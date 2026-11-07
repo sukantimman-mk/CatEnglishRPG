@@ -1,5 +1,5 @@
 // MeowQuest Service Worker v1.1.0
-const CACHE_NAME = 'meowquest-cache-v3';
+const CACHE_NAME = 'meowquest-cache-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

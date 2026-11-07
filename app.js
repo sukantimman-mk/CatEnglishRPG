@@ -1147,6 +1147,9 @@ function refreshCatAvatars() {
   const vocabMiniAvatar = document.getElementById("vocab-cat-avatar-mini");
   if (vocabMiniAvatar) vocabMiniAvatar.innerHTML = renderCatSvg();
 
+  const freetalkSlot = document.getElementById("freetalk-cat-avatar-slot");
+  if (freetalkSlot) freetalkSlot.innerHTML = renderCatSvg();
+
   const miniAvatars = document.querySelectorAll(".cat-avatar-mini");
   miniAvatars.forEach((el) => {
     el.innerHTML = renderCatSvg();
@@ -3627,6 +3630,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const viewId = btn.dataset.view;
       switchView(viewId);
       if (viewId === "view-adventure") renderAdventureGrid();
+      if (viewId === "view-ai-freetalk") renderFreeTalkView();
       if (viewId === "view-vocab") initVocabDeck(currentVocabDeck);
       if (viewId === "view-wardrobe") renderWardrobeInventory();
       if (viewId === "view-shop") renderShop();
@@ -3642,6 +3646,7 @@ window.addEventListener("DOMContentLoaded", () => {
       const viewId = btn.dataset.view;
       switchView(viewId);
       if (viewId === "view-adventure") renderAdventureGrid();
+      if (viewId === "view-ai-freetalk") renderFreeTalkView();
       if (viewId === "view-vocab") initVocabDeck(currentVocabDeck);
       if (viewId === "view-wardrobe") renderWardrobeInventory();
       if (viewId === "view-shop") renderShop();
@@ -4101,7 +4106,696 @@ window.addEventListener("DOMContentLoaded", () => {
   renderShop();
   renderDailyQuests();
   initVocabDeck("toeic");
+
+  // Wire AI Cat Free-Talk Companion
+  const btnHeroTalk = document.getElementById("btn-hero-talk-cat");
+  if (btnHeroTalk) {
+    btnHeroTalk.onclick = () => {
+      sfx.meow();
+      triggerHaptic(20);
+      switchView("view-ai-freetalk");
+      renderFreeTalkView();
+    };
+  }
+
+  const freetalkSendBtn = document.getElementById("freetalk-send-btn");
+  const freetalkInput = document.getElementById("freetalk-text-input");
+  if (freetalkSendBtn && freetalkInput) {
+    freetalkSendBtn.onclick = () => {
+      sendUserFreeTalkMessage(freetalkInput.value);
+    };
+    freetalkInput.onkeydown = (e) => {
+      if (e.key === "Enter") {
+        sendUserFreeTalkMessage(freetalkInput.value);
+      }
+    };
+  }
+
+  const freetalkMicBtn = document.getElementById("freetalk-mic-btn");
+  if (freetalkMicBtn) {
+    freetalkMicBtn.onclick = () => {
+      setupFreeTalkSpeech();
+    };
+  }
+
+  const freetalkSlowBtn = document.getElementById("freetalk-btn-slow-audio");
+  if (freetalkSlowBtn) {
+    freetalkSlowBtn.onclick = () => {
+      isSlowFreeTalkAudio = !isSlowFreeTalkAudio;
+      sfx.click();
+      freetalkSlowBtn.classList.toggle("active", isSlowFreeTalkAudio);
+      showToast(isSlowFreeTalkAudio ? "เปิดเสียงสโลว์โมชั่น (0.8x) ชัดถ้อยชัดคำ 🐢" : "เปิดเสียงความเร็วปกติ 🐇", "🔊");
+    };
+  }
+
+  const freetalkClearBtn = document.getElementById("freetalk-btn-clear-chat");
+  if (freetalkClearBtn) {
+    freetalkClearBtn.onclick = clearFreeTalkHistory;
+  }
+
+  // Quick Topic Pills Click
+  document.querySelectorAll(".topic-pill").forEach(pill => {
+    pill.onclick = () => {
+      const prompt = pill.dataset.prompt;
+      if (prompt) {
+        sendUserFreeTalkMessage(prompt);
+      }
+    };
+  });
+
 });
+
+// ==============================================
+// 14. AI CAT FREE-TALK COMPANION & GRAMMAR DOCTOR
+// ห้องสนทนาภาษาอังกฤษอิสระกับน้องแมว AI + หมอตรวจไวยากรณ์
+// ==============================================
+
+const CAT_GRAMMAR_RULES = [
+  {
+    id: "am_agree",
+    pattern: /\bI\s+am\s+agree\b/i,
+    fix: "I agree",
+    why: "คำว่า 'agree' เป็นคำกริยา (Verb) ในตัวมันเองแล้ว ไม่ต้องใส่ Verb to be ('am') ซ้อนข้างหน้าน้านุด! ✨"
+  },
+  {
+    id: "interesting_in",
+    pattern: /\bI\s+am\s+(?:very\s+)?interesting\s+in\b/i,
+    fix: "I am interested in",
+    why: "ความรู้สึกของคนเราใช้รูป -ed ('interested') ส่วนสิ่งของหรือเรื่องที่น่าสนใจจึงใช้ -ing ('interesting') จ้า 💡"
+  },
+  {
+    id: "boring_person",
+    pattern: /\bI\s+am\s+boring\b/i,
+    fix: "I am bored",
+    why: "'I am bored' = ฉันรู้สึกเบื่อ ส่วน 'I am boring' = ฉันเป็นคนน่าเบื่อ น้านุดไม่ได้น่าเบื่อแน่นอนใช่มั้ยเหมียว? 😹"
+  },
+  {
+    id: "yesterday_past",
+    pattern: /\byesterday\s+I\s+(go|see|eat|buy|come|have)\b/i,
+    fix: "yesterday I went / saw / ate / bought / came / had",
+    why: "เมื่อมีคำบอกเวลาอดีต ('yesterday') ต้องเปลี่ยนกริยาเป็นรูปอดีต (Past Simple: V.2) น้านุด 🕰️"
+  },
+  {
+    id: "he_she_dont",
+    pattern: /\b(he|she|it)\s+don't\b/i,
+    fix: "$1 doesn't",
+    why: "ประธานเอกพจน์บุรุษที่ 3 (He, She, It) ในประโยคปฏิเสธปัจจุบันต้องใช้ 'doesn't' จ้า 🐾"
+  },
+  {
+    id: "listen_music",
+    pattern: /\blisten\s+music\b/i,
+    fix: "listen to music",
+    why: "คำกริยา 'listen' เมื่อมีกรรมตามหลัง ต้องมีบุพบท 'to' เสมอ (Listen to...) 🎵"
+  },
+  {
+    id: "every_days",
+    pattern: /\bevery\s+days\b/i,
+    fix: "every day",
+    why: "หลังคำว่า 'every' คำนามต้องเป็นรูปเอกพจน์เสมอ (Every day ไม่มี s จ้า) 📅"
+  },
+  {
+    id: "explain_me",
+    pattern: /\bexplain\s+me\b/i,
+    fix: "explain to me",
+    why: "กริยา 'explain' ต้องมี 'to' ก่อนระบุคนรับฟัง (Explain this to me) 🗣️"
+  },
+  {
+    id: "look_forward",
+    pattern: /\blook(?:ing)?\s+forward\s+to\s+(hear|see|meet)\b/i,
+    fix: "look forward to hearing / seeing / meeting",
+    why: "'to' ในวลี 'look forward to' เป็น Preposition จึงต้องตามด้วย Gerund (กริยาเติม -ing) จ้า 📬"
+  },
+  {
+    id: "much_people",
+    pattern: /\bmuch\s+people\b/i,
+    fix: "many people",
+    why: "people เป็นคำนามนับได้พหูพจน์ ต้องใช้ 'many' แทน 'much' น้านุด 👥"
+  },
+  {
+    id: "people_is",
+    pattern: /\bpeople\s+is\b/i,
+    fix: "people are",
+    why: "คำว่า 'people' เป็นพหูพจน์ (หลายคน) จึงต้องใช้คู่กับ 'are' จ้า 🌟"
+  },
+  {
+    id: "discuss_about",
+    pattern: /\bdiscuss\s+about\b/i,
+    fix: "discuss (without 'about')",
+    why: "'discuss' เป็น Transitive Verb มีความหมายว่า 'พูดคุยเกี่ยวกับ' ในตัวอยู่แล้ว ไม่ต้องใส่ 'about' ซ้ำจ้า 💬"
+  },
+  {
+    id: "contact_with",
+    pattern: /\bcontact\s+with\s+me\b/i,
+    fix: "contact me",
+    why: "'contact' ในความหมายว่าติดต่อใคร ไม่ต้องใส่ 'with' ตามหลัง (Contact me directly) 📱"
+  },
+  {
+    id: "no_have",
+    pattern: /\bI\s+no\s+have\b/i,
+    fix: "I don't have",
+    why: "ประโยคปฏิเสธของ have ใช้ 'don't have' (หรือ There is no...) ไม่ใช้ 'no have' น้านุด ❌"
+  },
+  {
+    id: "more_better",
+    pattern: /\bmore\s+better\b/i,
+    fix: "much better / better",
+    why: "'better' เป็นรูปเปรียบเทียบขั้นกว่าของ good อยู่แล้ว ไม่ต้องใส่ 'more' ซ้ำซ้อนจ้า ✨"
+  },
+  {
+    id: "can_able_to",
+    pattern: /\bcan\s+able\s+to\b/i,
+    fix: "can / am able to",
+    why: "เลือกใช้อย่างใดอย่างหนึ่ง: 'I can...' หรือ 'I am able to...' ไม่ใช้ซ้อนกันน้านุด 🎯"
+  },
+  {
+    id: "congratulation_singular",
+    pattern: /\bcongratulation\b(?!s)/i,
+    fix: "congratulations!",
+    why: "คำแสดงความยินดีในภาษาอังกฤษต้องมี -s เสมอ: 'Congratulations!' 🎉"
+  },
+  {
+    id: "years_old_have",
+    pattern: /\bI\s+have\s+(\d+)\s+years\s+old\b/i,
+    fix: "I am $1 years old",
+    why: "การบอกอายุในภาษาอังกฤษใช้ Verb to be ('I am ... years old') ไม่ใช้ have จ้า 🎂"
+  },
+  {
+    id: "open_light",
+    pattern: /\bopen\s+the\s+light\b/i,
+    fix: "turn on the light",
+    why: "เครื่องใช้ไฟฟ้าหรือไฟส่องสว่าง ใช้ 'turn on / switch on' แทนคำว่า open จ้า 💡"
+  },
+  {
+    id: "close_light",
+    pattern: /\bclose\s+the\s+light\b/i,
+    fix: "turn off the light",
+    why: "การปิดไฟหรือเครื่องใช้ไฟฟ้า ใช้ 'turn off / switch off' แทนคำว่า close จ้า 🌙"
+  }
+];
+
+const CAT_CONVERSATION_INTENTS = [
+  {
+    keywords: ["hello", "hi", "hey", "good morning", "good afternoon", "good evening", "howdy", "sup"],
+    replies: [
+      {
+        en: "Meow! Hello there, my favorite hooman! It's so wonderful to chat with you! How is your day going so far, purr? 🐾",
+        th: "เหมียววว! สวัสดีน้านุดคนโปรดของข้า! ดีใจจังที่ได้คุยกัน วันนี้น้านุดเป็นยังไงบ้างเอ่ย? 🐾"
+      },
+      {
+        en: "Nyaa~ Warm greetings! I just woke up from my third nap today. Ready to practice speaking English together? 🐱✨",
+        th: "เหมียว~ ยินดีต้อนรับน้านุด! ข้าเพิ่งตื่นจากการงีบครั้งที่ 3 ของวัน พร้อมฝึกพูดภาษาอังกฤษด้วยกันแล้วหรือยังเหมียว? 🐱✨"
+      }
+    ]
+  },
+  {
+    keywords: ["how are you", "how are u", "how do you do", "how you doing", "what's up", "whats up"],
+    replies: [
+      {
+        en: "I'm feeling purr-fect today! My tummy is happy and my fur is silky smooth. How about you? Are you feeling energetic today? 💖",
+        th: "ข้ารู้สึกดีเลิศสุดๆ วันนี้ พุงอิ่ม ขนก็นุ่มสลวย แล้วน้านุดล่ะ วันนี้รู้สึกกระปรี้กระเปร่าดีมั้ยเหมียว? 💖"
+      },
+      {
+        en: "Purrrrr... I'm doing fantastic! Just chasing imaginary dust bunnies. Tell me, how was your day today? 🐾",
+        th: "เพอร์รร... สบายดีมากๆ เลย! กำลังวิ่งไล่จับฝุ่นจินตนาการอยู่ เล่าให้ข้าฟังหน่อย วันนี้น้านุดทำอะไรมาบ้าง? 🐾"
+      }
+    ]
+  },
+  {
+    keywords: ["food", "eat", "hungry", "lunch", "dinner", "breakfast", "meal", "tuna", "fish", "snack", "pizza", "coffee"],
+    replies: [
+      {
+        en: "Did somebody say FOOD?! My absolute favorite is fresh grilled tuna and crunchy cat treats! What delicious food did you eat today? 🐟😋",
+        th: "ใครพูดถึงของกินน่ะ?! ของโปรดที่สุดของข้าคือปลาทูย่างสดๆ กับขนมแมวกรุบกรอบ! วันนี้น้านุดกินของอร่อยอะไรมาบ้างเหมียว? 🐟😋"
+      },
+      {
+        en: "Speaking of eating, don't forget to stay hydrated and eat healthy meals, hooman! And maybe share some fish with me later, deal? 🍣😻",
+        th: "พูดถึงเรื่องกิน อย่าลืมดื่มน้ำเยอะๆ และกินอาหารที่มีประโยชน์นะน้านุด! แล้วอย่าลืมแบ่งปลาทูให้ข้าด้วยล่ะ ตกลงมั้ย? 🍣😻"
+      }
+    ]
+  },
+  {
+    keywords: ["tired", "exhausted", "sleepy", "hard day", "busy", "stress", "stressed", "work hard", "headache"],
+    replies: [
+      {
+        en: "Oh no, you worked so hard today! Please take a deep breath and relax. If I were next to you, I'd climb onto your lap and purr to heal your stress! 💤🛋️",
+        th: "โถ... น้านุดทำงานหนักมากเลยวันนี้! หายใจเข้าลึกๆ แล้วพักผ่อนนะ ถ้าข้าอยู่ข้างๆ จะปีนขึ้นไปนอนบนตักแล้วครางเพลินๆ ปลอบใจเลย! 💤🛋️"
+      },
+      {
+        en: "Cats are world champions of resting! Remember that taking breaks is essential for your brain. Drink some warm water and rest well tonight, okay? 🍵💖",
+        th: "แมวอย่างข้าเป็นแชมป์โลกด้านการพักผ่อนเลยนะ! จำไว้ว่าการพักเบรกจำเป็นต่อสมองมากๆ ดื่มน้ำอุ่นๆ แล้วคืนนี้พักผ่อนเยอะๆ น้า 🍵💖"
+      }
+    ]
+  },
+  {
+    keywords: ["joke", "funny", "laugh", "riddle", "humor", "make me laugh"],
+    replies: [
+      {
+        en: "Here's a classic cat joke: Why was the cat sitting on the computer? ...Because it wanted to keep an eye on the MOUSE! Hahaha, get it?! 🐭💻😹",
+        th: "มุกตลกแมวคลาสสิก: ทำไมแมวถึงชอบนั่งทับคอมพิวเตอร์? ...ก็เพราะมันอยากจับตาดู MOUSE (เมาส์/หนู) ยังไงล่ะ! ฮ่าๆๆ เก็ทมั้ยเหมียว?! 🐭💻😹"
+      },
+      {
+        en: "What do you call a cat that gets caught by the police? ...The PURR-petrator! Hehehe, aren't cat puns the best? 🐾👮‍♂️😸",
+        th: "แมวที่โดนตำรวจจับเรียกว่าอะไร? ...เรียกว่า 'PURR-petrator' (ผู้กระทำความผิด / เล่นคำกับ Purr)! คิกๆ มุกแมวฮาสุดๆ ใช่มั้ยล่ะ? 🐾👮‍♂️😸"
+      }
+    ]
+  },
+  {
+    keywords: ["travel", "trip", "vacation", "holiday", "japan", "flight", "beach", "country", "place", "hotel"],
+    replies: [
+      {
+        en: "Travelling sounds exciting! I've heard there are magical cat islands in Japan where cats rule the world! Where is your dream vacation destination? ✈️🏝️",
+        th: "การท่องเที่ยวฟังดูน่าตื่นเต้นจัง! ข้าได้ยินว่าที่ญี่ปุ่นมีเกาะแมวมหัศจรรย์ที่แมวเป็นใหญ่ด้วยนะ! สถานที่เที่ยวในฝันของน้านุดคือที่ไหนเอ่ย? ✈️🏝️"
+      },
+      {
+        en: "If you travel, promise you'll bring back a cozy cardboard box from the airport for me! What kind of places do you love visiting the most? 🧳🗺️",
+        th: "ถ้าน้านุดไปเที่ยว สัญญาได้มั้ยว่าจะเอากล่องพัสดุนุ่มๆ จากสนามบินกลับมาฝากข้าด้วย! น้านุดชอบไปเที่ยวที่แบบไหนที่สุดเหรอ? 🧳🗺️"
+      }
+    ]
+  },
+  {
+    keywords: ["box", "cardboard", "toy", "laser", "catnip", "purr", "scratch", "pet", "nap", "sleep"],
+    replies: [
+      {
+        en: "Cardboard boxes are the greatest invention in the universe! 'If it fits, I sits!' Have you tried dropping a box in our living room lounge yet? 📦😻",
+        th: "กล่องกระดาษพัสดุคือนวัตกรรมที่ยิ่งใหญ่ที่สุดในจักรวาล! 'ถ้าตัวข้าลงไปได้ ข้าก็จะนอน!' น้านุดลองดรอปกล่องในห้องนั่งเล่นหรือยังเหมียว? 📦😻"
+      },
+      {
+        en: "Purrrrr... Just thinking about catnip and warm sunbeams makes me want to roll on my back and take a 5-hour nap! ☀️🛋️",
+        th: "เพอร์รรร... แค่นึกถึงแคทนิปกับแสงแดดอุ่นๆ ก็อยากนอนหงายพุงงีบสัก 5 ชั่วโมงแล้วเหมียว! ☀️🛋️"
+      }
+    ]
+  },
+  {
+    keywords: ["name", "who are you", "what is your name", "your name"],
+    replies: [
+      {
+        en: `My name is ${typeof gameState !== "undefined" ? gameState.name : "Meow"}! I'm your loyal cat companion and English learning partner. What do you think of my cute 3D ears? 🐱👑`,
+        th: `ข้าชื่อ ${typeof gameState !== "undefined" ? gameState.name : "น้องเหมียว"}! ข้าคือคู่หูแมวผู้ซื่อสัตย์และพาร์ทเนอร์ฝึกภาษาอังกฤษของน้านุด หู 3 มิติน่ารักของข้าสวยมั้ยล่ะ? 🐱👑`
+      }
+    ]
+  },
+  {
+    keywords: ["learn", "english", "study", "grammar", "practice", "fluent", "vocabulary", "word", "speak"],
+    replies: [
+      {
+        en: "Practicing English every single day is the key to fluency! You don't have to be perfect; you just have to keep speaking. I'm always here cheering for you! 🌟📚",
+        th: "การฝึกภาษาอังกฤษทุกๆ วันคือหัวใจสู่ความคล่องแคล่วเลยนะ! ไม่จำเป็นต้องเป๊ะ 100% ตั้งแต่แรก แค่กล้าพูดบ่อยๆ ข้าจะคอยเป็นกำลังใจให้เสมอ! 🌟📚"
+      },
+      {
+        en: "You are doing an incredible job practicing with me today! Every new word you learn is like a delicious treat for your brain! What word do you want to learn today? 🧠🐟",
+        th: "น้านุดเก่งมากเลยที่มาฝึกกับข้าวันนี้! ทุกๆ คำศัพท์ใหม่ที่เรียนรู้ก็เหมือนขนมปลาทูแสนอร่อยของสมองนะ! วันนี้อยากเรียนคำไหนเป็นพิเศษมั้ย? 🧠🐟"
+      }
+    ]
+  }
+];
+
+const DEFAULT_CAT_REPLIES = [
+  {
+    en: "That's so interesting, my hooman! Tell me more about that. I love hearing your thoughts in English! 🐾✨",
+    th: "น่าสนใจมากเลยน้านุด! เล่าให้ข้าฟังเพิ่มอีกสิ ข้าชอบฟังน้านุดเล่าเรื่องเป็นภาษาอังกฤษที่สุดเลย! 🐾✨"
+  },
+  {
+    en: "Meow! That's a great thought! Practicing sentence by sentence will make you speak English like a pro very soon. What else is on your mind? 🐱💡",
+    th: "เหมียววว! เป็นความคิดที่ดีมากเลย! ฝึกพูดทีละประโยคแบบนี้ น้านุดจะเก่งอังกฤษขึ้นแบบก้าวกระโดดแน่นอน มีเรื่องอะไรอยากเล่าอีกมั้ย? 🐱💡"
+  },
+  {
+    en: "Purrrrr... I'm listening closely with both of my cute cat ears! Keep going, your English is improving every time we talk! 👂💖",
+    th: "เพอร์รร... ข้ากำลังตั้งใจฟังด้วยหูแมวน่ารักทั้งสองข้างเลย! พูดต่อได้เลยน้านุด ภาษาอังกฤษของน้านุดพัฒนาขึ้นทุกครั้งที่เราคุยกันนะ! 👂💖"
+  }
+];
+
+// Initialize Free-Talk State
+function initFreeTalkState() {
+  if (!gameState.freeTalkHistory) {
+    gameState.freeTalkHistory = [
+      {
+        sender: "cat",
+        text: "Meow! Hello there, my favorite hooman! 🐱 What's on your mind today? You can practice speaking or typing in English with me freely! If there are any grammar slips, I'll gently help you out, purr~ 🐾",
+        translation: "เหมียววว! สวัสดีน้านุดคนโปรดของข้า! 🐱 วันนี้มีเรื่องอะไรในใจมั้ย? น้านุดสามารถพิมพ์หรือพูดคุยภาษาอังกฤษกับข้าได้อย่างอิสระเลยนะ! ถ้ามีจุดไหนที่ไวยากรณ์ยังไม่เป๊ะ ข้าจะคอยช่วยแนะนำให้เองน้า เพอร์รร~ 🐾",
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    ];
+  }
+  if (!gameState.catFriendship) {
+    gameState.catFriendship = { points: 0, level: 1 };
+  }
+}
+
+// Render Free-Talk View
+function renderFreeTalkView() {
+  initFreeTalkState();
+
+  // Render Cat Figurine in Header
+  const avatarSlot = document.getElementById("freetalk-cat-avatar-slot");
+  if (avatarSlot && typeof renderCatSvg === "function") {
+    avatarSlot.innerHTML = renderCatSvg();
+  }
+
+  // Update Cat Name & Friendship
+  const catNameEl = document.getElementById("freetalk-cat-name-display");
+  if (catNameEl) catNameEl.textContent = gameState.name || "น้องแมว";
+
+  updateFriendshipMeterUI();
+  renderFreeTalkMessages();
+}
+
+function updateFriendshipMeterUI() {
+  const meterEl = document.getElementById("freetalk-friendship-meter");
+  if (!meterEl) return;
+
+  const pts = gameState.catFriendship ? gameState.catFriendship.points : 0;
+  const lvl = gameState.catFriendship ? gameState.catFriendship.level : 1;
+
+  const titles = {
+    1: "เพื่อนใหม่ (Acquaintance)",
+    2: "เพื่อนสนิท (Good Pal)",
+    3: "เพื่อนรู้ใจ (Best Buddy)",
+    4: "ทาสแมวคนโปรด (Beloved Hooman)",
+    5: "คู่หูรู้ใจตลอดกาล (Soulmate Purr)"
+  };
+
+  const title = titles[lvl] || titles[5];
+  const heartsFilled = Math.min(5, lvl);
+  const heartsEmpty = Math.max(0, 5 - heartsFilled);
+  const heartsStr = "💖".repeat(heartsFilled) + "🤍".repeat(heartsEmpty);
+
+  meterEl.innerHTML = `${heartsStr} (Lv.${lvl} ${title} • ${pts} แต้ม)`;
+}
+
+function renderFreeTalkMessages() {
+  const container = document.getElementById("freetalk-chat-messages");
+  if (!container) return;
+
+  container.innerHTML = "";
+  const history = gameState.freeTalkHistory || [];
+
+  history.forEach((msg, idx) => {
+    const isCat = msg.sender === "cat";
+    const msgEl = document.createElement("div");
+    msgEl.className = `freetalk-msg-row ${isCat ? "msg-cat-row" : "msg-user-row"}`;
+
+    if (isCat) {
+      msgEl.innerHTML = `
+        <div class="freetalk-avatar-bubble-icon" title="${gameState.name}">🐱</div>
+        <div class="freetalk-bubble cat-bubble">
+          <div class="freetalk-bubble-top">
+            <span class="bubble-sender-name">${gameState.name || "น้องแมว"}</span>
+            <button class="btn-bubble-tts" data-idx="${idx}" title="ฟังเสียงอ่านภาษาอังกฤษ">🔊 ฟังเสียง</button>
+          </div>
+          <div class="bubble-en-text">${escapeHtml(msg.text)}</div>
+          ${msg.translation ? `
+            <div class="bubble-th-trans">
+              <span class="trans-label">🇹🇭 คำแปล:</span> ${escapeHtml(msg.translation)}
+            </div>
+          ` : ""}
+          <span class="bubble-timestamp">${msg.timestamp || ""}</span>
+        </div>
+      `;
+
+      msgEl.querySelector(".btn-bubble-tts").onclick = () => {
+        speakCatFreeTalkText(msg.text);
+      };
+    } else {
+      // User message + potential Grammar Doctor card
+      let grammarCardHtml = "";
+      if (msg.grammarIssues && msg.grammarIssues.length > 0) {
+        grammarCardHtml = `
+          <div class="grammar-doctor-card">
+            <div class="doctor-badge">🩺 Cat Grammar Doctor (หมอแมวตรวจไวยากรณ์)</div>
+            ${msg.grammarIssues.map(iss => `
+              <div class="doctor-issue-item">
+                <div class="doctor-diff">
+                  <span class="diff-original">❌ ${escapeHtml(iss.matched)}</span>
+                  <span class="diff-arrow">➔</span>
+                  <span class="diff-fix">✅ ${escapeHtml(iss.fix)}</span>
+                </div>
+                <div class="doctor-why">💡 ${escapeHtml(iss.why)}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      msgEl.innerHTML = `
+        <div class="freetalk-bubble user-bubble">
+          <div class="bubble-en-text">${escapeHtml(msg.text)}</div>
+          ${msg.voiceUsed ? `<span class="voice-badge">🎙️ ส่งด้วยเสียง</span>` : ""}
+          <span class="bubble-timestamp">${msg.timestamp || ""}</span>
+          ${grammarCardHtml}
+        </div>
+      `;
+    }
+
+    container.appendChild(msgEl);
+  });
+
+  // Autoscroll to bottom
+  const chatBox = document.getElementById("freetalk-chat-box");
+  if (chatBox) {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+}
+
+// Check grammar on user message
+function checkCatGrammar(text) {
+  const issues = [];
+  CAT_GRAMMAR_RULES.forEach(rule => {
+    const match = text.match(rule.pattern);
+    if (match) {
+      issues.push({
+        matched: match[0],
+        fix: typeof rule.fix === "string" ? rule.fix.replace("$1", match[1] || "") : rule.fix,
+        why: rule.why
+      });
+    }
+  });
+  return issues;
+}
+
+// Generate intelligent Cat reply
+function generateCatFreeTalkReply(userText) {
+  const lower = userText.toLowerCase();
+
+  // 1. Check topic intents
+  for (const intent of CAT_CONVERSATION_INTENTS) {
+    for (const kw of intent.keywords) {
+      if (lower.includes(kw)) {
+        const randReply = intent.replies[Math.floor(Math.random() * intent.replies.length)];
+        return randReply;
+      }
+    }
+  }
+
+  // 2. Default fallback
+  const def = DEFAULT_CAT_REPLIES[Math.floor(Math.random() * DEFAULT_CAT_REPLIES.length)];
+  return def;
+}
+
+// Send user message
+function sendUserFreeTalkMessage(text, isVoice = false) {
+  const trimmed = text.trim();
+  if (!trimmed) return;
+
+  initFreeTalkState();
+  sfx.click();
+
+  // 1. Analyze grammar
+  const grammarIssues = checkCatGrammar(trimmed);
+
+  // 2. Add user message
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  gameState.freeTalkHistory.push({
+    sender: "user",
+    text: trimmed,
+    voiceUsed: isVoice,
+    grammarIssues: grammarIssues,
+    timestamp: timeStr
+  });
+
+  // Clear input
+  const inputEl = document.getElementById("freetalk-text-input");
+  if (inputEl) inputEl.value = "";
+
+  renderFreeTalkMessages();
+
+  // Award EXP & Coins
+  gameState.exp = (gameState.exp || 0) + 5;
+  gameState.coins = (gameState.coins || 0) + 2;
+  addFriendshipPoints(1);
+  saveGameState();
+  updateHUD();
+
+  // 3. Show typing indicator then reply
+  const typingEl = document.getElementById("freetalk-typing-indicator");
+  if (typingEl) {
+    typingEl.style.display = "flex";
+    const chatBox = document.getElementById("freetalk-chat-box");
+    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Play cat action in header
+  const avatarSlot = document.getElementById("freetalk-cat-avatar-slot");
+  if (avatarSlot) {
+    avatarSlot.classList.add("cat-laser-pounce");
+    setTimeout(() => avatarSlot.classList.remove("cat-laser-pounce"), 400);
+  }
+
+  setTimeout(() => {
+    if (typingEl) typingEl.style.display = "none";
+
+    const catReply = generateCatFreeTalkReply(trimmed);
+    gameState.freeTalkHistory.push({
+      sender: "cat",
+      text: catReply.en,
+      translation: catReply.th,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    });
+
+    // Limit history to 35 messages
+    if (gameState.freeTalkHistory.length > 35) {
+      gameState.freeTalkHistory = gameState.freeTalkHistory.slice(-35);
+    }
+
+    saveGameState();
+    renderFreeTalkMessages();
+    sfx.purr();
+    triggerHaptic(20);
+
+    // Speak cat reply aloud
+    speakCatFreeTalkText(catReply.en);
+  }, 900);
+}
+
+// Add friendship heart points
+function addFriendshipPoints(pts = 1) {
+  if (!gameState.catFriendship) {
+    gameState.catFriendship = { points: 0, level: 1 };
+  }
+  gameState.catFriendship.points += pts;
+
+  const currentLevel = gameState.catFriendship.level;
+  const nextTarget = currentLevel * 10;
+
+  if (gameState.catFriendship.points >= nextTarget && currentLevel < 5) {
+    gameState.catFriendship.level += 1;
+    showToast(`💖 เลเวลความสนิทกับน้องแมวเพิ่มขึ้นเป็นระดับ ${gameState.catFriendship.level}! ได้รับ +50 EXP`, "🎉");
+    gameState.exp = (gameState.exp || 0) + 50;
+    spawnFloatingHearts();
+    sfx.meow();
+  }
+
+  updateFriendshipMeterUI();
+}
+
+// Speak Cat Reply using SpeechSynthesis
+let isSlowFreeTalkAudio = false;
+
+function speakCatFreeTalkText(text) {
+  if (!('speechSynthesis' in window)) return;
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  // Accent selection
+  const accentSelect = document.getElementById("freetalk-accent-select");
+  const selectedLang = accentSelect ? accentSelect.value : "en-US";
+  utterance.lang = selectedLang;
+
+  // Rate & Pitch
+  utterance.rate = isSlowFreeTalkAudio ? 0.78 : 0.95;
+  utterance.pitch = 1.12; // slightly cheerful cat tone
+
+  // Voice preference
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang.replace('_', '-').startsWith(selectedLang) && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Siri')));
+  if (preferred) utterance.voice = preferred;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+// Clear chat history
+function clearFreeTalkHistory() {
+  if (confirm("ต้องการล้างประวัติการคุยกับน้องแมวทั้งหมดหรือไม่เหมียว? 🐾")) {
+    gameState.freeTalkHistory = [];
+    initFreeTalkState();
+    saveGameState();
+    renderFreeTalkMessages();
+    showToast("ล้างประวัติการคุยเรียบร้อยแล้วเหมียว 🧹", "🐾");
+  }
+}
+
+// Speech Recognition for Free-Talk
+let freeTalkSpeechRec = null;
+
+function setupFreeTalkSpeech() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    showToast("เบราว์เซอร์นี้ไม่รองรับการแปลงเสียงเป็นข้อความ กรุณาพิมพ์แทนนะเหมียว 🎙️", "⚠️");
+    return;
+  }
+
+  const micBtn = document.getElementById("freetalk-mic-btn");
+  const banner = document.getElementById("freetalk-listening-banner");
+  const stopBtn = document.getElementById("freetalk-btn-stop-listening");
+  const inputEl = document.getElementById("freetalk-text-input");
+
+  if (freeTalkSpeechRec) {
+    try { freeTalkSpeechRec.abort(); } catch (e) {}
+    freeTalkSpeechRec = null;
+    if (banner) banner.style.display = "none";
+    if (micBtn) micBtn.classList.remove("listening-active");
+    return;
+  }
+
+  try {
+    freeTalkSpeechRec = new SpeechRec();
+    freeTalkSpeechRec.lang = "en-US";
+    freeTalkSpeechRec.interimResults = true;
+    freeTalkSpeechRec.continuous = false;
+
+    if (banner) banner.style.display = "flex";
+    if (micBtn) micBtn.classList.add("listening-active");
+    triggerHaptic(30);
+
+    freeTalkSpeechRec.onresult = (event) => {
+      let transcript = "";
+      for (let i = 0; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      if (inputEl) inputEl.value = transcript;
+    };
+
+    freeTalkSpeechRec.onend = () => {
+      if (banner) banner.style.display = "none";
+      if (micBtn) micBtn.classList.remove("listening-active");
+      freeTalkSpeechRec = null;
+
+      // If text exists, prompt user or auto-send
+      if (inputEl && inputEl.value.trim()) {
+        sendUserFreeTalkMessage(inputEl.value.trim(), true);
+      }
+    };
+
+    freeTalkSpeechRec.onerror = (e) => {
+      console.warn("FreeTalk speech error:", e);
+      if (banner) banner.style.display = "none";
+      if (micBtn) micBtn.classList.remove("listening-active");
+      freeTalkSpeechRec = null;
+    };
+
+    if (stopBtn) {
+      stopBtn.onclick = () => {
+        if (freeTalkSpeechRec) {
+          try { freeTalkSpeechRec.stop(); } catch (e) {}
+        }
+      };
+    }
+
+    freeTalkSpeechRec.start();
+  } catch (err) {
+    console.error("Speech rec init error:", err);
+  }
+}
 
 // ==============================================
 // 13. PWA (PROGRESSIVE WEB APP) & SERVICE WORKER ENGINE

@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3.0">
+  <link rel="stylesheet" href="style.css?v=3.1">
 </head>
 <body>
 
@@ -115,7 +115,8 @@
 
   <!-- Desktop Navigation Tabs (Hidden on mobile) -->
   <nav class="app-nav">
-    <button class="nav-tab active" data-view="view-adventure">🗺️ ออกสำรวจ (10 ด่าน)</button>
+    <button class="nav-tab active" data-view="view-adventure">🗺️ การผจญภัย (40 ด่าน)</button>
+    <button class="nav-tab" data-view="view-ai-freetalk">💬 คุยอิสระกับน้องแมว AI</button>🗺️ ออกสำรวจ (10 ด่าน)</button>
     <button class="nav-tab" data-view="view-vocab">📚 การ์ดศัพท์โทอิค &amp; โทเฟล</button>
     <button class="nav-tab" data-view="view-wardrobe">🐱 ห้องน้องแมว &amp; แต่งตัว</button>
     <button class="nav-tab" data-view="view-shop">🛍️ ร้านค้าเหมียวช็อป</button>
@@ -194,6 +195,9 @@
               </div>
 
               <div class="sanctuary-care-btns">
+                <button id="btn-hero-talk-cat" class="btn-pet-action btn-talk" title="คุยภาษาอังกฤษอิสระกับน้องแมว (AI Free-Talk)">
+                  <span>💬</span> ชวนคุย Free Talk
+                </button>
                 <button id="btn-hero-pet-cat" class="btn-pet-action btn-pet-love" title="ลูบหัวหรือเกาคางน้องแมว (+สุข)">
                   <span>🐾</span> ลูบหัว
                 </button>
@@ -371,6 +375,107 @@
     <!-- ==============================================
          VIEW: VOCABULARY DECKS (TOEIC / TOEFL / BUSINESS)
          ============================================== -->
+    <!-- ==============================================
+         VIEW: AI CAT FREE-TALK COMPANION & GRAMMAR DOCTOR
+         ============================================== -->
+    <section id="view-ai-freetalk" class="view-section">
+      <div class="freetalk-container">
+        
+        <!-- Header: Cat Companion Info & Settings -->
+        <div class="freetalk-header-card">
+          <div class="freetalk-cat-profile">
+            <div class="freetalk-cat-avatar-wrap" id="freetalk-cat-avatar-slot">
+              <!-- Dynamically rendered 3D Cat Figurine -->
+            </div>
+            <div class="freetalk-cat-info">
+              <div class="freetalk-title-row">
+                <h2 id="freetalk-cat-name-display" class="freetalk-cat-name">น้องแมว</h2>
+                <span class="freetalk-coach-badge">🟢 AI English Coach</span>
+              </div>
+              <div class="freetalk-friendship-wrap">
+                <span class="freetalk-friendship-label">ระดับความสนิทสนม:</span>
+                <span id="freetalk-friendship-meter" class="freetalk-hearts">💖💖🤍🤍🤍 (Lv.1 เพื่อนใหม่)</span>
+              </div>
+              <p class="freetalk-coach-sub">คุยภาษาอังกฤษอิสระได้ทุกเรื่อง! น้องแมวจะคอยตอบเสียงใส พร้อมตรวจไวยากรณ์ให้ทันที 🩺✨</p>
+            </div>
+          </div>
+
+          <!-- Controls: Accent, Speed, Clear -->
+          <div class="freetalk-controls">
+            <div class="freetalk-control-group">
+              <label for="freetalk-accent-select" class="freetalk-label">สำเนียงเสียง:</label>
+              <select id="freetalk-accent-select" class="freetalk-select">
+                <option value="en-US">🇺🇸 US (อเมริกัน)</option>
+                <option value="en-GB">🇬🇧 UK (บริติช)</option>
+                <option value="en-AU">🇦🇺 AU (ออสเตรเลีย)</option>
+              </select>
+            </div>
+
+            <button id="freetalk-btn-slow-audio" class="freetalk-ctrl-btn" title="เปิด/ปิด การพูดแบบช้าๆ ชัดๆ">
+              <span id="freetalk-slow-icon">🐢</span> สปีดช้า (0.8x)
+            </button>
+
+            <button id="freetalk-btn-clear-chat" class="freetalk-ctrl-btn btn-clear-danger" title="ล้างประวัติการสนทนา">
+              🗑️ ล้างแชท
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Topic Suggestion Pills -->
+        <div class="freetalk-topics-bar">
+          <span class="freetalk-topics-label">💡 หัวข้อชวนคุย:</span>
+          <div class="freetalk-topics-scroll" id="freetalk-topic-pills">
+            <button class="topic-pill" data-prompt="What is your favorite food, kitty?">🍕 ของกินที่ชอบ</button>
+            <button class="topic-pill" data-prompt="I feel tired from work today.">💼 บ่นเรื่องงาน/การบ้าน</button>
+            <button class="topic-pill" data-prompt="Tell me a funny cat joke!">😂 เล่ามุกตลกแมว</button>
+            <button class="topic-pill" data-prompt="Where do you want to travel?">✈️ ฝันอยากไปเที่ยวไหน</button>
+            <button class="topic-pill" data-prompt="I am agree with you. Can you check my grammar?">🩺 ลองตรวจไวยากรณ์</button>
+            <button class="topic-pill" data-prompt="What should I do this weekend?">🎉 วันหยุดทำอะไรดี</button>
+            <button class="topic-pill" data-prompt="Why do cats love cardboard boxes so much?">📦 ทำไมชอบนอนในกล่อง</button>
+          </div>
+        </div>
+
+        <!-- Chat Messages Stream -->
+        <div class="freetalk-chat-box" id="freetalk-chat-box">
+          <div class="freetalk-messages-list" id="freetalk-chat-messages">
+            <!-- Messages dynamically populated by JS -->
+          </div>
+
+          <!-- Typing Indicator Bubble -->
+          <div id="freetalk-typing-indicator" class="freetalk-typing-wrap" style="display: none;">
+            <div class="freetalk-avatar-bubble-icon">🐱</div>
+            <div class="typing-bubble">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-text">น้องแมวกำลังคิดคำตอบ...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voice Listening Banner -->
+        <div id="freetalk-listening-banner" class="freetalk-listening-banner" style="display: none;">
+          <div class="listening-wave-anim">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+          </div>
+          <span class="listening-text">🎙️ กำลังฟังเสียงภาษาอังกฤษของคุณ... พูดได้เลยเหมียว!</span>
+          <button id="freetalk-btn-stop-listening" class="btn-stop-listen">เสร็จสิ้น ⏹</button>
+        </div>
+
+        <!-- Input Bar: Text, Mic, Send -->
+        <div class="freetalk-input-bar">
+          <button id="freetalk-mic-btn" class="freetalk-action-btn btn-mic" title="กดเพื่อพูดภาษาอังกฤษกับน้องแมว">
+            🎙️
+          </button>
+          <input type="text" id="freetalk-text-input" class="freetalk-input-field" placeholder="พิมพ์คุยภาษาอังกฤษกับน้องแมว... (กด Enter เพื่อส่ง)" autocomplete="off">
+          <button id="freetalk-send-btn" class="freetalk-action-btn btn-send" title="ส่งข้อความ">
+            ส่ง 🚀
+          </button>
+        </div>
+
+      </div>
+    </section>
+
     <section id="view-vocab" class="view-section">
       <div class="section-banner" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: #3d155f;">
         <div>
@@ -848,9 +953,13 @@
 
   <!-- MOBILE BOTTOM NAVIGATION BAR (Thumb-friendly for smartphone users) -->
   <nav class="mobile-bottom-nav">
-    <button class="mob-nav-btn active" data-view="view-adventure" title="ด่านผจญภัย">
+    <button class="mob-nav-btn active" data-view="view-adventure" title="การผจญภัย">
       <span class="mob-nav-icon">🗺️</span>
-      <span class="mob-nav-label">ด่าน</span>
+      <span class="mob-nav-label">ผจญภัย</span>
+    </button>
+    <button class="mob-nav-btn" data-view="view-ai-freetalk" title="คุยอิสระกับน้องแมว AI">
+      <span class="mob-nav-icon">💬</span>
+      <span class="mob-nav-label">คุยกับแมว</span>
     </button>
     <button class="mob-nav-btn" data-view="view-vocab" title="การ์ดศัพท์โทอิค &amp; โทเฟล">
       <span class="mob-nav-icon">📚</span>
@@ -1227,8 +1336,8 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="scenarios.js?v=3.0"></script>
-  <script src="vocab_decks.js?v=3.0"></script>
-  <script src="app.js?v=3.0"></script>
+  <script src="scenarios.js?v=3.1"></script>
+  <script src="vocab_decks.js?v=3.1"></script>
+  <script src="app.js?v=3.1"></script>
 </body>
 </html>
