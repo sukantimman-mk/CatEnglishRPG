@@ -1213,8 +1213,9 @@ function updateHUD() {
     }
   }
 
-  // Render Adopted Breeds List
+  // Render Adopted Breeds List & Squad Living Lounge
   renderAdoptedBreeds();
+  renderCatSquadLounge();
 
   const currentHouse = SHOP_CATALOG.houses.find((h) => h.id === gameState.equipped.house);
   const houseDecor = document.getElementById("house-decor-icon");
@@ -1566,6 +1567,7 @@ function renderAdoptedBreeds() {
         saveGameState();
         refreshCatAvatars();
         renderAdoptedBreeds();
+        renderCatSquadLounge();
         if (currentInvCategory === "breeds") renderWardrobeInventory("breeds");
         showToast(`สลับมาใช้น้องแมวพันธุ์ "${breed.nameTh}" แล้ว! 🐾`, "✨");
       }
@@ -1573,6 +1575,309 @@ function renderAdoptedBreeds() {
 
     container.appendChild(card);
   });
+}
+
+// ==============================================
+// CAT SQUAD LIVING LOUNGE & REAL CAT BEHAVIORS
+// ระบบห้องนั่งเล่นรวมแก๊งแมวเหมียว & พฤติกรรมแมวจริง
+// ==============================================
+const SQUAD_CAT_BEHAVIORS = {
+  calico: {
+    spot: { left: "22%", bottom: "65px" },
+    actionClass: "action-knead",
+    actionLabel: "นวดขนมปัง 🥐",
+    dialogues: [
+      "นวดขนมปังปุๆๆ... นวดแป้งวันละ 500 รอบ แป้งฟูพร้อมเสิร์ฟฮะ! 🥐🐾",
+      "เกาคางตรงนี้ฟินที่สุดในสามโลกเลยงับนุด~ Purrrrr ❤️",
+      "สามสีนำโชคมาพร้อมความขยัน วันนี้มาเก็บเลเวลกันต่อนะเหมียว! ✨"
+    ]
+  },
+  british_blue: {
+    spot: { left: "14%", bottom: "115px" },
+    actionClass: "action-loaf",
+    actionLabel: "ก้อนขนมปัง 🍞",
+    dialogues: [
+      "ผู้ดีอังกฤษอย่างเราไม่ได้อ้วนนะฮะ เค้าเรียกว่าขนกำมะหยี่หนาแน่นฟูนุ่มต่างหาก! 💂‍♂️🍪",
+      "แปลงร่างเป็นก้อนขนมปังปิ้ง ห้ามรบกวนเวลาจิบชาตอนบ่ายนะฮะ 🍞☕",
+      "Hello hooman! วันนี้สำเนียง British เราเป๊ะมากเลยนะ ลองฟังดูสิ 🇬🇧"
+    ]
+  },
+  siamese: {
+    spot: { left: "7%", top: "45px" },
+    actionClass: "action-bird-watch",
+    actionLabel: "ส่องนกสั่นคาง 🐦",
+    dialogues: [
+      "นกพิราบตัวนั้นกลิ่นน่าอร่อยจัง... แคะๆๆๆ! (Ek-ek-ek-ek) 🐦👀",
+      "วิเชียรมาศแมวมงคลไทยโบราณ ตาสีไพลินคมกริบ พร้อมซ้อมบทสนทนาแล้วเหมียว! 💎",
+      "ทำไมหน้าเรามีรอยไหม้ 9 จุดเหรอ? นี่เค้าเรียกว่าแต้มช็อกโกแลตสุดคลาสสิกต่างหาก! 🍫"
+    ]
+  },
+  scottish_fold: {
+    spot: { left: "46%", bottom: "75px" },
+    actionClass: "action-butt-wiggle",
+    actionLabel: "ยัดตัวลงกล่อง 📦",
+    dialogues: [
+      "ถ้าหัวมุดเข้าได้ ก้นอ้วนๆ ก็ต้องยัดลงได้! กล่องพัสดุคือที่นอนที่ดีที่สุดในโลก 📦🦉",
+      "หูพับหน้ากลมเหมือนนกฮูก แต่น่ารักขนาดนี้ นุดจะไม่ยอมใจอ่อนป้อนปลาทูเหรอ? 🥺🐟",
+      "หมอบต่ำ ส่ายก้นดุ๊กดิ๊ก... ล็อกเป้าหมายเท้ามนุษย์ 3 2 1 ตะครุบ! 🎯🐾"
+    ]
+  },
+  khao_manee: {
+    spot: { right: "10%", top: "65px" },
+    actionClass: "action-violin-leg",
+    actionLabel: "ยกขาเสาอากาศ 📡",
+    dialogues: [
+      "โยคะท่ายกขาหลังชี้ฟ้า รับสัญญาณดาวเทียมจากยานแม่ดาวแมว 📡🧘",
+      "ตาสองสี (Odd Eyes) ฟ้าไพลิน & เขียวมรกต... มองเห็นว่านุดกำลังจะท่องศัพท์ TOEIC! 💎✨",
+      "ขนขาวบริสุทธิ์เหมือนเพชรแท้ นุดต้องลูบเบาๆ ด้วยความอ่อนโยนนะฮะ 🤍"
+    ]
+  },
+  bengal: {
+    spot: { right: "24%", bottom: "85px" },
+    actionClass: "action-swat",
+    actionLabel: "เขี่ยแก้วกาแฟ ☕",
+    dialogues: [
+      "กำลังทดลองกฎแรงโน้มถ่วงของนิวตันฮะ... ค่อยๆ เขี่ยแก้วกาแฟ... เพล้ง! อุ๊ย ไม่ได้ตั้งใจน้าา ☕😈",
+      "พลังงาน 50,000 แคลอรี่ในตัว! เพิ่งวิ่งไต่กำแพงบ้านรอบที่ 12 เสร็จ สนุกสุดๆ 🐆⚡",
+      "ลายเสือดาวป่าแต่หัวใจมุ้งมิ้ง มาฝึกพูดอังกฤษสำเนียงดุดันไม่เกรงใจใครกัน! 🐾"
+    ]
+  },
+  persian: {
+    spot: { right: "6%", bottom: "75px" },
+    actionClass: "action-loaf",
+    actionLabel: "เจ้าหญิงขนฟู 👑",
+    dialogues: [
+      "ขนยาวสลวยนุ่มฟูดุจปุยเมฆ... เกาคางเจ้าหญิงเบาๆ อย่างมีระดับหน่อยสิคะนุด 👑✨",
+      "หน้าตุ๊กตาหวานละมุน แต่วันนี้ช่วยตรวจเอกสารภาษาอังกฤษให้ผ่านฉลุยเลยนะ 🌸",
+      "ขอเวลาแต่งขน 3 ชั่วโมงนะคะนุด ความสวยของเปอร์เซียต้องสมบูรณ์แบบเสมอ 💅"
+    ]
+  },
+  orange_tabby: {
+    spot: { left: "34%", bottom: "65px" },
+    actionClass: "action-belly-trap",
+    actionLabel: "หงายพุงล่อลวง 😼",
+    dialogues: [
+      "หงายพุงโชว์พุงกลมๆ นุ่มฟู... แต่นี่คือก้นกับดัก! แตะเกิน 2 วิ โดนงับมือนะบอกก่อน 🍊😼",
+      "กินจุ วิ่งซน ชวนคุยได้ทั้งวัน ส้มจอมพลังพร้อมลุยเควสต์แล้วฮะ! ⚡🍔",
+      "ส้มไม่เคยผิด! ไม่ว่าจะทำอะไร ส้มก็ยังน่ารักที่สุดเสมอ 🍊❤️"
+    ]
+  },
+  tuxedo: {
+    spot: { right: "18%", bottom: "115px" },
+    actionClass: "action-keyboard",
+    actionLabel: "นอนทับคีย์บอร์ด 💻",
+    dialogues: [
+      "เห็นนุดพิมพ์งานเหนื่อย เราช่วยพิมพ์ให้: 'asdfjkl;qwoeijr' เหมียว! 💻😴",
+      "ใส่สูททักซิโด้ผูกโบว์ดำพร้อมเข้าห้องประชุมเจรจาธุรกิจระดับพันล้าน 🎩💼",
+      "สุภาพบุรุษทักซิโด้มารายงานตัว พร้อมยกระดับคะแนนภาษาอังกฤษให้โปรเฟสชันนอล! ✨"
+    ]
+  }
+};
+
+function renderCatSquadLounge() {
+  const container = document.getElementById("squad-cats-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const ownedBreedIds = gameState.inventory.breeds || ["calico"];
+  const allBreeds = SHOP_CATALOG.breeds || [];
+  const currentEquippedBreed = gameState.equipped.breed || gameState.furColor || "calico";
+
+  // Update squad count badge
+  const countBadge = document.getElementById("squad-cat-count-badge");
+  if (countBadge) {
+    countBadge.innerHTML = `🐱 สมาชิกแก๊ง: <strong>${ownedBreedIds.length} / ${allBreeds.length}</strong> ตัว`;
+  }
+
+  ownedBreedIds.forEach((breedId, idx) => {
+    const breedInfo = allBreeds.find((b) => b.id === breedId) || { id: breedId, nameTh: breedId, icon: "🐱" };
+    const behavior = SQUAD_CAT_BEHAVIORS[breedId] || SQUAD_CAT_BEHAVIORS.calico;
+    const isMain = breedId === currentEquippedBreed;
+
+    const catItem = document.createElement("div");
+    catItem.className = `squad-cat-item ${behavior.actionClass} ${isMain ? "is-main" : ""}`;
+    catItem.dataset.breed = breedId;
+
+    // Apply positioning coordinates
+    Object.assign(catItem.style, behavior.spot);
+    catItem.style.zIndex = 10 + idx;
+
+    // Render SVG for that breed (passing null for equipment so natural breed coats shine!)
+    const catSvg = renderCatSvg(null, breedId, false);
+
+    catItem.innerHTML = `
+      <div class="squad-cat-svg-wrap">
+        ${catSvg}
+      </div>
+      <div class="squad-cat-tag">
+        <span>${isMain ? "⭐" : breedInfo.icon}</span>
+        <span>${breedInfo.nameTh.split(" ")[0]}</span>
+        <span style="opacity:0.8; font-size:0.6rem;">• ${behavior.actionLabel}</span>
+      </div>
+    `;
+
+    // Tap/Click interaction
+    catItem.onclick = (e) => {
+      e.stopPropagation();
+      triggerSquadCatClick(breedId, breedInfo, behavior, isMain, catItem);
+    };
+
+    container.appendChild(catItem);
+  });
+}
+
+function triggerSquadCatClick(breedId, breedInfo, behavior, isMain, catItemEl) {
+  triggerHaptic([25, 30, 25]);
+  if (Math.random() > 0.4) {
+    sfx.purr();
+  } else {
+    sfx.meow();
+  }
+
+  // Wiggle or bounce effect
+  catItemEl.style.transform = "scale(1.22) translateY(-8px)";
+  setTimeout(() => {
+    catItemEl.style.transform = "";
+  }, 400);
+
+  // Pick random dialogue
+  const randomMsg = behavior.dialogues[Math.floor(Math.random() * behavior.dialogues.length)];
+  const bubbleText = document.getElementById("squad-bubble-text");
+  const equipBtn = document.getElementById("btn-squad-bubble-equip");
+
+  if (bubbleText) {
+    bubbleText.textContent = `[${breedInfo.nameTh}] "${randomMsg}"`;
+  }
+
+  if (equipBtn) {
+    if (!isMain) {
+      equipBtn.style.display = "inline-block";
+      equipBtn.textContent = `⭐ ตั้ง ${breedInfo.nameTh.split(" ")[0]} เป็นคู่หูหลัก`;
+      equipBtn.onclick = () => {
+        sfx.click();
+        equipItem("breed", breedId);
+        showToast(`เลือก "${breedInfo.nameTh}" เป็นคู่หูหลักเรียบร้อยแล้ว! 🐾`, "⭐");
+        renderCatSquadLounge();
+      };
+    } else {
+      equipBtn.style.display = "none";
+    }
+  }
+}
+
+// Toy Interactions
+function triggerToyLaser() {
+  const laserDot = document.getElementById("squad-laser-dot");
+  if (!laserDot) return;
+
+  sfx.click();
+  triggerHaptic(30);
+
+  laserDot.style.display = "block";
+  const coords = [
+    { left: "20%", top: "70%" },
+    { left: "65%", top: "45%" },
+    { left: "35%", top: "80%" },
+    { left: "75%", top: "65%" }
+  ];
+
+  let step = 0;
+  const moveLaser = () => {
+    if (step < coords.length) {
+      laserDot.style.left = coords[step].left;
+      laserDot.style.top = coords[step].top;
+      step++;
+      setTimeout(moveLaser, 500);
+    } else {
+      // Pick a random cat to pounce
+      const allCatItems = document.querySelectorAll(".squad-cat-item");
+      if (allCatItems.length > 0) {
+        const randomCat = allCatItems[Math.floor(Math.random() * allCatItems.length)];
+        randomCat.classList.add("cat-chasing-laser");
+        setTimeout(() => {
+          randomCat.classList.remove("cat-chasing-laser");
+          laserDot.style.display = "none";
+          sfx.meow();
+          showToast("เจ้าเหมียวพุ่งตะครุบจุดแดง! แต่จุดแดงดันหายไปไหนแล้วเนี่ย?! 🔴🙀", "🐾");
+        }, 600);
+      } else {
+        laserDot.style.display = "none";
+      }
+    }
+  };
+  moveLaser();
+}
+
+function triggerToyCatnip() {
+  const container = document.getElementById("squad-catnip-container");
+  if (!container) return;
+
+  sfx.purr();
+  triggerHaptic([30, 40, 50]);
+
+  // Spawn 14 falling catnip leaves
+  for (let i = 0; i < 14; i++) {
+    const leaf = document.createElement("span");
+    leaf.className = "catnip-leaf";
+    leaf.textContent = i % 2 === 0 ? "🌿" : "🍃";
+    leaf.style.left = `${Math.random() * 90 + 5}%`;
+    leaf.style.animationDelay = `${Math.random() * 0.8}s`;
+    leaf.style.animationDuration = `${2 + Math.random() * 1.2}s`;
+    container.appendChild(leaf);
+    setTimeout(() => leaf.remove(), 3500);
+  }
+
+  // All cats get blissful
+  const allCatItems = document.querySelectorAll(".squad-cat-item");
+  allCatItems.forEach((c) => c.classList.add("catnip-bliss"));
+  setTimeout(() => {
+    allCatItems.forEach((c) => c.classList.remove("catnip-bliss"));
+  }, 3500);
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `"ฟี้ๆๆๆ... กลิ่นแคทนิปหอมฟินเกินต้านนนน นอนกลิ้งหงายพุงทั้งวันเลยดีกว่า! 🌿✨"`;
+  }
+  showToast("เทศกาลแคทนิปเริ่มแล้ว! น้องแมวทุกตัวกลิ้งหงายพุงเคลิ้มฟินสุดๆ~ 🌿❤️", "😻");
+}
+
+function triggerToyFeather() {
+  sfx.meow();
+  triggerHaptic([20, 30, 20]);
+
+  const allCatItems = document.querySelectorAll(".squad-cat-item");
+  allCatItems.forEach((c) => {
+    c.style.transform = "scale(1.15) translateY(-14px)";
+    setTimeout(() => {
+      c.style.transform = "";
+    }, 450);
+  });
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `"ขนนกพริ้วๆ ขยับดุ๊กดิ๊ก! อุ้งเล็บกระตุก อยากกระโดดตะปบให้ได้เหมียว! 🪶😼"`;
+  }
+  showToast("สะบัดไม้ขนนกพริ้วๆ! น้องแมวทั้งแก๊งกระโดดตะปบอย่างร่าเริง 🪶🐾", "✨");
+}
+
+function triggerToyBox() {
+  const boxContainer = document.getElementById("squad-box-container");
+  if (!boxContainer) return;
+
+  sfx.click();
+  triggerHaptic(40);
+
+  boxContainer.innerHTML = "📦";
+  boxContainer.style.display = "block";
+  boxContainer.style.animation = "none";
+  void boxContainer.offsetWidth; // retrigger
+  boxContainer.style.animation = "boxBounce 0.4s ease";
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `"กล่องพัสดุใบใหม่มาส่งแล้ว! ใครเร็วใครได้ ก้นอ้วนแค่ไหนก็ยัดลงได้แน่นอน 📦😹"`;
+  }
+  showToast("โยนกล่องพัสดุลงกลางห้อง! น้องๆ รีบวิ่งกรูเข้ามายัดตัวลงกล่องทันที 📦🐾", "😹");
 }
 
 function renderWardrobeInventory(category = currentInvCategory) {
@@ -1630,6 +1935,7 @@ function equipItem(gearType, itemId) {
     refreshCatAvatars();
     renderWardrobeInventory("breeds");
     renderAdoptedBreeds();
+    renderCatSquadLounge();
     const allBreeds = SHOP_CATALOG.breeds || [];
     const br = allBreeds.find((b) => b.id === itemId);
     showToast(`สลับมาใช้น้องแมวพันธุ์ "${br ? br.nameTh : itemId}" แล้ว! 🐾`, "✨");
@@ -1729,6 +2035,7 @@ function buyShopItem(category, item) {
     refreshCatAvatars();
     renderShop("breeds");
     renderAdoptedBreeds();
+    renderCatSquadLounge();
     return;
   }
 
@@ -2399,6 +2706,55 @@ window.addEventListener("DOMContentLoaded", () => {
       const order = ["toeic", "toefl", "business"];
       const nextIdx = (order.indexOf(currentVocabDeck) + 1) % order.length;
       initVocabDeck(order[nextIdx]);
+    };
+  }
+
+  // Squad Lounge Toy Buttons, Navigation & Coffee Cup
+  const btnToyLaser = document.getElementById("btn-toy-laser");
+  if (btnToyLaser) btnToyLaser.onclick = triggerToyLaser;
+
+  const btnToyCatnip = document.getElementById("btn-toy-catnip");
+  if (btnToyCatnip) btnToyCatnip.onclick = triggerToyCatnip;
+
+  const btnToyFeather = document.getElementById("btn-toy-feather");
+  if (btnToyFeather) btnToyFeather.onclick = triggerToyFeather;
+
+  const btnToyBox = document.getElementById("btn-toy-box");
+  if (btnToyBox) btnToyBox.onclick = triggerToyBox;
+
+  const btnSquadAdoptMore = document.getElementById("btn-squad-adopt-more");
+  if (btnSquadAdoptMore) {
+    btnSquadAdoptMore.onclick = () => {
+      sfx.click();
+      switchView("view-shop");
+      renderShop("breeds");
+    };
+  }
+
+  const btnWardrobeGotoSquad = document.getElementById("btn-wardrobe-goto-squad");
+  if (btnWardrobeGotoSquad) {
+    btnWardrobeGotoSquad.onclick = () => {
+      sfx.click();
+      switchView("view-adventure");
+      const loungeEl = document.getElementById("cat-squad-lounge");
+      if (loungeEl) {
+        loungeEl.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+  }
+
+  const coffeeCup = document.getElementById("squad-coffee-cup");
+  if (coffeeCup) {
+    coffeeCup.onclick = () => {
+      coffeeCup.classList.add("tipped");
+      sfx.click();
+      triggerHaptic(40);
+      const bubbleText = document.getElementById("squad-bubble-text");
+      if (bubbleText) {
+        bubbleText.textContent = `"อุ๊ย! แก้วกาแฟตกพื้นเฉยเลย... แมวไม่ได้ทำนะฮะ แรงโน้มถ่วงมันดึงดูดไปเอง ☕😈"`;
+      }
+      showToast("แก้วกาแฟตกโต๊ะดังเพล้ง! เจ้าเหมียวทำหน้าไม่รู้ไม่ชี้ ☕😹", "💥");
+      setTimeout(() => coffeeCup.classList.remove("tipped"), 1800);
     };
   }
 

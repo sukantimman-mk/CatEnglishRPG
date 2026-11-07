@@ -2957,3 +2957,563 @@ footer.app-footer {
   box-shadow: var(--shadow-md);
   animation: popIn 0.3s ease;
 }
+
+/* ==============================================
+   CAT SQUAD LIVING LOUNGE & REAL CAT BEHAVIORS
+   ห้องนั่งเล่นรวมแก๊งแมวเหมียว & แอนิเมชันพฤติกรรมแมวจริง
+   ============================================== */
+.cat-squad-lounge-card {
+  background: white;
+  border: 2.5px solid #ffe0b2;
+  border-radius: 24px;
+  padding: 18px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(255, 123, 84, 0.12);
+  overflow: hidden;
+  position: relative;
+}
+
+.squad-lounge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.squad-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.squad-icon-badge {
+  font-size: 1.8rem;
+  background: #fff3e0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.2);
+  border: 1.5px solid #ffcc80;
+}
+
+.squad-title-group h3 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #4a2810;
+  font-weight: 800;
+}
+
+.squad-title-group p {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: #8d6e63;
+  font-weight: 600;
+}
+
+.squad-counter-badge {
+  background: linear-gradient(135deg, #ff7043, #ff5722);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 0 3px 8px rgba(255, 87, 34, 0.3);
+}
+
+.squad-toy-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #fff8f0;
+  border: 1.5px dashed #ffcc80;
+  padding: 10px 14px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+}
+
+.toy-toolbar-label {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #6d4c41;
+}
+
+.btn-squad-toy {
+  background: white;
+  border: 1.5px solid #ffb74d;
+  color: #4e342e;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  user-select: none;
+}
+
+.btn-squad-toy:hover {
+  transform: translateY(-2px) scale(1.04);
+  background: #fff3e0;
+  box-shadow: 0 4px 10px rgba(255, 152, 0, 0.25);
+}
+
+.btn-squad-toy:active {
+  transform: scale(0.96);
+}
+
+/* Squad Living Room Stage */
+.squad-living-room {
+  position: relative;
+  width: 100%;
+  min-height: 380px;
+  height: 380px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fff9f2 0%, #fff0e0 62%, #dfba8c 62%, #caa06d 100%);
+  border: 2px solid #ffe0b2;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.04);
+  user-select: none;
+}
+
+/* Room Ambient Props */
+.room-decor-window {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  font-size: 3.5rem;
+  opacity: 0.92;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.08));
+  z-index: 2;
+}
+
+.window-bird-flock {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  font-size: 1.2rem;
+  animation: birdFlutter 3s infinite alternate ease-in-out;
+}
+
+@keyframes birdFlutter {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-6px) scale(1.08); }
+}
+
+.room-decor-cattree {
+  position: absolute;
+  top: 26px;
+  right: 20px;
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12));
+  z-index: 2;
+}
+
+.room-decor-sofa {
+  position: absolute;
+  bottom: 85px;
+  left: 18px;
+  font-size: 4.2rem;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.12));
+  z-index: 2;
+}
+
+.room-decor-laptop-table {
+  position: absolute;
+  bottom: 95px;
+  right: 85px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  z-index: 2;
+}
+
+.laptop-icon {
+  font-size: 2.2rem;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.1));
+}
+
+.coffee-cup-icon {
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  transform-origin: bottom center;
+}
+
+.coffee-cup-icon.tipped {
+  animation: coffeeCupTip 1.5s ease forwards;
+}
+
+@keyframes coffeeCupTip {
+  0% { transform: rotate(0); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(85deg) translateY(20px); }
+  100% { transform: rotate(0) translateY(0); }
+}
+
+.room-decor-rug {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78%;
+  height: 94px;
+  background: radial-gradient(ellipse at center, #ffe0b2 0%, #ffcc80 60%, #ffa726 100%);
+  border-radius: 50%;
+  opacity: 0.65;
+  border: 2px dashed #f57c00;
+  z-index: 1;
+}
+
+/* Interactive Laser Dot */
+.squad-laser-dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #ff1744;
+  border-radius: 50%;
+  box-shadow: 0 0 14px 4px #ff1744, 0 0 24px 8px rgba(255, 23, 68, 0.6);
+  display: none;
+  z-index: 40;
+  pointer-events: none;
+  transition: top 0.4s cubic-bezier(0.25, 1, 0.5, 1), left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Dynamic Catnip Leaves */
+.squad-catnip-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 45;
+  overflow: hidden;
+}
+
+.catnip-leaf {
+  position: absolute;
+  font-size: 1.4rem;
+  animation: catnipDrift 2.8s linear forwards;
+}
+
+@keyframes catnipDrift {
+  0% {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(380px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Delivery Box Prop */
+.squad-box-container {
+  position: absolute;
+  bottom: 80px;
+  left: 45%;
+  z-index: 5;
+  font-size: 3.2rem;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  animation: boxBounce 0.4s ease;
+}
+
+@keyframes boxBounce {
+  0% { transform: scale(0.3) translateY(-100px); opacity: 0; }
+  60% { transform: scale(1.15) translateY(10px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* Cats Positioning Container */
+.squad-cats-container {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+}
+
+/* Individual Squad Cat Item */
+.squad-cat-item {
+  position: absolute;
+  width: 86px;
+  height: 98px;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.squad-cat-item:hover {
+  transform: scale(1.14);
+  z-index: 35 !important;
+  filter: drop-shadow(0 6px 14px rgba(255, 123, 84, 0.4));
+}
+
+.squad-cat-svg-wrap {
+  width: 72px;
+  height: 72px;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.squad-cat-tag {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid #ffb74d;
+  color: #4a2c00;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-top: 2px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.squad-cat-item.is-main .squad-cat-tag {
+  background: linear-gradient(135deg, #ffd700, #ffb300);
+  color: #3e2723;
+  border-color: #ff8f00;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+/* ==============================================
+   AUTHENTIC REAL CAT ACTION ANIMATIONS (ท่าทางแมวจริง)
+   ============================================== */
+
+/* 1. The Cat Loaf (ก้อนขนมปังอบอุ่น) */
+.action-loaf .squad-cat-svg-wrap {
+  animation: catLoaf 2.6s ease-in-out infinite alternate;
+}
+@keyframes catLoaf {
+  0% { transform: scale(1, 0.96) translateY(2px); }
+  100% { transform: scale(1.03, 0.93) translateY(4px); }
+}
+
+/* 2. Making Biscuits / Kneading Dough (นวดขนมปัง) */
+.action-knead .squad-cat-svg-wrap {
+  animation: catKnead 0.55s ease-in-out infinite alternate;
+}
+@keyframes catKnead {
+  0% { transform: rotate(-5deg) translateY(-2px); }
+  100% { transform: rotate(5deg) translateY(2px); }
+}
+
+/* 3. 3 AM Zoomies (ซูมมี่ วิ่ง 4x100) */
+.action-zoomies {
+  animation: catZoomies 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+@keyframes catZoomies {
+  0% { transform: translateX(0) scaleX(1); }
+  35% { transform: translateX(140px) scaleX(1) scale(1.05); }
+  45% { transform: translateX(140px) scaleX(-1); }
+  85% { transform: translateX(-40px) scaleX(-1) scale(1.05); }
+  95% { transform: translateX(0) scaleX(1); }
+  100% { transform: translateX(0) scaleX(1); }
+}
+
+/* 4. Butt Wiggle Pounce (หมอบส่ายก้นดุ๊กดิ๊กก่อนตะครุบ) */
+.action-butt-wiggle .squad-cat-svg-wrap {
+  animation: catButtWiggle 0.16s ease-in-out infinite alternate;
+}
+@keyframes catButtWiggle {
+  0% { transform: rotate(-8deg) scaleY(0.92); }
+  100% { transform: rotate(8deg) scaleY(0.92); }
+}
+
+/* 5. The Belly Trap (กลิ้งหงายพุงล่อลวง) */
+.action-belly-trap .squad-cat-svg-wrap {
+  animation: catBellyRoll 2.2s ease-in-out infinite alternate;
+}
+@keyframes catBellyRoll {
+  0% { transform: rotate(155deg) scale(0.95); }
+  100% { transform: rotate(175deg) scale(0.98); }
+}
+
+/* 6. Knocking Things Off (เขี่ยแก้วกาแฟตกโต๊ะ) */
+.action-swat .squad-cat-svg-wrap {
+  animation: catSwat 2.4s ease-in-out infinite;
+}
+@keyframes catSwat {
+  0%, 100% { transform: rotate(0) translateX(0); }
+  30% { transform: rotate(-10deg) translateX(4px); }
+  60% { transform: rotate(-18deg) translateX(10px); }
+  75% { transform: rotate(8deg) translateX(-2px); }
+}
+
+/* 7. Bird Chattering (ส่องนกสั่นคาง แคะๆๆ) */
+.action-bird-watch .squad-cat-svg-wrap {
+  animation: catBirdChatter 1.4s ease-in-out infinite alternate;
+}
+@keyframes catBirdChatter {
+  0% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+  55% { transform: translateY(-2px) rotate(1deg); }
+  60% { transform: translateY(-4px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(-4deg); }
+}
+
+/* 8. Yoga Violin Leg (ยกขาหลังตั้งเสาอากาศ) */
+.action-violin-leg .squad-cat-svg-wrap {
+  animation: catViolinLeg 2s ease-in-out infinite alternate;
+}
+@keyframes catViolinLeg {
+  0% { transform: rotate(12deg) skewX(6deg); }
+  100% { transform: rotate(18deg) skewX(8deg); }
+}
+
+/* 9. Sleeping on Keyboard (นอนทับคีย์บอร์ด) */
+.action-keyboard .squad-cat-svg-wrap {
+  animation: catKeyboardNap 2.8s ease-in-out infinite alternate;
+}
+@keyframes catKeyboardNap {
+  0% { transform: scale(1, 0.94) translateY(3px); }
+  100% { transform: scale(1.04, 0.9) translateY(6px); }
+}
+
+/* Laser Chase Reaction */
+.cat-chasing-laser {
+  animation: pounceLaser 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards !important;
+}
+@keyframes pounceLaser {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.2) translateY(-28px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* Catnip Bliss Reaction */
+.catnip-bliss .squad-cat-svg-wrap {
+  animation: catnipRoll 0.8s ease-in-out infinite alternate !important;
+}
+@keyframes catnipRoll {
+  0% { transform: rotate(140deg) scale(1.08); }
+  100% { transform: rotate(190deg) scale(1.08); }
+}
+
+/* Squad Speech Bubble */
+.squad-speech-bubble {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 2px solid #ff7b54;
+  border-radius: 16px;
+  padding: 8px 16px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #4a2810;
+  box-shadow: 0 4px 14px rgba(255, 123, 84, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 38;
+  max-width: 90%;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.squad-speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 9px 8px 0;
+  border-style: solid;
+  border-color: white transparent;
+  display: block;
+  width: 0;
+}
+
+.squad-speech-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px 9px 0;
+  border-style: solid;
+  border-color: #ff7b54 transparent;
+  display: block;
+  width: 0;
+}
+
+.btn-squad-bubble-equip {
+  background: linear-gradient(135deg, #ff7b54, #ff5722);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(255, 87, 34, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.btn-squad-bubble-equip:hover {
+  transform: scale(1.05);
+}
+
+.squad-lounge-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #ffe0b2;
+}
+
+.squad-tip-text {
+  font-size: 0.8rem;
+  color: #8d6e63;
+}
+
+.btn-squad-adopt {
+  background: linear-gradient(135deg, #ffb300, #ff8f00);
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 14px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(255, 143, 0, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.btn-squad-adopt:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 143, 0, 0.4);
+}
+
+.btn-goto-squad-lounge {
+  background: linear-gradient(135deg, #ff9800, #f57c00);
+  color: white;
+  border: 1px solid #e65100;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.btn-goto-squad-lounge:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 2px 6px rgba(245, 124, 0, 0.35);
+}

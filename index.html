@@ -209,6 +209,87 @@
         </div>
       </div>
 
+      <!-- ==============================================
+           CAT SQUAD PLAYGROUND & LIVING LOUNGE
+           ห้องนั่งเล่น & สวนสนุกรวมแก๊งแมวเหมียว (แสดงแมวทุกตัวที่รับเลี้ยงไว้ เล่นด้วยกันแบบแมวจริง)
+           ============================================== -->
+      <div class="cat-squad-lounge-card" id="cat-squad-lounge">
+        <div class="squad-lounge-header">
+          <div class="squad-title-group">
+            <span class="squad-icon-badge">🐾</span>
+            <div>
+              <h3>ห้องนั่งเล่นรวมแก๊งแมวเหมียว (Cat Squad Living Lounge)</h3>
+              <p>แมวทุกตัวที่คุณรับเลี้ยงจะมารวมตัวและใช้ชีวิตอยู่ที่นี่! วิ่งซูมมี่ นวดขนมปัง ยัดตัวลงกล่อง และทำวีรกรรมกวนๆ สไตล์แมวจริง</p>
+            </div>
+          </div>
+          <div class="squad-counter-badge" id="squad-cat-count-badge">
+            🐱 สมาชิกแก๊ง: <strong>1 / 9</strong> ตัว
+          </div>
+        </div>
+
+        <!-- Interactive Squad Toy Toolbar -->
+        <div class="squad-toy-toolbar">
+          <span class="toy-toolbar-label">🎮 ของเล่นแก๊งแมว:</span>
+          <button id="btn-toy-laser" class="btn-squad-toy" title="จุดเลเซอร์แดง - แมวทุกตัวจะหันขวับตามและวิ่งไล่ตะครุบ!">
+            🔴 จุดเลเซอร์แดง
+          </button>
+          <button id="btn-toy-catnip" class="btn-squad-toy" title="แคทนิปปาร์ตี้ - โปรยสมุนไพรฟิน น้องๆ ทุกตัวจะกลิ้งหงายพุงเคลิ้ม!">
+            🌿 แคทนิปปาร์ตี้
+          </button>
+          <button id="btn-toy-feather" class="btn-squad-toy" title="สะบัดไม้ขนนก - ล่อให้น้องแมวกระโดดตะปบ!">
+            🪶 ไม้ตกแมวขนนก
+          </button>
+          <button id="btn-toy-box" class="btn-squad-toy" title="โยนกล่องพัสดุใบใหม่ - แย่งกันยัดตัวลงกล่องแคบๆ!">
+            📦 โยนกล่องพัสดุ
+          </button>
+        </div>
+
+        <!-- Squad Living Room Habitat Scene -->
+        <div class="squad-living-room" id="squad-living-room-stage">
+          <!-- Room Ambient Decorations -->
+          <div class="room-decor-window" title="หน้าต่างส่องนกพิราบ">
+            <span class="window-frame">🪟</span>
+            <span class="window-bird-flock">🐦</span>
+          </div>
+          <div class="room-decor-cattree" title="คอนโดแมวไม้ 3 ชั้น">
+            <div class="cat-condo-tower">🏰</div>
+          </div>
+          <div class="room-decor-sofa" title="โซฟานุ่มตัวโปรด">🛋️</div>
+          <div class="room-decor-laptop-table" title="โต๊ะทำงานพร้อมแก้วกาแฟเสี่ยงตก">
+            <span class="laptop-icon">💻</span>
+            <span id="squad-coffee-cup" class="coffee-cup-icon" title="แก้วกาแฟที่แมวชอบเขี่ย">☕</span>
+          </div>
+          <div class="room-decor-rug"></div>
+
+          <!-- Red Laser Dot element for interactive chase -->
+          <div id="squad-laser-dot" class="squad-laser-dot"></div>
+
+          <!-- Dynamic Catnip Leaves Container -->
+          <div id="squad-catnip-container" class="squad-catnip-container"></div>
+
+          <!-- Dynamic Delivery Box Container -->
+          <div id="squad-box-container" class="squad-box-container"></div>
+
+          <!-- Dynamic Cats Container rendered by app.js -->
+          <div id="squad-cats-container" class="squad-cats-container">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+
+          <!-- Global Interactive Squad Speech Bubble -->
+          <div id="squad-speech-bubble" class="squad-speech-bubble">
+            <span id="squad-bubble-text">"เหมียววว... ยินดีต้อนรับสู่ห้องนั่งเล่นรวมแก๊งแมวฮะมนุษย์! 🐾"</span>
+            <button id="btn-squad-bubble-equip" class="btn-squad-bubble-equip" style="display:none;">⭐ ตั้งเป็นคู่หูหลัก</button>
+          </div>
+        </div>
+
+        <div class="squad-lounge-footer">
+          <span class="squad-tip-text">💡 <strong>เคล็ดลับทาสแมว:</strong> แตะที่น้องแมวแต่ละตัวในห้องเพื่อฟังเสียง ดูท่าทางกวนๆ หรือกดสลับเป็นคู่หูหลักได้ทันที!</span>
+          <button id="btn-squad-adopt-more" class="btn-squad-adopt" title="ไปรับเลี้ยงสายพันธุ์อื่นเพิ่มที่ร้านค้า">
+            🛍️ รับเลี้ยงสายพันธุ์แท้เพิ่มเข้าแก๊ง
+          </button>
+        </div>
+      </div>
+
       <div class="section-banner">
         <div>
           <h2>ด่านสถานการณ์จำลอง (Daily Life Scenarios - 10 ด่าน)</h2>
@@ -462,7 +543,10 @@
             <div class="adopted-breeds-panel">
               <div class="adopted-header">
                 <h4><span>🐾</span> แมวที่คุณรับเลี้ยงแล้ว (Adopted Cats):</h4>
-                <button id="btn-goto-adopt-shop" class="btn-adopt-more-shop" title="ไปรับเลี้ยงสายพันธุ์แท้เพิ่มในร้านค้า">🛍️ รับเลี้ยงพันธุ์เพิ่ม</button>
+                <div class="adopted-header-actions">
+                  <button id="btn-wardrobe-goto-squad" class="btn-goto-squad-lounge" title="ไปดูแมวทุกตัวเล่นด้วยกันในห้องนั่งเล่นรวมแก๊ง">🐾 ดูแก๊งแมวเล่นกัน</button>
+                  <button id="btn-goto-adopt-shop" class="btn-adopt-more-shop" title="ไปรับเลี้ยงสายพันธุ์แท้เพิ่มในร้านค้า">🛍️ รับเลี้ยงพันธุ์เพิ่ม</button>
+                </div>
               </div>
               <div id="adopted-breeds-list" class="adopted-breeds-grid">
                 <!-- Rendered dynamically by app.js -->
