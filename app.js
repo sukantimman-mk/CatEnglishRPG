@@ -3548,6 +3548,7 @@ function switchView(targetViewId) {
   });
   const target = document.getElementById(targetViewId);
   if (target) target.classList.add("active");
+  if (targetViewId === "view-shadowing") renderShadowingStudio();
 
   // Keep both desktop and mobile nav in sync
   document.querySelectorAll(".nav-tab").forEach((tab) => {
@@ -3631,6 +3632,7 @@ window.addEventListener("DOMContentLoaded", () => {
       switchView(viewId);
       if (viewId === "view-adventure") renderAdventureGrid();
       if (viewId === "view-ai-freetalk") renderFreeTalkView();
+      if (viewId === "view-shadowing") renderShadowingStudio();
       if (viewId === "view-vocab") initVocabDeck(currentVocabDeck);
       if (viewId === "view-wardrobe") renderWardrobeInventory();
       if (viewId === "view-shop") renderShop();
@@ -3647,6 +3649,7 @@ window.addEventListener("DOMContentLoaded", () => {
       switchView(viewId);
       if (viewId === "view-adventure") renderAdventureGrid();
       if (viewId === "view-ai-freetalk") renderFreeTalkView();
+      if (viewId === "view-shadowing") renderShadowingStudio();
       if (viewId === "view-vocab") initVocabDeck(currentVocabDeck);
       if (viewId === "view-wardrobe") renderWardrobeInventory();
       if (viewId === "view-shop") renderShop();
@@ -4161,7 +4164,94 @@ window.addEventListener("DOMContentLoaded", () => {
         sendUserFreeTalkMessage(prompt);
       }
     };
+  
+  // Wire Shadowing Practice Studio
+  const btnHeroShadowing = document.getElementById("btn-hero-shadowing");
+  if (btnHeroShadowing) {
+    btnHeroShadowing.onclick = () => {
+      sfx.meow();
+      triggerHaptic(20);
+      switchView("view-shadowing");
+      renderShadowingStudio();
+    };
+  }
+
+  // Shadowing Category Pills
+  document.querySelectorAll(".shadow-cat-pill").forEach(pill => {
+    pill.addEventListener("click", () => {
+      currentShadowingFilterCategory = pill.dataset.cat;
+      currentShadowingIndex = 0;
+      sfx.click();
+      renderShadowingStudio();
+    });
   });
+
+  // Shadowing CEFR Filter
+  const shadowCefrSelect = document.getElementById("shadowing-cefr-filter");
+  if (shadowCefrSelect) {
+    shadowCefrSelect.addEventListener("change", (e) => {
+      currentShadowingFilterCefr = e.target.value;
+      currentShadowingIndex = 0;
+      sfx.click();
+      renderShadowingStudio();
+    });
+  }
+
+  // Shadowing Search Input
+  const shadowSearchInput = document.getElementById("shadowing-search-input");
+  if (shadowSearchInput) {
+    shadowSearchInput.addEventListener("input", (e) => {
+      currentShadowingSearchQuery = e.target.value;
+      currentShadowingIndex = 0;
+      renderShadowingStudio();
+    });
+  }
+
+  // Shadowing Model Audio Buttons
+  const btnShadowModelNorm = document.getElementById("btn-shadow-listen-model");
+  if (btnShadowModelNorm) {
+    btnShadowModelNorm.addEventListener("click", () => playShadowingModelAudio(false));
+  }
+
+  const btnShadowModelSlow = document.getElementById("btn-shadow-listen-slow");
+  if (btnShadowModelSlow) {
+    btnShadowModelSlow.addEventListener("click", () => playShadowingModelAudio(true));
+  }
+
+  // Shadowing Record Mic Button
+  const btnShadowRecord = document.getElementById("btn-shadow-record");
+  if (btnShadowRecord) {
+    btnShadowRecord.addEventListener("click", () => startShadowingVoiceSession());
+  }
+
+  // Shadowing Self Audio & Model Comparison
+  const btnShadowPlaySelf = document.getElementById("btn-play-self-recording");
+  if (btnShadowPlaySelf) {
+    btnShadowPlaySelf.addEventListener("click", () => playUserRecordedAudio());
+  }
+
+  const btnShadowPlayModelRef = document.getElementById("btn-play-model-ref");
+  if (btnShadowPlayModelRef) {
+    btnShadowPlayModelRef.addEventListener("click", () => playShadowingModelAudio(false));
+  }
+
+  // Shadowing Navigation Buttons
+  const btnShadowPrev = document.getElementById("btn-shadow-prev");
+  if (btnShadowPrev) {
+    btnShadowPrev.addEventListener("click", () => navigateShadowing("prev"));
+  }
+
+  const btnShadowRandom = document.getElementById("btn-shadow-random");
+  if (btnShadowRandom) {
+    btnShadowRandom.addEventListener("click", () => navigateShadowing("random"));
+  }
+
+  const btnShadowNext = document.getElementById("btn-shadow-next");
+  if (btnShadowNext) {
+    btnShadowNext.addEventListener("click", () => navigateShadowing("next"));
+  }
+
+});
 
 });
 
@@ -5538,4 +5628,481 @@ function downloadCertificatePng() {
     }, 1000);
     showToast("ดาวน์โหลดใบประกาศนียบัตรสากล (HD PNG) เรียบร้อยแล้ว! 🎓🖼️", "✨");
   }, "image/png");
+}
+
+
+// ==============================================
+// 15. SHADOWING PRACTICE STUDIO ENGINE (70 DIVERSE SENTENCES)
+// ระบบฝึกพูดตาม เลียนเสียงสำเนียง พร้อมประเมินคะแนนคำต่อคำและเทียบเสียงตนเอง
+// ==============================================
+
+let currentShadowingFilterCategory = "all";
+let currentShadowingFilterCefr = "all";
+let currentShadowingSearchQuery = "";
+let currentShadowingIndex = 0;
+let userRecordedAudioBlob = null;
+let shadowingMediaRecorder = null;
+let shadowingSpeechRecInstance = null;
+
+// Initialize Shadowing Progress in GameState
+function initShadowingState() {
+  if (!gameState.shadowingProgress) {
+    gameState.shadowingProgress = {};
+  }
+}
+
+// Get filtered list of shadowing sentences
+function getFilteredShadowingList() {
+  if (typeof SHADOWING_DATASET === "undefined" || !Array.isArray(SHADOWING_DATASET)) {
+    return [];
+  }
+
+  return SHADOWING_DATASET.filter(item => {
+    // 1. Category filter
+    if (currentShadowingFilterCategory !== "all" && item.category !== currentShadowingFilterCategory) {
+      return false;
+    }
+    // 2. CEFR filter
+    if (currentShadowingFilterCefr !== "all" && item.cefr !== currentShadowingFilterCefr) {
+      return false;
+    }
+    // 3. Search query
+    if (currentShadowingSearchQuery.trim()) {
+      const q = currentShadowingSearchQuery.toLowerCase().trim();
+      const matchEn = item.sentenceEn.toLowerCase().includes(q);
+      const matchTh = item.sentenceTh.toLowerCase().includes(q);
+      const matchTip = item.focusTip.toLowerCase().includes(q);
+      if (!matchEn && !matchTh && !matchTip) return false;
+    }
+    return true;
+  });
+}
+
+// Render the entire Shadowing Studio View
+function renderShadowingStudio() {
+  initShadowingState();
+
+  const filtered = getFilteredShadowingList();
+  if (currentShadowingIndex >= filtered.length) {
+    currentShadowingIndex = 0;
+  }
+
+  // Update Overall Studio Progress
+  const totalSentences = typeof SHADOWING_DATASET !== "undefined" ? SHADOWING_DATASET.length : 70;
+  const progressMap = gameState.shadowingProgress || {};
+  const completedCount = Object.keys(progressMap).filter(id => progressMap[id] && progressMap[id].bestScore >= 60).length;
+  let totalStars = 0;
+  Object.values(progressMap).forEach(p => {
+    if (p && p.stars) totalStars += p.stars;
+  });
+
+  const progressPercent = Math.min(100, Math.round((completedCount / totalSentences) * 100));
+  const progressTextEl = document.getElementById("shadowing-progress-text");
+  if (progressTextEl) {
+    progressTextEl.textContent = `${completedCount} / ${totalSentences} ประโยค (${progressPercent}%)`;
+  }
+
+  const progressFillEl = document.getElementById("shadowing-total-progress-fill");
+  if (progressFillEl) {
+    progressFillEl.style.width = `${progressPercent}%`;
+  }
+
+  const starsBadgeEl = document.getElementById("shadowing-total-stars-badge");
+  if (starsBadgeEl) {
+    starsBadgeEl.textContent = `⭐ ${totalStars} ดาวสะสม`;
+  }
+
+  // Update Category Pill States
+  document.querySelectorAll(".shadow-cat-pill").forEach(pill => {
+    const cat = pill.dataset.cat;
+    pill.classList.toggle("active", cat === currentShadowingFilterCategory);
+  });
+
+  renderCurrentShadowingCard();
+}
+
+// Render Current Active Shadowing Card
+function renderCurrentShadowingCard() {
+  const filtered = getFilteredShadowingList();
+  const cardEl = document.getElementById("shadowing-main-card");
+  if (!cardEl) return;
+
+  if (filtered.length === 0) {
+    cardEl.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px; color: #64748b;">
+        <span style="font-size: 3rem; display: block; margin-bottom: 12px;">🔍🐾</span>
+        <h3>ไม่พบประโยคที่ตรงกับเงื่อนไขการค้นหา</h3>
+        <p>ลองเปลี่ยนหมวดหมู่หรือล้างคำค้นหาดูนะเหมียว</p>
+        <button class="btn-shadow-nav btn-random" onclick="resetShadowingFilters()" style="margin-top: 14px;">ล้างตัวกรองทั้งหมด</button>
+      </div>
+    `;
+    return;
+  }
+
+  const currentItem = filtered[currentShadowingIndex];
+  if (!currentItem) return;
+
+  // Header meta
+  const catBadge = document.getElementById("shadow-badge-category");
+  if (catBadge) catBadge.textContent = currentItem.categoryNameTh || currentItem.category;
+
+  const cefrBadge = document.getElementById("shadow-badge-cefr");
+  if (cefrBadge) cefrBadge.textContent = `CEFR ${currentItem.cefr || "A1"}`;
+
+  const diffBadge = document.getElementById("shadow-badge-diff");
+  if (diffBadge) diffBadge.textContent = currentItem.difficulty || "Beginner";
+
+  const indexEl = document.getElementById("shadow-current-index");
+  if (indexEl) indexEl.textContent = currentShadowingIndex + 1;
+
+  const totalFilteredEl = document.getElementById("shadow-total-filtered");
+  if (totalFilteredEl) totalFilteredEl.textContent = filtered.length;
+
+  // Best star record
+  const recordEl = document.getElementById("shadow-best-record");
+  const record = gameState.shadowingProgress ? gameState.shadowingProgress[currentItem.id] : null;
+  if (recordEl) {
+    if (record && record.bestScore) {
+      const starStr = "⭐".repeat(record.stars || 1) + "☆".repeat(Math.max(0, 3 - (record.stars || 1)));
+      recordEl.innerHTML = `<span style="color:#d97706; font-weight:800;">${starStr} สูงสุด ${record.bestScore}%</span>`;
+    } else {
+      recordEl.textContent = "☆☆☆ ยังไม่เคยฝึก";
+    }
+  }
+
+  // Sentence Text
+  const enEl = document.getElementById("shadow-sentence-en");
+  if (enEl) enEl.textContent = currentItem.sentenceEn;
+
+  const ipaEl = document.getElementById("shadow-sentence-ipa");
+  if (ipaEl) ipaEl.textContent = currentItem.phoneticIpa || "";
+
+  const thEl = document.getElementById("shadow-sentence-th");
+  if (thEl) thEl.textContent = currentItem.sentenceTh;
+
+  const tipEl = document.getElementById("shadow-focus-tip");
+  if (tipEl) tipEl.textContent = currentItem.focusTip || "เน้นการออกเสียงให้เป็นธรรมชาติ ลื่นไหลตามจังหวะ";
+
+  // Hide score card and comparison on new sentence
+  const scoreCard = document.getElementById("shadow-score-result-card");
+  if (scoreCard) scoreCard.style.display = "none";
+
+  const comparisonBox = document.getElementById("shadow-playback-comparison-box");
+  if (comparisonBox) comparisonBox.style.display = "none";
+
+  const recordingBanner = document.getElementById("shadow-recording-banner");
+  if (recordingBanner) recordingBanner.style.display = "none";
+
+  const recordBtn = document.getElementById("btn-shadow-record");
+  if (recordBtn) {
+    recordBtn.classList.remove("recording-active");
+    recordBtn.disabled = false;
+  }
+
+  userRecordedAudioBlob = null;
+}
+
+// Reset filters
+function resetShadowingFilters() {
+  currentShadowingFilterCategory = "all";
+  currentShadowingFilterCefr = "all";
+  currentShadowingSearchQuery = "";
+  currentShadowingIndex = 0;
+  const searchInput = document.getElementById("shadowing-search-input");
+  if (searchInput) searchInput.value = "";
+  const cefrSelect = document.getElementById("shadowing-cefr-filter");
+  if (cefrSelect) cefrSelect.value = "all";
+  renderShadowingStudio();
+}
+
+// Play Model Audio (Normal vs Turtle Mode)
+function playShadowingModelAudio(isSlow = false) {
+  const filtered = getFilteredShadowingList();
+  const item = filtered[currentShadowingIndex];
+  if (!item || !('speechSynthesis' in window)) return;
+
+  window.speechSynthesis.cancel();
+  sfx.click();
+
+  const utterance = new SpeechSynthesisUtterance(item.sentenceEn);
+
+  const accentSelect = document.getElementById("shadow-accent-select");
+  const selectedLang = accentSelect ? accentSelect.value : "en-US";
+  utterance.lang = selectedLang;
+
+  utterance.rate = isSlow ? 0.72 : 0.94;
+  utterance.pitch = 1.05;
+
+  const voices = window.speechSynthesis.getVoices();
+  const matchedVoice = voices.find(v => v.lang.replace('_', '-').startsWith(selectedLang) && (v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Siri') || v.name.includes('Samantha')));
+  if (matchedVoice) utterance.voice = matchedVoice;
+
+  window.speechSynthesis.speak(utterance);
+}
+
+// Start Voice Recording & Shadowing Analysis
+function startShadowingVoiceSession() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    showToast("เบราว์เซอร์นี้ไม่รองรับการแปลงเสียงเป็นข้อความ กรุณาใช้ Chrome / Edge / Safari นะเหมียว 🎙️", "⚠️");
+    return;
+  }
+
+  const recordBtn = document.getElementById("btn-shadow-record");
+  const banner = document.getElementById("shadow-recording-banner");
+  const stopBtn = document.getElementById("btn-shadow-stop-record");
+
+  if (shadowingSpeechRecInstance) {
+    try { shadowingSpeechRecInstance.abort(); } catch (e) {}
+    shadowingSpeechRecInstance = null;
+  }
+
+  sfx.click();
+  triggerHaptic([30, 40]);
+
+  try {
+    shadowingSpeechRecInstance = new SpeechRec();
+    shadowingSpeechRecInstance.lang = "en-US";
+    shadowingSpeechRecInstance.interimResults = false;
+    shadowingSpeechRecInstance.continuous = false;
+
+    let finalTranscript = "";
+
+    // Also attempt MediaRecorder audio capture for Self-Playback Mirror
+    let audioChunks = [];
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        shadowingMediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        shadowingMediaRecorder.ondataavailable = e => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+        shadowingMediaRecorder.onstop = () => {
+          userRecordedAudioBlob = new Blob(audioChunks, { type: "audio/webm" });
+          stream.getTracks().forEach(t => t.stop());
+        };
+        shadowingMediaRecorder.start();
+      }).catch(err => {
+        console.warn("MediaRecorder permission or device error:", err);
+      });
+    }
+
+    if (banner) banner.style.display = "flex";
+    if (recordBtn) recordBtn.classList.add("recording-active");
+
+    shadowingSpeechRecInstance.onresult = (event) => {
+      for (let i = 0; i < event.results.length; i++) {
+        finalTranscript += event.results[i][0].transcript;
+      }
+    };
+
+    shadowingSpeechRecInstance.onend = () => {
+      if (banner) banner.style.display = "none";
+      if (recordBtn) recordBtn.classList.remove("recording-active");
+
+      if (shadowingMediaRecorder && shadowingMediaRecorder.state !== "inactive") {
+        try { shadowingMediaRecorder.stop(); } catch (e) {}
+      }
+
+      shadowingSpeechRecInstance = null;
+
+      if (finalTranscript.trim()) {
+        evaluateShadowingAttempt(finalTranscript.trim());
+      } else {
+        showToast("ยังไม่ได้ยินเสียงพูดเลยเหมียว ลองกดปุ่มแล้วพูดใหม่อีกครั้งนะ 🎙️", "🐱");
+      }
+    };
+
+    shadowingSpeechRecInstance.onerror = (e) => {
+      console.warn("Shadowing speech error:", e);
+      if (banner) banner.style.display = "none";
+      if (recordBtn) recordBtn.classList.remove("recording-active");
+      if (shadowingMediaRecorder && shadowingMediaRecorder.state !== "inactive") {
+        try { shadowingMediaRecorder.stop(); } catch (err) {}
+      }
+      shadowingSpeechRecInstance = null;
+    };
+
+    if (stopBtn) {
+      stopBtn.onclick = () => {
+        if (shadowingSpeechRecInstance) {
+          try { shadowingSpeechRecInstance.stop(); } catch (e) {}
+        }
+      };
+    }
+
+    shadowingSpeechRecInstance.start();
+  } catch (err) {
+    console.error("Shadowing init error:", err);
+    showToast("เกิดข้อผิดพลาดในการเปิดไมโครโฟน กรุณาอนุญาตการใช้ไมค์นะเหมียว 🎤", "⚠️");
+  }
+}
+
+// Evaluate Shadowing Attempt against current sentence
+function evaluateShadowingAttempt(spokenText) {
+  const filtered = getFilteredShadowingList();
+  const currentItem = filtered[currentShadowingIndex];
+  if (!currentItem) return;
+
+  const result = evaluateDetailedPronunciation(spokenText, currentItem.sentenceEn);
+  const score = result.overallAccuracy;
+
+  // Star calculation
+  let stars = 1;
+  if (score >= 90) stars = 3;
+  else if (score >= 75) stars = 2;
+
+  // Save progress
+  if (!gameState.shadowingProgress) gameState.shadowingProgress = {};
+  const prevRecord = gameState.shadowingProgress[currentItem.id] || { bestScore: 0, stars: 0, attempts: 0 };
+  const isNewBest = score > prevRecord.bestScore;
+
+  gameState.shadowingProgress[currentItem.id] = {
+    bestScore: Math.max(prevRecord.bestScore, score),
+    stars: Math.max(prevRecord.stars, stars),
+    attempts: (prevRecord.attempts || 0) + 1,
+    lastAttemptText: spokenText,
+    lastDate: new Date().toISOString()
+  };
+
+  // Rewards: EXP and Coins
+  const expGain = isNewBest ? (currentItem.expReward || 20) : 5;
+  const coinGain = isNewBest ? (currentItem.coinReward || 6) : 2;
+  gameState.exp = (gameState.exp || 0) + expGain;
+  gameState.coins = (gameState.coins || 0) + coinGain;
+  saveGameState();
+  updateHUD();
+
+  // Render Score Board
+  const scoreCard = document.getElementById("shadow-score-result-card");
+  if (scoreCard) scoreCard.style.display = "block";
+
+  const percentEl = document.getElementById("shadow-score-percent");
+  if (percentEl) {
+    percentEl.textContent = `${score}%`;
+    percentEl.style.color = score >= 90 ? "#16a34a" : score >= 75 ? "#2563eb" : "#d97706";
+  }
+
+  const starsEl = document.getElementById("shadow-score-stars");
+  if (starsEl) {
+    starsEl.textContent = "⭐".repeat(stars);
+  }
+
+  // Mascot Feedback
+  const feedbackEl = document.getElementById("shadow-cat-feedback");
+  if (feedbackEl) {
+    let msg = "";
+    if (score >= 90) {
+      msg = `"เพอร์รรร! สำเนียงยอดเยี่ยมมากน้านุด! คล่องแคล่วเป๊ะเหมือนเนทีฟเลยเหมียว! +${expGain} EXP 🪙 +${coinGain}" 😻🎉`;
+      sfx.win();
+      spawnFloatingHearts();
+    } else if (score >= 75) {
+      msg = `"เก่งมากเลยเหมียว! การออกเสียงชัดเจนเกือบสมบูรณ์แบบแล้ว ลองแตะคำสีส้มเพื่อซ้อมฟังคำนั้นอีกนิดนะ! +${expGain} EXP 🪙 +${coinGain}" 😸✨`;
+      sfx.purr();
+    } else {
+      msg = `"ไม่เป็นไรน้านุด! ได้ ${score}% แล้ว ลองกดปุ่ม 🐢 สโลว์โมชั่นฟังจังหวะเชื่อมเสียง แล้วฝึกพูดตามใหม่อีกรอบนะเหมียว! +${expGain} EXP" 🐾💡`;
+      sfx.meow();
+    }
+    feedbackEl.textContent = msg;
+  }
+
+  // Render Word-by-Word Heatmap Chips
+  const chipsTray = document.getElementById("shadow-word-chips-tray");
+  if (chipsTray) {
+    chipsTray.innerHTML = "";
+    result.words.forEach(wItem => {
+      const chip = document.createElement("button");
+      chip.className = `shadow-word-chip chip-${wItem.status}`;
+      chip.title = `แตะเพื่อฟังเสียงคำว่า "${wItem.word}"`;
+      chip.innerHTML = `
+        <span class="chip-word-text">${escapeHtml(wItem.word)}</span>
+        <span class="chip-icon">${wItem.status === "word-perfect" ? "✓" : wItem.status === "word-near" ? "~" : "!"}</span>
+      `;
+
+      chip.onclick = () => {
+        sfx.click();
+        speakSingleWordIsolated(wItem.word);
+        showWordDrillTip(wItem);
+      };
+
+      chipsTray.appendChild(chip);
+    });
+  }
+
+  // Show Dual Audio Playback Comparison Box
+  const comparisonBox = document.getElementById("shadow-playback-comparison-box");
+  if (comparisonBox) {
+    comparisonBox.style.display = "block";
+  }
+
+  // Scroll smoothly to score result
+  scoreCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+  // Refresh studio overview progress
+  renderShadowingStudio();
+}
+
+// Speak single word in isolation
+function speakSingleWordIsolated(word) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const cleanWord = word.replace(/[^a-zA-Z']/g, "");
+  const utterance = new SpeechSynthesisUtterance(cleanWord);
+  const accentSelect = document.getElementById("shadow-accent-select");
+  utterance.lang = accentSelect ? accentSelect.value : "en-US";
+  utterance.rate = 0.82;
+  window.speechSynthesis.speak(utterance);
+}
+
+// Show specific drill tip when user clicks word chip
+function showWordDrillTip(wItem) {
+  const drillCard = document.getElementById("shadow-word-drill-card");
+  if (!drillCard) return;
+
+  drillCard.style.display = "block";
+  drillCard.innerHTML = `
+    <div class="drill-tip-header">
+      <span class="drill-word-title">🔍 เจาะลึกคำว่า: <strong>"${escapeHtml(wItem.word)}"</strong></span>
+      <span class="drill-status-badge ${wItem.status}">${wItem.label || ""}</span>
+    </div>
+    <p class="drill-tip-desc">${escapeHtml(wItem.tip || "")}</p>
+    <button class="btn-bubble-tts" onclick="speakSingleWordIsolated('${escapeHtml(wItem.word)}')" style="margin-top: 6px;">
+      🔊 ฟังเสียงซ้ำเฉพาะคำนี้
+    </button>
+  `;
+}
+
+// Play User Recording Audio
+function playUserRecordedAudio() {
+  if (!userRecordedAudioBlob) {
+    showToast("ยังไม่มีไฟล์บันทึกเสียงของคุณเหมียว ลองกดปุ่มเริ่มพูดตามก่อนนะ 🎙️", "🐱");
+    return;
+  }
+  sfx.click();
+  const audioUrl = URL.createObjectURL(userRecordedAudioBlob);
+  const player = new Audio(audioUrl);
+  player.play().catch(e => console.warn("Self playback audio error:", e));
+}
+
+// Navigate Shadowing Cards
+function navigateShadowing(direction) {
+  const filtered = getFilteredShadowingList();
+  if (filtered.length === 0) return;
+
+  sfx.click();
+  triggerHaptic(15);
+
+  if (direction === "next") {
+    currentShadowingIndex = (currentShadowingIndex + 1) % filtered.length;
+  } else if (direction === "prev") {
+    currentShadowingIndex = (currentShadowingIndex - 1 + filtered.length) % filtered.length;
+  } else if (direction === "random") {
+    let nextIdx = Math.floor(Math.random() * filtered.length);
+    if (nextIdx === currentShadowingIndex && filtered.length > 1) {
+      nextIdx = (nextIdx + 1) % filtered.length;
+    }
+    currentShadowingIndex = nextIdx;
+  }
+
+  renderCurrentShadowingCard();
 }

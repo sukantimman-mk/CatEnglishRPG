@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3.1">
+  <link rel="stylesheet" href="style.css?v=3.2">
 </head>
 <body>
 
@@ -116,7 +116,8 @@
   <!-- Desktop Navigation Tabs (Hidden on mobile) -->
   <nav class="app-nav">
     <button class="nav-tab active" data-view="view-adventure">🗺️ การผจญภัย (40 ด่าน)</button>
-    <button class="nav-tab" data-view="view-ai-freetalk">💬 คุยอิสระกับน้องแมว AI</button>🗺️ ออกสำรวจ (10 ด่าน)</button>
+    <button class="nav-tab" data-view="view-ai-freetalk">💬 คุยเล่นกับน้องแมว AI</button>
+    <button class="nav-tab" data-view="view-shadowing">🎙️ ฝึกพูดตาม (Shadowing)</button>
     <button class="nav-tab" data-view="view-vocab">📚 การ์ดศัพท์โทอิค &amp; โทเฟล</button>
     <button class="nav-tab" data-view="view-wardrobe">🐱 ห้องน้องแมว &amp; แต่งตัว</button>
     <button class="nav-tab" data-view="view-shop">🛍️ ร้านค้าเหมียวช็อป</button>
@@ -195,7 +196,10 @@
               </div>
 
               <div class="sanctuary-care-btns">
-                <button id="btn-hero-talk-cat" class="btn-pet-action btn-talk" title="คุยภาษาอังกฤษอิสระกับน้องแมว (AI Free-Talk)">
+                <button id="btn-hero-shadowing" class="btn-pet-action btn-shadow" title="ฝึกพูดตามและเลียนเสียงสำเนียง (Shadowing Practice)">
+            <span>🎙️</span> ฝึกพูดตาม Shadowing
+          </button>
+          <button id="btn-hero-talk-cat" class="btn-pet-action btn-talk" title="คุยภาษาอังกฤษอิสระกับน้องแมว (AI Free-Talk)">
                   <span>💬</span> ชวนคุย Free Talk
                 </button>
                 <button id="btn-hero-pet-cat" class="btn-pet-action btn-pet-love" title="ลูบหัวหรือเกาคางน้องแมว (+สุข)">
@@ -471,6 +475,200 @@
           <button id="freetalk-send-btn" class="freetalk-action-btn btn-send" title="ส่งข้อความ">
             ส่ง 🚀
           </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW: SHADOWING PRACTICE STUDIO (พูดตาม & เลียนเสียงสด)
+         ============================================== -->
+    <section id="view-shadowing" class="view-section">
+      <div class="shadowing-container">
+
+        <!-- Top Banner: Studio Intro & Overall Progress -->
+        <div class="shadowing-header-banner">
+          <div class="shadowing-header-text">
+            <div class="shadowing-badge-row">
+              <span class="shadowing-badge-pill">🎙️ Shadowing Studio</span>
+              <span class="shadowing-badge-accent">70 ประโยคครอบคลุมทุกระดับ (A1 - C1)</span>
+              <span class="shadowing-badge-stars" id="shadowing-total-stars-badge">⭐ 0 ดาวสะสม</span>
+            </div>
+            <h2 class="shadowing-banner-title">ฝึกพูดตาม & เลียนเสียงสำเนียงเจ้าของภาษา (Shadowing)</h2>
+            <p class="shadowing-banner-desc">
+              ฟังเสียงต้นฉบับแล้วเปล่งเสียงตามทันทีเพื่อฝึกฝนการเชื่อมเสียง (Linking), จังหวะพูด (Rhythm) และสำเนียง พร้อมรับคะแนนวิเคราะห์คำต่อคำแบบเรียลไทม์ 🎧✨
+            </p>
+          </div>
+
+          <!-- Overall Progress Box -->
+          <div class="shadowing-progress-card">
+            <div class="progress-card-info">
+              <span>ความก้าวหน้าทั้งหมด:</span>
+              <strong id="shadowing-progress-text">0 / 70 ประโยค (0%)</strong>
+            </div>
+            <div class="shadowing-progress-track">
+              <div id="shadowing-total-progress-fill" class="shadowing-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="shadowing-filter-card">
+          <div class="shadowing-category-scroll" id="shadowing-category-pills">
+            <button class="shadow-cat-pill active" data-cat="all">🌟 ทั้งหมด (70)</button>
+            <button class="shadow-cat-pill" data-cat="daily">☕ ชีวิตประจำวัน (12)</button>
+            <button class="shadow-cat-pill" data-cat="workplace">💼 ออฟฟิศ & งาน (12)</button>
+            <button class="shadow-cat-pill" data-cat="business">🤝 ธุรกิจสากล (12)</button>
+            <button class="shadow-cat-pill" data-cat="executive">👑 ผู้นำ C1 (12)</button>
+            <button class="shadow-cat-pill" data-cat="travel">✈️ ท่องเที่ยว (12)</button>
+            <button class="shadow-cat-pill" data-cat="twisters">👅 ลิ้นรัวออกเสียง (10)</button>
+          </div>
+
+          <div class="shadowing-subfilter-row">
+            <div class="subfilter-group">
+              <label for="shadowing-cefr-filter">ระดับ CEFR:</label>
+              <select id="shadowing-cefr-filter" class="shadow-select">
+                <option value="all">ทุกระดับ (All Tiers)</option>
+                <option value="A1">A1 (Breakthrough)</option>
+                <option value="A2">A2 (Waystage)</option>
+                <option value="B1">B1 (Threshold)</option>
+                <option value="B2">B2 (Vantage)</option>
+                <option value="C1">C1 (Executive)</option>
+              </select>
+            </div>
+
+            <div class="subfilter-search">
+              <input type="text" id="shadowing-search-input" class="shadow-search-field" placeholder="🔍 ค้นหาคำศัพท์หรือประโยค..." autocomplete="off">
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Shadowing Practice Card -->
+        <div class="shadowing-card" id="shadowing-main-card">
+
+          <!-- Card Header: Badges & Counter -->
+          <div class="shadow-card-meta">
+            <div class="shadow-badge-cluster">
+              <span id="shadow-badge-category" class="badge-cat-pill">☕ ชีวิตประจำวัน</span>
+              <span id="shadow-badge-cefr" class="badge-cefr-pill">CEFR A1</span>
+              <span id="shadow-badge-diff" class="badge-diff-pill">Beginner</span>
+            </div>
+            <div class="shadow-card-index">
+              <span class="shadow-index-text">ประโยคที่ <strong id="shadow-current-index">1</strong> / <strong id="shadow-total-filtered">70</strong></span>
+              <span id="shadow-best-record" class="shadow-stars-badge">☆☆☆ ยังไม่เคยฝึก</span>
+            </div>
+          </div>
+
+          <!-- Sentence Display -->
+          <div class="shadow-sentence-display">
+            <div id="shadow-sentence-en" class="shadow-sentence-en">
+              Could I have a hot latte with oat milk, please?
+            </div>
+            <div id="shadow-sentence-ipa" class="shadow-sentence-ipa">
+              /kʊd aɪ hæv ə hɒt ˈlɑːteɪ wɪð oʊt mɪlk pliːz/
+            </div>
+            <div id="shadow-sentence-th" class="shadow-sentence-th">
+              🇹🇭 ขอลาเต้ร้อนใส่นมโอ๊ตหนึ่งแก้วครับ/ค่ะ
+            </div>
+            <div class="shadow-focus-tip-box">
+              <span class="tip-icon">💡</span>
+              <span id="shadow-focus-tip" class="tip-text">เชื่อมเสียง 'Could I' ให้เป็นเสียงเดียว (คูด-ได)...</span>
+            </div>
+          </div>
+
+          <!-- Model Audio Controls -->
+          <div class="shadow-audio-controls-row">
+            <button id="btn-shadow-listen-model" class="btn-shadow-audio btn-primary-audio" title="ฟังเสียงต้นฉบับ">
+              🔊 ฟังเสียงต้นฉบับ (1.0x)
+            </button>
+            <button id="btn-shadow-listen-slow" class="btn-shadow-audio btn-turtle-audio" title="ฟังแบบช้าๆ ชัดถ้อยชัดคำ">
+              🐢 สโลว์โมชั่น (0.75x)
+            </button>
+
+            <div class="shadow-accent-wrap">
+              <label for="shadow-accent-select" class="accent-label">สำเนียง:</label>
+              <select id="shadow-accent-select" class="shadow-select">
+                <option value="en-US">🇺🇸 US</option>
+                <option value="en-GB">🇬🇧 UK</option>
+                <option value="en-AU">🇦🇺 AU</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Recording Area -->
+          <div class="shadow-record-action-area">
+            <button id="btn-shadow-record" class="btn-shadow-record-main">
+              <span class="mic-icon">🎙️</span>
+              <span class="mic-label">กดเพื่อพูดตาม (Start Shadowing)</span>
+            </button>
+
+            <!-- Recording Wave Indicator -->
+            <div id="shadow-recording-banner" class="shadow-recording-banner" style="display: none;">
+              <div class="shadow-sound-waves">
+                <span class="s-bar"></span><span class="s-bar"></span><span class="s-bar"></span><span class="s-bar"></span><span class="s-bar"></span>
+              </div>
+              <span class="recording-prompt-text">กำลังฟังเสียงภาษาอังกฤษของคุณ... พูดตามประโยคได้เลยเหมียว!</span>
+              <button id="btn-shadow-stop-record" class="btn-shadow-stop">เสร็จสิ้น ⏹</button>
+            </div>
+          </div>
+
+          <!-- Dual Audio Playback Comparison Box -->
+          <div id="shadow-playback-comparison-box" class="shadow-dual-playback-box" style="display: none;">
+            <div class="comparison-header">
+              <span class="comparison-title">🎧 เปรียบเทียบเสียงของคุณกับต้นฉบับ (Audio Mirror):</span>
+            </div>
+            <div class="comparison-btns-row">
+              <button id="btn-play-self-recording" class="btn-compare-audio btn-user-voice" title="ฟังเสียงที่เราเพิ่งบันทึก">
+                ▶ ฟังเสียงของคุณ (Your Recording)
+              </button>
+              <button id="btn-play-model-ref" class="btn-compare-audio btn-model-voice" title="ฟังเสียงต้นฉบับอีกครั้ง">
+                🔊 ฟังเสียงต้นฉบับ (Native Model)
+              </button>
+            </div>
+          </div>
+
+          <!-- Scoring Result Card -->
+          <div id="shadow-score-result-card" class="shadow-score-card" style="display: none;">
+            <div class="score-card-summary">
+              <div class="score-circle-display">
+                <span id="shadow-score-percent" class="score-number">95%</span>
+                <span id="shadow-score-stars" class="score-stars">⭐⭐⭐</span>
+              </div>
+              <div class="score-mascot-speech">
+                <div class="mascot-bubble-header">🐱 ผลการประเมินจากโค้ชแมว:</div>
+                <div id="shadow-cat-feedback" class="mascot-bubble-body">
+                  "ยอดเยี่ยมมากเลยน้านุด! สำเนียงเป๊ะเหมือนเจ้าของภาษาเหมียว! +20 EXP 🪙 +7"
+                </div>
+              </div>
+            </div>
+
+            <!-- Word-by-Word Heatmap Chips -->
+            <div class="shadow-word-heatmap-area">
+              <div class="heatmap-instruction">
+                <span>📊 ผลประเมินรายคำ (แตะที่คำเพื่อฟังเสียงอ่านเฉพาะคำนั้น):</span>
+              </div>
+              <div id="shadow-word-chips-tray" class="shadow-chips-tray">
+                <!-- Word chips injected dynamically -->
+              </div>
+              <div id="shadow-word-drill-card" class="shadow-word-drill-box" style="display: none;">
+                <!-- Word drill tips injected dynamically -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation Footer -->
+          <div class="shadow-card-footer-nav">
+            <button id="btn-shadow-prev" class="btn-shadow-nav">
+              ◀ ประโยคก่อนหน้า
+            </button>
+            <button id="btn-shadow-random" class="btn-shadow-nav btn-random">
+              🎲 สุ่มประโยค
+            </button>
+            <button id="btn-shadow-next" class="btn-shadow-nav btn-next">
+              ประโยคถัดไป ▶
+            </button>
+          </div>
+
         </div>
 
       </div>
@@ -957,6 +1155,10 @@
       <span class="mob-nav-icon">🗺️</span>
       <span class="mob-nav-label">ผจญภัย</span>
     </button>
+    <button class="mob-nav-btn" data-view="view-shadowing" title="ฝึกพูดตาม (Shadowing)">
+      <span class="mob-nav-icon">🎙️</span>
+      <span class="mob-nav-label">Shadowing</span>
+    </button>
     <button class="mob-nav-btn" data-view="view-ai-freetalk" title="คุยอิสระกับน้องแมว AI">
       <span class="mob-nav-icon">💬</span>
       <span class="mob-nav-label">คุยกับแมว</span>
@@ -1336,8 +1538,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="scenarios.js?v=3.1"></script>
-  <script src="vocab_decks.js?v=3.1"></script>
-  <script src="app.js?v=3.1"></script>
+  <script src="scenarios.js?v=3.2"></script>
+  <script src="vocab_decks.js?v=3.2"></script>
+  <script src="shadowing_dataset.js?v=3.2"></script>
+  <script src="app.js?v=3.2"></script>
 </body>
 </html>

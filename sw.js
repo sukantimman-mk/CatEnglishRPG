@@ -1,5 +1,5 @@
 // MeowQuest Service Worker v1.1.0
-const CACHE_NAME = 'meowquest-cache-v4';
+const CACHE_NAME = 'meowquest-cache-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
   './app.js',
   './scenarios.js',
   './vocab_decks.js',
+  './shadowing_dataset.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
