@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#ff7b54">
+  <title>MeowQuest: Daily English RPG (เหมียวเควสต์)</title>
+  
+  <!-- Google Fonts: Nunito & Kanit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation & Heads-Up Display (HUD) -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section" id="brand-logo-btn" title="MeowQuest">
+        <div class="logo-badge">🐾</div>
+        <div class="brand-text">
+          <h1>MeowQuest</h1>
+          <span>Daily English RPG ฝึกพูดภาษาอังกฤษกับน้องแมว</span>
+        </div>
+      </div>
+
+      <!-- Quick Persistent Cat Companion Card in Header (Always Visible on Any Screen) -->
+      <div class="hud-cat-pill" id="hud-cat-pill" title="คลิกเพื่อไปที่ห้องน้องแมว & แต่งตัว">
+        <div class="hud-cat-avatar" id="hud-cat-avatar-mini">
+          <!-- Dynamic Cat Mini SVG -->
+        </div>
+        <div class="hud-cat-info">
+          <div class="hud-cat-name-row">
+            <span class="hud-cat-name" id="hud-cat-name">Mimi</span>
+            <span class="hud-cat-status-dot" title="น้องแมวร่าเริง 100%"></span>
+          </div>
+          <div class="hud-cat-title-badge" id="hud-cat-title">เด็กฝึกงานตาดำๆ 🍼</div>
+        </div>
+      </div>
+
+      <!-- Player HUD Stats -->
+      <div class="hud-stats">
+        <!-- Level & EXP -->
+        <div class="hud-item hud-level">
+          <span id="hud-level-text">Lv. 1</span>
+        </div>
+        <div class="hud-exp-wrap">
+          <div class="hud-exp-label">
+            <span>EXP</span>
+            <span><span id="hud-exp-current">0</span> / <span id="hud-exp-max">100</span></span>
+          </div>
+          <div class="exp-bar-bg">
+            <div id="hud-exp-fill" class="exp-bar-fill"></div>
+          </div>
+        </div>
+
+        <!-- Gold / PawCoins -->
+        <div class="hud-item hud-coins" title="เหรียญทอง PawCoins สำหรับซื้อไอเทม">
+          <span>🪙</span>
+          <span id="hud-coins-text">120</span>
+        </div>
+
+        <!-- Streak -->
+        <div class="hud-item hud-streak" title="สถิติการฝึกติดต่อกันรายวัน">
+          <span>🔥</span>
+          <span id="hud-streak-text">1 วัน</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Desktop Navigation Tabs (Hidden on mobile) -->
+  <nav class="app-nav">
+    <button class="nav-tab active" data-view="view-adventure">🗺️ ออกสำรวจ (10 ด่าน)</button>
+    <button class="nav-tab" data-view="view-vocab">📚 การ์ดศัพท์โทอิค &amp; โทเฟล</button>
+    <button class="nav-tab" data-view="view-wardrobe">🐱 ห้องน้องแมว &amp; แต่งตัว</button>
+    <button class="nav-tab" data-view="view-shop">🛍️ ร้านค้าเหมียวช็อป</button>
+    <button class="nav-tab" data-view="view-daily">📅 ภารกิจรายวัน (Daily Loop)</button>
+    <button class="nav-tab" data-view="view-settings">⚙️ ตั้งค่า &amp; เซฟเกม</button>
+  </nav>
+
+  <!-- Mode Bar: Silent Mode vs Voice Mode -->
+  <div class="mode-bar">
+    <div class="mode-toggle-group">
+      <button id="btn-mode-silent" class="mode-btn active" title="เลือกคำตอบ/พิมพ์ เหมาะสำหรับสถานที่เงียบ">
+        <span>🤫</span> โหมดเงียบ (ค่าเริ่มต้น)
+      </button>
+      <button id="btn-mode-voice" class="mode-btn" title="พูดออกเสียงผ่านไมโครโฟนเพื่อรับโบนัส EXP">
+        <span>🎙️</span> โหมดเสียงพูด (Optional + โบนัส EXP)
+      </button>
+    </div>
+    <div class="mode-status-info">
+      <span>💡 ในโหมดเงียบคุณยังคงฝึกคิดประโยคได้เต็มที่ และสลับไปใช้ไมค์ได้ทุกเมื่อที่พร้อม</span>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- ==============================================
+         VIEW 1: ADVENTURE (SCENARIO SELECTOR)
+         ============================================== -->
+    <section id="view-adventure" class="view-section active">
+
+      <!-- ==============================================
+           HERO: CAT COMPANION SANCTUARY & WORKPLACE PROGRESSION
+           ศูนย์ดูแลคู่หูแมวเหมียว & ฉายาคนทำงาน (เด่นตระหง่านหน้าแรก)
+           ============================================== -->
+      <div class="cat-companion-hero-card">
+        <!-- Left Side: Interactive Habitat with Decor & Avatar -->
+        <div class="cat-hero-left" id="hero-cat-living-space" title="แตะหรือคลิกเพื่อลูบหัว/เกาคางน้องแมว!">
+          <div class="cat-pet-hint-pill">🐾 แตะลูบหัวน้องแมวได้นะ!</div>
+          <div id="hero-cat-speech-bubble" class="cat-hero-speech-bubble">
+            "สวัสดีฮะน้านุด! วันนี้ Mimi เป็นเด็กฝึกงานตาดำๆ สู้ชีวิตไปด้วยกันนะเหมียว~ 🍼"
+          </div>
+          <div id="hero-house-decor-icon" class="hero-house-bg-decor">⛺</div>
+          <div id="hero-cat-avatar-render" class="hero-cat-avatar cat-avatar-interactive">
+            <!-- Dynamic Cat SVG -->
+          </div>
+        </div>
+
+        <!-- Right Side: Profile, Workplace Rank & Tamagotchi Care -->
+        <div class="cat-hero-right">
+          <div class="cat-hero-header-row">
+            <div class="cat-hero-name-block">
+              <span class="cat-hero-tag">🐱 คู่หูภาษาอังกฤษของคุณ</span>
+              <h2 class="cat-hero-name">
+                <span id="hero-cat-name-display">Mimi</span>
+                <button id="btn-hero-edit-name" class="btn-hero-rename" title="คลิกเพื่อเปลี่ยนชื่อน้องแมว">✏️</button>
+                <span class="cat-species-pill" id="hero-cat-breed-badge">ส้มจอมซน 🍊</span>
+              </h2>
+            </div>
+            <!-- Big Office Title Pill with glowing gradient -->
+            <div class="cat-office-rank-box">
+              <span class="office-rank-label">ฉายาคนทำงานปัจจุบัน (สะสม EXP):</span>
+              <div id="hero-cat-title-badge" class="hero-cat-title-badge">
+                เด็กฝึกงานตาดำๆ 🍼 (Intern Kitten)
+              </div>
+            </div>
+          </div>
+
+          <!-- Career Ladder Progress to Next Title -->
+          <div class="career-milestone-bar">
+            <div class="career-milestone-info">
+              <span class="career-step-current">📍 ตำแหน่งปัจจุบัน: <strong>Lv. <span id="hero-cat-current-lvl">1</span></strong></span>
+              <span class="career-step-next">🎯 เลเวลถัดไป: <strong id="hero-cat-next-title">พนักงานทดลองงานสายลุ้น 🐣 (Lv. 2)</strong></span>
+            </div>
+            <div class="career-progress-track">
+              <div id="hero-career-progress-fill" class="career-progress-fill" style="width: 20%;"></div>
+            </div>
+            <div class="career-progress-subtext">
+              <span>สะสมอีก <strong id="hero-career-exp-needed" style="color:var(--primary);">100 EXP</strong> เพื่อเลื่อนขั้นตำแหน่งใหม่!</span>
+              <span id="hero-cat-streak-badge">🔥 ไฟขยัน 1 วัน</span>
+            </div>
+          </div>
+
+          <!-- Tamagotchi Pet Care Stats -->
+          <div class="pet-care-stats-row">
+            <div class="pet-care-stat">
+              <div class="pet-care-label">
+                <span>💖 ความสุขของน้องแมว</span>
+                <span id="hero-cat-happiness-val">100%</span>
+              </div>
+              <div class="pet-care-bar-bg">
+                <div id="hero-cat-happiness-fill" class="pet-care-bar-fill happiness" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="pet-care-stat">
+              <div class="pet-care-label">
+                <span>🐟 ความอิ่มท้อง</span>
+                <span id="hero-cat-hunger-val">90%</span>
+              </div>
+              <div class="pet-care-bar-bg">
+                <div id="hero-cat-hunger-fill" class="pet-care-bar-fill hunger" style="width: 90%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Care Buttons -->
+          <div class="pet-care-actions-row">
+            <button id="btn-hero-pet-cat" class="btn-pet-action btn-pet-love" title="ลูบหัวหรือเกาคางน้องแมว (+สุข)">
+              <span>🐾</span> ลูบหัวน้องแมว
+            </button>
+            <button id="btn-hero-feed-cat" class="btn-pet-action btn-pet-feed" title="ป้อนปลาทู/ขนมแมวเลีย (ฟรีวันละ 1 ครั้ง หรือใช้ 5 PawCoins ได้บัฟ +15 EXP)">
+              <span>🐟</span> ป้อนขนม (+15 EXP)
+            </button>
+            <button id="btn-hero-goto-wardrobe" class="btn-pet-action btn-pet-dress" title="ไปห้องแต่งตัว & ตกแต่งบ้าน">
+              <span>👗</span> แต่งตัว &amp; ห้องนอน
+            </button>
+            <button id="btn-hero-goto-vocab" class="btn-pet-action btn-pet-vocab" title="พาน้องแมวไปติวการ์ดศัพท์โทอิค/โทเฟล">
+              <span>📚</span> ติวการ์ดศัพท์
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-banner">
+        <div>
+          <h2>ด่านสถานการณ์จำลอง (Daily Life Scenarios - 10 ด่าน)</h2>
+          <p>เลือกสถานการณ์ในชีวิตประจำวันเพื่อฝึกการสื่อสารจริง ตอบคำถาม สะสมเหรียญ และพัฒนาทักษะภาษาอังกฤษไปพร้อมกับน้องแมวของคุณ</p>
+        </div>
+        <div style="font-size: 3.2rem;">🎒</div>
+      </div>
+
+      <div id="scenario-cards-grid" class="scenario-grid">
+        <!-- Rendered dynamically by app.js (10 scenarios) -->
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW: VOCABULARY DECKS (TOEIC / TOEFL / BUSINESS)
+         ============================================== -->
+    <section id="view-vocab" class="view-section">
+      <div class="section-banner" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: #3d155f;">
+        <div>
+          <h2>คลังการ์ดคำศัพท์ระดับสากล (TOEIC &amp; TOEFL Cards)</h2>
+          <p>ฝึกท่องศัพท์ระดับทำงานและการประชุมสากล พลิกการ์ดฟังเสียงสำเนียงเจ้าของภาษา ท่องครบรับ EXP และเหรียญทอง PawCoins!</p>
+        </div>
+        <div style="font-size: 3.2rem;">📚</div>
+      </div>
+
+      <!-- Cat Study Cheerleader Banner -->
+      <div class="vocab-companion-banner" id="vocab-companion-pill">
+        <div class="vocab-companion-avatar" id="vocab-cat-avatar-mini"></div>
+        <div class="vocab-companion-text">
+          <strong id="vocab-cat-cheer-name">Mimi</strong>: <span id="vocab-cat-cheer-msg">"กำลังนั่งติวการ์ดศัพท์ข้างๆ คุณ! ฝึกจำประโยคในที่ทำงานให้แม่นนะเหมียว~ 🐾"</span>
+        </div>
+      </div>
+
+      <!-- Deck Selectors -->
+      <div class="vocab-deck-tabs">
+        <button class="vocab-deck-btn active" data-deck="toeic">
+          <span>🎯</span> TOEIC Workplace (ออฟฟิศ &amp; สัญญา)
+        </button>
+        <button class="vocab-deck-btn" data-deck="toefl">
+          <span>🎓</span> TOEFL Strategy (วิชาการ &amp; เชิงกลยุทธ์)
+        </button>
+        <button class="vocab-deck-btn" data-deck="business">
+          <span>💼</span> Executive English (เจรจาธุรกิจระดับสูง)
+        </button>
+      </div>
+
+      <!-- Deck Progress & Stats -->
+      <div class="vocab-deck-info-bar">
+        <span id="vocab-card-counter" style="font-weight: 800; color: var(--primary);">การ์ดที่ 1 / 6</span>
+        <div class="vocab-progress-track">
+          <div id="vocab-progress-fill" class="vocab-progress-fill" style="width: 16.6%;"></div>
+        </div>
+        <span id="vocab-deck-status" style="font-weight: 700; color: var(--text-muted);">จำได้แล้ว: 0 / 6</span>
+      </div>
+
+      <!-- 3D Interactive Flashcard Area -->
+      <div class="flashcard-wrapper">
+        <div id="vocab-flashcard-inner" class="flashcard-inner" title="แตะหรือคลิกที่การ์ดเพื่อพลิกดูความหมาย!">
+          <!-- Front Face -->
+          <div class="flashcard-face flashcard-front">
+            <span id="vocab-card-tag-front" class="vocab-context-badge">Team Meeting</span>
+            <h2 id="vocab-card-word" class="vocab-main-word">Collaborate</h2>
+            <div class="vocab-phonetic-row">
+              <span id="vocab-card-phonetic" class="vocab-phonetic">/kəˈlæb.ə.reɪt/</span>
+              <button id="btn-vocab-speak-word" class="btn-sound-mini" title="ฟังเสียงอ่านคำศัพท์">🔊</button>
+            </div>
+            <span id="vocab-card-pos" class="vocab-pos-pill">Verb</span>
+            <div class="flashcard-flip-prompt">
+              <span>👆 แตะที่การ์ดเพื่อพลิกดูความหมายและตัวอย่างประโยค</span>
+            </div>
+          </div>
+
+          <!-- Back Face -->
+          <div class="flashcard-face flashcard-back">
+            <span id="vocab-card-tag-back" class="vocab-context-badge">Team Meeting</span>
+            <h3 id="vocab-card-meaning" class="vocab-meaning-th">ร่วมมือ ทำงานร่วมกัน (ระหว่างทีมหรือบริษัท)</h3>
+            
+            <div class="vocab-example-box">
+              <div class="vocab-example-header">
+                <strong>ตัวอย่างการใช้ในที่ประชุม / เอกสาร:</strong>
+                <button id="btn-vocab-speak-example" class="btn-sound-mini" title="ฟังเสียงอ่านประโยคตัวอย่าง">🔊</button>
+              </div>
+              <p id="vocab-card-example-en" class="vocab-example-en">
+                "We need to collaborate closely with the marketing team to finalize the product launch by Friday."
+              </p>
+              <p id="vocab-card-example-th" class="vocab-example-th">
+                พวกเราจำเป็นต้องร่วมมืออย่างใกล้ชิดกับทีมการตลาดเพื่อสรุปแผนเปิดตัวสินค้าให้ทันภายในวันศุกร์นี้
+              </p>
+            </div>
+
+            <div id="vocab-card-collocations" class="vocab-collocations">
+              💡 <strong>คำที่มักใช้คู่กัน:</strong> collaborate with, collaborate on
+            </div>
+
+            <div class="flashcard-flip-prompt">
+              <span>🔄 แตะเพื่อพลิกกลับด้านหน้า</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flashcard Action Buttons -->
+      <div class="vocab-action-bar">
+        <button id="btn-vocab-repeat" class="btn-vocab-action review" title="ยังจำไม่ได้ ขอทบทวนซ้ำ">
+          <span>❌</span> ยังจำไม่ได้ (Review)
+        </button>
+        <button id="btn-vocab-mastered" class="btn-vocab-action master" title="จำได้แม่นยำแล้ว">
+          <span>✅</span> จำได้แล้ว! (Mastered)
+        </button>
+      </div>
+
+      <!-- Deck Complete Reward Box -->
+      <div id="vocab-complete-box" class="vocab-complete-card" style="display: none;">
+        <div style="font-size: 3rem;">🎉</div>
+        <h3 style="font-size: 1.4rem; color: var(--primary); margin-bottom: 6px;">ฝึกท่องศัพท์เซ็ตนี้ครบแล้ว!</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 14px;">ยอดเยี่ยมมากเจ้าเหมียว! รับรางวัลเพิ่มค่าประสบการณ์และเหรียญทอง PawCoins</p>
+        <div class="victory-rewards-box" style="max-width: 320px; margin: 0 auto 16px auto;">
+          <div class="reward-stat-item">
+            <span class="label">ค่าประสบการณ์</span>
+            <span class="val" style="color: var(--primary);">+50 EXP</span>
+          </div>
+          <div class="reward-stat-item">
+            <span class="label">เหรียญทอง</span>
+            <span class="val" style="color: var(--gold);">+35 🪙</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button id="btn-vocab-replay-deck" class="btn-play-scenario">ฝึกซ้ำอีกรอบ 🔄</button>
+          <button id="btn-vocab-next-deck" class="btn-primary-action">สลับไป Deck ถัดไป ➔</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 2: STAGE ARENA (IN-GAME DIALOGUE)
+         ============================================== -->
+    <section id="view-stage-arena" class="view-section">
+      <div class="stage-top-bar">
+        <button id="btn-exit-stage" class="btn-exit-stage">⬅ แผนที่</button>
+        <h3 id="stage-scenario-title" style="font-size: 1rem; color: var(--primary);">สถานการณ์จำลอง</h3>
+        <span id="stage-turn-counter" style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted);">ประโยคที่ 1 / 4</span>
+      </div>
+
+      <!-- Turn Progress Bar -->
+      <div class="stage-turn-progress-wrap">
+        <div id="stage-turn-progress-fill" class="stage-turn-progress-fill" style="width: 25%;"></div>
+      </div>
+
+      <!-- Visual Stage Background -->
+      <div id="stage-scene-area" class="stage-scene theme-cafe">
+        <!-- Left: Player Cat Avatar -->
+        <div class="character-box">
+          <div class="char-badge" id="stage-cat-char-badge">🐱 น้องแมวของคุณ</div>
+          <div id="stage-cat-avatar" class="char-avatar-render cat-avatar-interactive" title="คลิกเพื่อลูบน้องแมว!">
+            <!-- Dynamic Cat SVG -->
+          </div>
+        </div>
+
+        <!-- Right: NPC Avatar -->
+        <div class="character-box">
+          <div id="stage-npc-name" class="char-badge">Barista Bella</div>
+          <div id="stage-npc-avatar" class="char-avatar-render npc-avatar-render">
+            🐱‍👓
+          </div>
+        </div>
+      </div>
+
+      <!-- Dialogue & Action Area -->
+      <div class="dialogue-container">
+        <!-- NPC Speech Bubble -->
+        <div class="npc-speech-bubble">
+          <div class="npc-text-header">
+            <span id="npc-bubble-name" class="npc-name-tag">Barista Bella</span>
+            <button id="btn-listen-npc" class="btn-tts-listen" title="คลิกเพื่อฟังเสียงอ่านภาษาอังกฤษ">
+              <span>🔊</span> ฟังเสียงซ้ำ
+            </button>
+          </div>
+          <div id="npc-speech-text" class="npc-speech-content">
+            "Welcome to Whisker Cafe! What can I get started for you today?"
+          </div>
+          <div id="npc-context-text" class="npc-context-th">
+            บริบท: พนักงานต้อนรับและถามว่าคุณต้องการรับอะไรดีวันนี้
+          </div>
+        </div>
+
+        <!-- Language Hint Box -->
+        <div id="dialogue-hint-text" class="dialogue-hint-box">
+          💡 <strong>คำแนะนำ:</strong> การสั่งเครื่องดื่มอย่างสุภาพ มักเริ่มต้นด้วย 'I'd like...' หรือ 'Can I get...'
+        </div>
+
+        <!-- Player Response Area -->
+        <div class="player-response-section">
+          <!-- Quiet Mode Options (Multiple Choice) -->
+          <div id="quiet-mode-options" class="options-list">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Voice Mode Box (Speech Recognition) -->
+          <div id="voice-mode-box" class="voice-box-container" style="display: none;">
+            <button id="btn-mic-record" class="voice-mic-btn" title="คลิกเพื่อเริ่มพูด">
+              🎤
+            </button>
+            <div id="voice-transcript-text" class="voice-transcript-result">
+              กดปุ่มไมโครโฟน แล้วพูดประโยคภาษาอังกฤษได้เลย...
+            </div>
+            <div id="voice-score-display" class="voice-match-score"></div>
+            <span style="font-size: 0.78rem; color: var(--text-muted);">
+              (ระบบตรวจจับความใกล้เคียงของคำศัพท์และสำเนียง ออกเสียงชัดถ้อยชัดคำเพื่อรับคะแนนสูงสุด!)
+            </span>
+          </div>
+
+          <!-- Feedback & Vocabulary Insights -->
+          <div id="turn-feedback-card" class="turn-feedback-card">
+            <h4 id="feedback-title">ผลการตอบ</h4>
+            <p id="feedback-detail">คำอธิบาย</p>
+            <div id="turn-vocab-tray" class="vocab-tray"></div>
+          </div>
+
+          <!-- Next Button -->
+          <div class="stage-actions-bottom">
+            <button id="btn-next-turn" class="btn-next-turn">ไปประโยคถัดไป ➔</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 3: WARDROBE & CAT ROOM
+         ============================================== -->
+    <section id="view-wardrobe" class="view-section">
+      <div class="wardrobe-container">
+        <!-- Left: Cat Avatar Preview & Living Space -->
+        <div class="cat-stage-preview">
+          <div id="cat-living-space-area" class="cat-living-space" title="คลิกลูบหัวหรือเกาคางน้องแมวได้นะ!">
+            <div class="cat-pet-hint">🐾 แตะที่ตัวเพื่อลูบน้องแมว!</div>
+            <div id="cat-pet-speech-bubble" class="cat-pet-speech">ฟี้ๆ... เพอร์~ ❤️</div>
+            <div id="house-decor-icon" class="house-bg-decor">⛺</div>
+            <div id="cat-preview-render" class="cat-big-avatar cat-avatar-interactive">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <div class="cat-profile-details">
+            <div class="cat-name-input-wrap">
+              <input type="text" id="cat-name-display" class="cat-name-input" value="Mimi" title="คลิกเพื่อเปลี่ยนชื่อแมว และกด Enter">
+              <span title="พิมพ์ชื่อแล้วกด Enter หรือคลิกข้างนอก">✏️</span>
+            </div>
+            <div id="cat-title-display" class="cat-title-badge">Novice Kitten 🍼</div>
+
+            <!-- Adopted Real Breeds Selector (Equip from owned breeds) -->
+            <div class="adopted-breeds-panel">
+              <div class="adopted-header">
+                <h4><span>🐾</span> แมวที่คุณรับเลี้ยงแล้ว (Adopted Cats):</h4>
+                <button id="btn-goto-adopt-shop" class="btn-adopt-more-shop" title="ไปรับเลี้ยงสายพันธุ์แท้เพิ่มในร้านค้า">🛍️ รับเลี้ยงพันธุ์เพิ่ม</button>
+              </div>
+              <div id="adopted-breeds-list" class="adopted-breeds-grid">
+                <!-- Rendered dynamically by app.js -->
+              </div>
+            </div>
+
+            <!-- Equipped Slots Overview -->
+            <div class="equipped-gear-grid">
+              <div id="gear-slot-hat" class="gear-slot">
+                <span class="gear-slot-icon">👒</span>
+                <div class="gear-slot-info">
+                  <span class="gear-slot-type">หมวก</span>
+                  <span class="gear-slot-name">หมวกสานชาวไร่</span>
+                </div>
+              </div>
+              <div id="gear-slot-outfit" class="gear-slot">
+                <span class="gear-slot-icon">🧥</span>
+                <div class="gear-slot-info">
+                  <span class="gear-slot-type">ชุด</span>
+                  <span class="gear-slot-name">ฮู้ดดี้สีส้ม</span>
+                </div>
+              </div>
+              <div id="gear-slot-weapon" class="gear-slot">
+                <span class="gear-slot-icon">🐟</span>
+                <div class="gear-slot-info">
+                  <span class="gear-slot-type">ไอเทมถือ</span>
+                  <span class="gear-slot-name">ก้างปลาทองคำ</span>
+                </div>
+              </div>
+              <div id="gear-slot-vehicle" class="gear-slot">
+                <span class="gear-slot-icon">📦</span>
+                <div class="gear-slot-info">
+                  <span class="gear-slot-type">ยานพาหนะ</span>
+                  <span class="gear-slot-name">กล่องติดล้อ</span>
+                </div>
+              </div>
+              <div id="gear-slot-house" class="gear-slot">
+                <span class="gear-slot-icon">⛺</span>
+                <div class="gear-slot-info">
+                  <span class="gear-slot-type">บ้านพัก</span>
+                  <span class="gear-slot-name">เต็นท์กล่องกระดาษ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Wardrobe Inventory -->
+        <div class="wardrobe-inventory-panel">
+          <h3 style="font-size: 1.15rem; margin-bottom: 12px; color: var(--text-main);">ตู้เสื้อผ้า & คลังไอเทม</h3>
+          <div class="inventory-tabs">
+            <button class="inv-tab-btn" data-cat="breeds">🐱 สายพันธุ์</button>
+            <button class="inv-tab-btn active" data-cat="hats">👒 หมวก</button>
+            <button class="inv-tab-btn" data-cat="outfits">🧥 เสื้อผ้า</button>
+            <button class="inv-tab-btn" data-cat="weapons">🪄 ไอเทมถือ</button>
+            <button class="inv-tab-btn" data-cat="vehicles">🛹 ยานพาหนะ</button>
+            <button class="inv-tab-btn" data-cat="houses">🏰 บ้าน</button>
+          </div>
+
+          <div id="inventory-items-grid" class="inventory-items-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 4: SHOP (MEOW SHOP)
+         ============================================== -->
+    <section id="view-shop" class="view-section">
+      <div class="section-banner" style="background: linear-gradient(135deg, #ffd56b, #ffb26b); color: #4a2c00;">
+        <div>
+          <h2>ร้านค้าเหมียวช็อป (Meow Shop)</h2>
+          <p>นำเหรียญทองจากการฝึกสนทนามาอัปเกรดเครื่องแต่งกาย อาวุธเสริมพลัง ยานพาหนะ และบ้านพัก ยิ่งเลเวลสูงยิ่งปลดล็อกไอเทมหายาก!</p>
+        </div>
+        <div style="font-size: 3.2rem;">🛍️</div>
+      </div>
+
+      <div class="shop-tabs">
+        <button class="shop-tab-btn active" data-cat="breeds">🐱 สายพันธุ์แมวแท้ (Breeds)</button>
+        <button class="shop-tab-btn" data-cat="hats">👒 หมวก (Hats)</button>
+        <button class="shop-tab-btn" data-cat="outfits">🧥 ชุดเสื้อผ้า (Outfits)</button>
+        <button class="shop-tab-btn" data-cat="weapons">🪄 ไอเทมเสริม (Accessories)</button>
+        <button class="shop-tab-btn" data-cat="vehicles">🛹 ยานพาหนะ (Vehicles)</button>
+        <button class="shop-tab-btn" data-cat="houses">🏰 บ้านพัก (Condos)</button>
+      </div>
+
+      <div id="shop-items-grid" class="shop-items-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 5: DAILY QUESTS & ENDLESS LOOP
+         ============================================== -->
+    <section id="view-daily" class="view-section">
+      <div class="daily-streak-banner">
+        <div>
+          <h2 style="font-size: 1.45rem; margin-bottom: 4px;">ระบบฝึกฝนรายวัน (Daily Streak & Endless Loop)</h2>
+          <p style="font-size: 0.88rem; opacity: 0.9;">เข้าเรียนและทำภารกิจทุกวันเพื่อรักษาไฟความขยัน พร้อมรับโบนัสทวีคูณ!</p>
+          <div style="font-size: 1.7rem; font-weight: 800; margin-top: 8px;">
+            เช็กอินต่อเนื่อง: <span id="daily-streak-count">1 วัน</span> 🔥
+          </div>
+        </div>
+        <div id="streak-boxes-wrap" class="streak-day-boxes">
+          <!-- Rendered by JS: Day 1 - 7 boxes -->
+        </div>
+      </div>
+
+      <h3 style="font-size: 1.2rem; margin-bottom: 12px; color: var(--text-main);">ภารกิจประจำวันนี้ (Daily Quests)</h3>
+      <div id="daily-quests-container" class="daily-quests-list">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="margin-top: 24px; background: white; border: 2px dashed var(--border-color); border-radius: var(--border-radius); padding: 18px;">
+        <h4 style="font-size: 1rem; margin-bottom: 6px; color: var(--primary);">♾️ ทำไมระบบนี้ถึงเป็น Endless Loop?</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.55;">
+          ระบบจะสุ่มภารกิจใหม่ทุกเที่ยงคืน มีการคิดคะแนนและจัดสถิติการเล่นซ้ำเพื่อให้คุณจำวลีภาษาอังกฤษได้แบบซึมซับ (Spaced Repetition). คุณสามารถกลับมาฝึกด่านเดิมซ้ำเพื่อเพิ่มความคล่องตัว และเก็บเงินซื้อไอเทมระดับตำนานในร้านค้าได้ไม่สิ้นสุด
+        </p>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 6: SETTINGS & DATABASE SYSTEM
+         ============================================== -->
+    <section id="view-settings" class="view-section">
+      <div class="settings-grid">
+        <!-- Audio & Speech Settings -->
+        <div class="settings-card">
+          <h3><span>🔊</span> ระบบเสียง & การพูด</h3>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">เสียงเอฟเฟกต์ & เสียงแมว (Sound FX)</div>
+              <div class="setting-desc">เสียงดนตรี 8-bit เสียงเหรียญ และเสียงครางเหมียวๆ</div>
+            </div>
+            <input type="checkbox" id="chk-setting-sound" checked style="transform: scale(1.3);">
+          </div>
+          <div class="setting-row">
+            <div>
+              <div class="setting-label">เสียงอ่านของ NPC (Text-To-Speech)</div>
+              <div class="setting-desc">อ่านออกเสียงประโยคภาษาอังกฤษอัตโนมัติ</div>
+            </div>
+            <input type="checkbox" id="chk-setting-tts" checked style="transform: scale(1.3);">
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+            ℹ️ ระบบใช้ Web Speech API ของเบราว์เซอร์ ซึ่งทำงานได้ทันทีโดยไม่ต้องเชื่อมต่อ Cloud API เสียค่าใช้จ่าย
+          </p>
+        </div>
+
+        <!-- Data Backup & Persistence -->
+        <div class="settings-card">
+          <h3><span>💾</span> บันทึกและสำรองข้อมูลเซฟ</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+            ข้อมูลเลเวล ไอเทม และความคืบหน้าจะถูกเซฟอัตโนมัติในเบราว์เซอร์ (LocalStorage). คุณสามารถส่งออกไฟล์เซฟเพื่อย้ายเครื่องเล่นได้
+          </p>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
+            <button id="btn-export-save" class="btn-primary-action">📤 ส่งออกไฟล์เซฟ (Export JSON)</button>
+            <label class="btn-primary-action" style="background: var(--purple); cursor: pointer;">
+              📥 นำเข้าไฟล์เซฟ (Import JSON)
+              <input type="file" id="file-import-save" accept=".json" style="display: none;">
+            </label>
+          </div>
+          <div style="border-top: 1px solid var(--border-color); padding-top: 14px;">
+            <button id="btn-reset-game" class="btn-danger-outline">⚠️ รีเซ็ตข้อมูลเกมทั้งหมด (เริ่มเล่นใหม่)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION BAR (Thumb-friendly for smartphone users) -->
+  <nav class="mobile-bottom-nav">
+    <button class="mob-nav-btn active" data-view="view-adventure" title="ด่านผจญภัย">
+      <span class="mob-nav-icon">🗺️</span>
+      <span class="mob-nav-label">ด่าน</span>
+    </button>
+    <button class="mob-nav-btn" data-view="view-vocab" title="การ์ดศัพท์โทอิค &amp; โทเฟล">
+      <span class="mob-nav-icon">📚</span>
+      <span class="mob-nav-label">ศัพท์ TOEIC</span>
+    </button>
+    <button class="mob-nav-btn" data-view="view-wardrobe" title="ห้องน้องแมว &amp; แต่งตัว">
+      <span class="mob-nav-icon">🐱</span>
+      <span class="mob-nav-label">ห้องน้องแมว</span>
+    </button>
+    <button class="mob-nav-btn" data-view="view-shop" title="ร้านค้า">
+      <span class="mob-nav-icon">🛍️</span>
+      <span class="mob-nav-label">ร้านค้า</span>
+    </button>
+    <button class="mob-nav-btn" data-view="view-daily" title="ภารกิจรายวัน">
+      <span class="mob-nav-icon">📅</span>
+      <span class="mob-nav-label">ภารกิจ</span>
+    </button>
+    <button class="mob-nav-btn" data-view="view-settings" title="ตั้งค่า">
+      <span class="mob-nav-icon">⚙️</span>
+      <span class="mob-nav-label">ตั้งค่า</span>
+    </button>
+  </nav>
+
+  <!-- VICTORY MODAL OVERLAY -->
+  <div id="victory-overlay" class="victory-overlay">
+    <div class="victory-card">
+      <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
+      <h2 class="victory-title">สำเร็จภารกิจ!</h2>
+      <p id="victory-stage-name" style="font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">ด่านทดสอบ</p>
+      
+      <div id="victory-stars-display" class="victory-stars">⭐⭐⭐</div>
+
+      <div class="victory-rewards-box">
+        <div class="reward-stat-item">
+          <span class="label">ค่าประสบการณ์</span>
+          <span id="victory-exp-reward" class="val" style="color: var(--primary);">+60 EXP</span>
+        </div>
+        <div class="reward-stat-item">
+          <span class="label">เหรียญทอง</span>
+          <span id="victory-coin-reward" class="val" style="color: var(--gold);">+40 🪙</span>
+        </div>
+      </div>
+
+      <button id="btn-claim-victory" class="btn-victory-claim">รับรางวัล & กลับสู่แผนที่</button>
+    </div>
+  </div>
+
+  <!-- FLOATING TOAST NOTICE -->
+  <div id="toast-notice" class="toast-notice">
+    <span>🔔</span>
+    <span>แจ้งเตือน</span>
+  </div>
+
+  <!-- App Footer -->
+  <footer class="app-footer">
+    <p>MeowQuest: Daily English RPG — ออกแบบตามหลัก EdTech Game Mechanics และ Cognitive Load Theory สำหรับทาสแมว 🐾</p>
+    <p style="font-size: 0.75rem; margin-top: 4px; opacity: 0.7;">รองรับ Web Speech API &amp; Synthesized Web Audio Engine</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="scenarios.js"></script>
+  <script src="vocab_decks.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
