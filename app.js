@@ -536,7 +536,195 @@ function triggerHaptic(pattern = 20) {
 // ==========================================
 // 4. DYNAMIC SVG CAT AVATAR GENERATOR (ENHANCED FOR CAT LOVERS)
 // ==========================================
-function renderCatSvg(equipped = gameState.equipped, fur = gameState.furColor || "calico", isHappy = isCatHappyTemp) {
+// ==============================================
+// 3D CUTE FIGURINE CAT & EQUIPMENT RENDER ENGINE
+// ==============================================
+
+function renderHatSvg(hatId) {
+  if (!hatId) return "";
+  if (hatId === "hat_straw") {
+    return `
+      <!-- 3D Straw Hat -->
+      <ellipse cx="60" cy="34" rx="36" ry="9" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
+      <ellipse cx="60" cy="27" rx="18" ry="12" fill="#ffe082" stroke="#8d6e63" stroke-width="2"/>
+      <path d="M43,30 Q60,34 77,30" stroke="#f4511e" stroke-width="3" fill="none"/>
+    `;
+  } else if (hatId === "hat_chef") {
+    return `
+      <!-- 3D Chef Hat -->
+      <path d="M42,34 L78,34 L75,22 C80,18 78,8 60,8 C42,8 40,18 45,22 Z" fill="#ffffff" stroke="#90a4ae" stroke-width="2"/>
+      <rect x="42" y="30" width="36" height="8" rx="2" fill="#eceff1" stroke="#90a4ae" stroke-width="1.5"/>
+    `;
+  } else if (hatId === "hat_detective") {
+    return `
+      <!-- 3D Detective Cap -->
+      <ellipse cx="60" cy="32" rx="26" ry="11" fill="#795548" stroke="#4e342e" stroke-width="2"/>
+      <path d="M38,32 Q60,18 82,32" fill="#8d6e63" stroke="#4e342e" stroke-width="2"/>
+      <circle cx="60" cy="22" r="3" fill="#ffb74d"/>
+    `;
+  } else if (hatId === "hat_wizard") {
+    return `
+      <!-- 3D Wizard Hat -->
+      <polygon points="60,4 40,32 80,32" fill="#5e35b1" stroke="#311b92" stroke-width="2"/>
+      <ellipse cx="60" cy="32" rx="30" ry="8" fill="#7e57c2" stroke="#311b92" stroke-width="2"/>
+      <polygon points="60,14 62,18 66,18 63,21 64,25 60,23 56,25 57,21 54,18 58,18" fill="#ffd54f"/>
+    `;
+  } else if (hatId === "hat_crown") {
+    return `
+      <!-- 3D Royal Crown -->
+      <polygon points="42,32 40,16 50,24 60,12 70,24 80,16 78,32" fill="#ffd700" stroke="#b78103" stroke-width="2"/>
+      <circle cx="40" cy="15" r="3" fill="#e91e63"/>
+      <circle cx="60" cy="11" r="3.5" fill="#2196f3"/>
+      <circle cx="80" cy="15" r="3" fill="#4caf50"/>
+    `;
+  }
+  return "";
+}
+
+function renderOutfitSvg(outfitId) {
+  if (!outfitId) return "";
+  if (outfitId === "outfit_hoodie") {
+    return `
+      <!-- Orange Hoodie -->
+      <path d="M40,78 Q60,70 80,78 L84,106 Q60,112 36,106 Z" fill="#ff7043" stroke="#d84315" stroke-width="2"/>
+      <path d="M52,77 L60,88 L68,77" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+    `;
+  } else if (outfitId === "outfit_apron") {
+    return `
+      <!-- Barista Apron -->
+      <path d="M44,78 L76,78 L80,108 L40,108 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="2"/>
+      <line x1="44" y1="78" x2="36" y2="86" stroke="#ffffff" stroke-width="2"/>
+      <line x1="76" y1="78" x2="84" y2="86" stroke="#ffffff" stroke-width="2"/>
+      <rect x="52" y="90" width="16" height="12" rx="2" fill="#ffffff" opacity="0.3"/>
+    `;
+  } else if (outfitId === "outfit_trench") {
+    return `
+      <!-- Trench Coat -->
+      <path d="M38,76 L82,76 L86,110 L34,110 Z" fill="#a1887f" stroke="#5d4037" stroke-width="2"/>
+      <line x1="60" y1="76" x2="60" y2="110" stroke="#5d4037" stroke-width="2"/>
+      <circle cx="56" cy="88" r="2.5" fill="#4e342e"/>
+      <circle cx="56" cy="98" r="2.5" fill="#4e342e"/>
+    `;
+  } else if (outfitId === "outfit_cyber") {
+    return `
+      <!-- Cyber Neon Suit -->
+      <path d="M38,76 L82,76 L84,108 L36,108 Z" fill="#212121" stroke="#00e5ff" stroke-width="2"/>
+      <line x1="48" y1="80" x2="72" y2="80" stroke="#ff007f" stroke-width="2"/>
+      <line x1="60" y1="84" x2="60" y2="104" stroke="#00e5ff" stroke-width="2.5"/>
+    `;
+  } else if (outfitId === "outfit_tuxedo") {
+    return `
+      <!-- Tuxedo -->
+      <path d="M38,76 L82,76 L84,108 L36,108 Z" fill="#263238" stroke="#102027" stroke-width="2"/>
+      <polygon points="52,76 60,94 68,76" fill="#ffffff"/>
+      <polygon points="56,80 64,80 60,85" fill="#d32f2f"/>
+    `;
+  }
+  return "";
+}
+
+function renderWeaponSvg(weaponId) {
+  if (!weaponId) return "";
+  if (weaponId === "wpn_fishbone") {
+    return `
+      <!-- Lucky Fishbone -->
+      <g transform="translate(86, 75) rotate(-15)">
+        <line x1="0" y1="15" x2="28" y2="15" stroke="#ffa000" stroke-width="3"/>
+        <line x1="8" y1="8" x2="8" y2="22" stroke="#ffa000" stroke-width="2"/>
+        <line x1="16" y1="10" x2="16" y2="20" stroke="#ffa000" stroke-width="2"/>
+        <polygon points="26,15 34,9 34,21" fill="#ffa000"/>
+        <circle cx="2" cy="15" r="4" fill="#ffa000"/>
+      </g>
+    `;
+  } else if (weaponId === "wpn_cup") {
+    return `
+      <!-- Coffee Cup -->
+      <g transform="translate(86, 76)">
+        <rect x="0" y="4" width="16" height="20" rx="3" fill="#ffffff" stroke="#795548" stroke-width="2"/>
+        <path d="M16,9 Q22,14 16,19" fill="none" stroke="#795548" stroke-width="2"/>
+        <path d="M4,1 Q6,-4 8,0 Q10,-4 12,0" fill="none" stroke="#b0bec5" stroke-width="1.5"/>
+      </g>
+    `;
+  } else if (weaponId === "wpn_quill") {
+    return `
+      <!-- Magic Quill -->
+      <g transform="translate(86, 70) rotate(-25)">
+        <path d="M0,30 Q10,15 5,0 Q20,10 10,30 Z" fill="#9c27b0" stroke="#4a148c" stroke-width="1.5"/>
+        <polygon points="2,30 4,36 6,30" fill="#ffd700"/>
+      </g>
+    `;
+  } else if (weaponId === "wpn_mic") {
+    return `
+      <!-- Golden Mic -->
+      <g transform="translate(86, 72) rotate(-10)">
+        <rect x="2" y="0" width="10" height="16" rx="5" fill="#ffd700" stroke="#ff8f00" stroke-width="1.5"/>
+        <rect x="5" y="16" width="4" height="18" fill="#424242"/>
+        <circle cx="7" cy="35" r="4" fill="#ffd700"/>
+      </g>
+    `;
+  } else if (weaponId === "wpn_scepter") {
+    return `
+      <!-- Catnip Scepter -->
+      <g transform="translate(86, 60) rotate(-10)">
+        <line x1="6" y1="12" x2="6" y2="44" stroke="#ffd700" stroke-width="3"/>
+        <circle cx="6" cy="8" r="8" fill="#4caf50" stroke="#ffd700" stroke-width="2"/>
+        <circle cx="6" cy="8" r="3" fill="#ffffff"/>
+      </g>
+    `;
+  }
+  return "";
+}
+
+function renderVehicleBackSvg(vehicleId) {
+  if (!vehicleId) return "";
+  if (vehicleId === "veh_cloud") {
+    return `
+      <!-- Magical Cloud (Back Layer) -->
+      <ellipse cx="60" cy="116" rx="46" ry="14" fill="#e1f5fe" stroke="#81d4fa" stroke-width="2"/>
+      <circle cx="40" cy="112" r="14" fill="#e1f5fe"/>
+      <circle cx="75" cy="110" r="16" fill="#e1f5fe"/>
+    `;
+  }
+  return "";
+}
+
+function renderVehicleFrontSvg(vehicleId) {
+  if (!vehicleId) return "";
+  if (vehicleId === "veh_box") {
+    return `
+      <!-- Box Kart -->
+      <rect x="26" y="100" width="68" height="20" rx="3" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
+      <circle cx="38" cy="120" r="5" fill="#424242" stroke="#212121" stroke-width="1.5"/>
+      <circle cx="82" cy="120" r="5" fill="#424242" stroke="#212121" stroke-width="1.5"/>
+      <text x="34" y="114" font-size="7.5" font-weight="bold" fill="#5d4037">MEOW EXPRESS</text>
+    `;
+  } else if (vehicleId === "veh_skate") {
+    return `
+      <!-- Skateboard -->
+      <rect x="20" y="112" width="80" height="6" rx="3" fill="#ff5722" stroke="#bf360c" stroke-width="1.5"/>
+      <circle cx="34" cy="120" r="4" fill="#ffd54f"/>
+      <circle cx="86" cy="120" r="4" fill="#ffd54f"/>
+    `;
+  } else if (vehicleId === "veh_roomba") {
+    return `
+      <!-- Roomba Vacuum -->
+      <ellipse cx="60" cy="114" rx="44" ry="10" fill="#37474f" stroke="#263238" stroke-width="2"/>
+      <circle cx="60" cy="112" r="4" fill="#00e676"/>
+    `;
+  } else if (vehicleId === "veh_ufo") {
+    return `
+      <!-- Alien UFO -->
+      <ellipse cx="60" cy="112" rx="48" ry="12" fill="#7e57c2" stroke="#512da8" stroke-width="2"/>
+      <ellipse cx="60" cy="106" rx="26" ry="8" fill="#b388ff" opacity="0.6"/>
+      <circle cx="35" cy="113" r="2.5" fill="#00e5ff"/>
+      <circle cx="60" cy="115" r="2.5" fill="#00e5ff"/>
+      <circle cx="85" cy="113" r="2.5" fill="#00e5ff"/>
+    `;
+  }
+  return "";
+}
+
+function renderCatSvg(equipped = (typeof gameState !== "undefined" ? gameState.equipped : {}), fur = (typeof gameState !== "undefined" ? (gameState.furColor || "calico") : "calico"), isHappy = (typeof isCatHappyTemp !== "undefined" ? isCatHappyTemp : false)) {
   if (!equipped) equipped = {};
   const uid = "c3d_" + Math.random().toString(36).substring(2, 7);
 
@@ -552,9 +740,9 @@ function renderCatSvg(equipped = gameState.equipped, fur = gameState.furColor ||
       rightEarHi: "#ffb74d", rightEarMid: "#ff9800", rightEarDark: "#e65100",
       markings: `
         <!-- 3D Soft Calico Patch Left -->
-        <path d="M30,42 Q42,28 52,36 Q50,52 34,54 Z" fill="url(#calicoDarkGrad_${uid})" filter="url(#softBlur_${uid})" opacity="0.95"/>
+        <path d="M30,42 Q42,28 52,36 Q50,52 34,54 Z" fill="url(#calicoDarkGrad_${uid})" filter="url(#dropShadowEar_${uid})" opacity="0.95"/>
         <!-- 3D Soft Calico Patch Right -->
-        <path d="M68,34 Q82,32 90,46 Q88,58 74,58 Q66,50 68,34 Z" fill="url(#calicoOrangeGrad_${uid})" filter="url(#softBlur_${uid})" opacity="0.95"/>
+        <path d="M68,34 Q82,32 90,46 Q88,58 74,58 Q66,50 68,34 Z" fill="url(#calicoOrangeGrad_${uid})" filter="url(#dropShadowEar_${uid})" opacity="0.95"/>
         <!-- Body Calico Patches -->
         <circle cx="44" cy="88" r="7.5" fill="url(#calicoDarkGrad_${uid})" opacity="0.9"/>
         <path d="M68,80 Q84,76 84,94 Q72,98 68,88 Z" fill="url(#calicoOrangeGrad_${uid})" opacity="0.9"/>
@@ -752,31 +940,27 @@ function renderCatSvg(equipped = gameState.equipped, fur = gameState.furColor ||
         </filter>
 
         <filter id="dropShadowEar_${uid}" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
-          <feOffset dx="0" dy="1.5"/>
-          <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1.8"/>
+          <feOffset dx="0" dy="2"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.22"/></feComponentTransfer>
           <feMerge>
             <feMergeNode/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
 
-        <filter id="softBlur_${uid}">
-          <feGaussianBlur stdDeviation="0.8"/>
-        </filter>
-
-        <!-- 3D Spherical Gradients for Head & Body -->
-        <radialGradient id="head3dGrad_${uid}" cx="38%" cy="32%" r="68%" fx="28%" fy="22%">
+        <!-- 3D Spherical Radial Gradients -->
+        <radialGradient id="head3dGrad_${uid}" cx="42%" cy="32%" r="68%">
           <stop offset="0%" stop-color="${pal.bodyHi}"/>
-          <stop offset="45%" stop-color="${pal.bodyMid}"/>
+          <stop offset="55%" stop-color="${pal.bodyMid}"/>
           <stop offset="85%" stop-color="${pal.bodyDark}"/>
           <stop offset="100%" stop-color="${pal.bodyRim}"/>
         </radialGradient>
 
-        <radialGradient id="body3dGrad_${uid}" cx="35%" cy="32%" r="72%" fx="25%" fy="22%">
+        <radialGradient id="body3dGrad_${uid}" cx="42%" cy="35%" r="70%">
           <stop offset="0%" stop-color="${pal.bodyHi}"/>
-          <stop offset="42%" stop-color="${pal.bodyMid}"/>
-          <stop offset="82%" stop-color="${pal.bodyDark}"/>
+          <stop offset="55%" stop-color="${pal.bodyMid}"/>
+          <stop offset="85%" stop-color="${pal.bodyDark}"/>
           <stop offset="100%" stop-color="${pal.bodyRim}"/>
         </radialGradient>
 
@@ -944,6 +1128,34 @@ function renderCatSvg(equipped = gameState.equipped, fur = gameState.furColor ||
       ${vehicleFrontSvg}
     </svg>
   `;
+}
+
+// Refresh all Cat SVG instances on page
+function refreshCatAvatars() {
+  const previewDiv = document.getElementById("cat-preview-render");
+  if (previewDiv) previewDiv.innerHTML = renderCatSvg();
+
+  const stageCharDiv = document.getElementById("stage-cat-avatar");
+  if (stageCharDiv) stageCharDiv.innerHTML = renderCatSvg();
+
+  const heroAvatar = document.getElementById("hero-cat-avatar-render");
+  if (heroAvatar) heroAvatar.innerHTML = renderCatSvg();
+
+  const hudMiniAvatar = document.getElementById("hud-cat-avatar-mini");
+  if (hudMiniAvatar) hudMiniAvatar.innerHTML = renderCatSvg();
+
+  const vocabMiniAvatar = document.getElementById("vocab-cat-avatar-mini");
+  if (vocabMiniAvatar) vocabMiniAvatar.innerHTML = renderCatSvg();
+
+  const miniAvatars = document.querySelectorAll(".cat-avatar-mini");
+  miniAvatars.forEach((el) => {
+    el.innerHTML = renderCatSvg();
+  });
+
+  // If squad lounge is rendered, refresh squad cats as well
+  if (typeof renderCatSquadLounge === "function") {
+    renderCatSquadLounge();
+  }
 }
 
 // Interactive Cat Petting / Tap Reaction
