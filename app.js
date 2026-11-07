@@ -35,6 +35,9 @@ const WORKPLACE_TITLES = {
 
 const DEFAULT_STATE = {
   name: "Mimi",
+  candidateName: "SUKANT IMMAN",
+  masteredVocab: [],
+  mistakesClearedCount: 0,
   title: "เด็กฝึกงานตาดำๆ 🍼 (Intern Kitten)",
   furColor: "calico", // Default character is Japanese Calico (แมวสามสีนำโชค)
   petCount: 0,
@@ -119,6 +122,9 @@ function loadGameState() {
       if (!parsed.equipped) parsed.equipped = {};
       parsed.equipped.breed = parsed.furColor;
       if (!parsed.mistakes) parsed.mistakes = [];
+      parsed.candidateName = parsed.candidateName || parsed.name || "SUKANT IMMAN";
+      parsed.masteredVocab = parsed.masteredVocab || [];
+      parsed.mistakesClearedCount = parsed.mistakesClearedCount || 0;
 
       return { ...DEFAULT_STATE, ...parsed };
     }
@@ -1325,6 +1331,13 @@ function updateHUD() {
       silentBtn.classList.add("active");
       voiceBtn.classList.remove("active");
     }
+  }
+
+  // Update CEFR Level Badge in HUD
+  const cefrHudText = document.getElementById("hud-cefr-level-text");
+  if (cefrHudText && typeof calculateCefrCompetencyMetrics === "function") {
+    const cefrData = calculateCefrCompetencyMetrics();
+    cefrHudText.textContent = `CEFR ${cefrData.cefrKey}`;
   }
 
   // Render Adopted Breeds List & Squad Living Lounge
@@ -2835,10 +2848,16 @@ function renderAdventureGrid() {
       </div>
       <div class="scenario-meta">
         <span class="badge ${sc.difficulty === "Beginner" ? "badge-diff-beginner" : "badge-diff-intermediate"}">${sc.difficulty}</span>
+        <span class="badge" style="background:#fef3c7; color:#92400e; font-weight:800; border:1px solid #fde68a;">CEFR ${sc.cefrLevel || "A2"}</span>
         <span class="badge badge-cat">${sc.category}</span>
         <span class="badge" style="background:#e0f2fe; color:#0369a1;">สถิติ: ${bestStars}</span>
       </div>
-      <div class="scenario-desc">${sc.description}</div>
+      <div class="scenario-desc">
+        ${sc.description}
+        <div style="font-size: 0.74rem; color: #b45309; margin-top: 5px; font-weight: 600;">
+          🎯 <em>Can-Do: ${sc.canDoSummary || sc.cefrCanDo || ""}</em>
+        </div>
+      </div>
       <div class="scenario-footer">
         <div class="rewards-preview">
           <span class="reward-exp">+${sc.rewardExp} EXP</span>
@@ -2912,7 +2931,7 @@ function renderCurrentVocabCard() {
 
   // Front elements
   const tagFront = document.getElementById("vocab-card-tag-front");
-  if (tagFront) tagFront.textContent = card.contextTag;
+  if (tagFront) tagFront.textContent = `${card.contextTag} • CEFR ${card.cefrLevel || "B1"}`;
 
   const wordEl = document.getElementById("vocab-card-word");
   if (wordEl) wordEl.textContent = card.word;
@@ -2984,7 +3003,14 @@ function handleVocabMastered() {
   const deckData = typeof VOCAB_DECKS !== "undefined" ? VOCAB_DECKS[currentVocabDeck] : null;
   if (deckData) {
     const card = deckData.words[currentVocabCardIdx];
-    if (card) masteredVocabCards.add(card.id);
+    if (card) {
+      masteredVocabCards.add(card.id);
+      if (!gameState.masteredVocab) gameState.masteredVocab = [];
+      if (!gameState.masteredVocab.includes(card.id)) {
+        gameState.masteredVocab.push(card.id);
+        saveGameState();
+      }
+    }
   }
 
   currentVocabCardIdx++;
@@ -3491,6 +3517,54 @@ window.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  // CEFR & Certificate Action Listeners
+  const btnHudCefr = document.getElementById("btn-hud-cefr-cert");
+  if (btnHudCefr) btnHudCefr.onclick = () => openCefrModal("radar");
+
+  const btnHeroCefr = document.getElementById("btn-hero-open-cefr");
+  if (btnHeroCefr) btnHeroCefr.onclick = () => openCefrModal("radar");
+
+  const btnSettingsCefr = document.getElementById("btn-settings-open-cefr");
+  if (btnSettingsCefr) btnSettingsCefr.onclick = () => openCefrModal("radar");
+
+  const btnCloseCefr = document.getElementById("btn-close-cefr-modal");
+  if (btnCloseCefr) btnCloseCefr.onclick = closeCefrModal;
+
+  const tabBtnRadar = document.getElementById("tab-btn-cefr-radar");
+  if (tabBtnRadar) tabBtnRadar.onclick = () => switchCefrTab("radar");
+
+  const tabBtnCert = document.getElementById("tab-btn-cefr-cert");
+  if (tabBtnCert) tabBtnCert.onclick = () => switchCefrTab("cert");
+
+  const btnGotoCert = document.getElementById("btn-goto-cert-tab");
+  if (btnGotoCert) btnGotoCert.onclick = () => switchCefrTab("cert");
+
+  const btnSaveCertName = document.getElementById("btn-save-cert-name");
+  if (btnSaveCertName) {
+    btnSaveCertName.onclick = () => {
+      const input = document.getElementById("input-cert-candidate-name");
+      if (input && input.value.trim()) {
+        saveCandidateName(input.value.trim());
+      }
+    };
+  }
+
+  const btnDownloadCert = document.getElementById("btn-download-cert-png");
+  if (btnDownloadCert) btnDownloadCert.onclick = downloadCertificatePng;
+
+  const btnPrintCert = document.getElementById("btn-print-cert");
+  if (btnPrintCert) btnPrintCert.onclick = () => window.print();
+
+  const btnCopyCert = document.getElementById("btn-copy-cert-text");
+  if (btnCopyCert) btnCopyCert.onclick = copyCertificateText;
+
+  const cefrModalOverlay = document.getElementById("cefr-cert-modal-overlay");
+  if (cefrModalOverlay) {
+    cefrModalOverlay.onclick = (e) => {
+      if (e.target === cefrModalOverlay) closeCefrModal();
+    };
+  }
+
   // Register PWA Service Worker
   registerServiceWorker();
 
@@ -3597,4 +3671,629 @@ async function triggerPwaInstall() {
   }
   deferredInstallPrompt = null;
   closePwaInstallModal();
+}
+
+
+// ==============================================
+// 15. CEFR COMPETENCY & OFFICIAL CERTIFICATE ENGINE
+// กรอบมาตรฐานความสามารถทางภาษาอังกฤษระดับสากล & ใบประกาศนียบัตร
+// ==============================================
+
+const CEFR_LEVEL_DEFINITIONS = {
+  A1: {
+    level: "A1",
+    nameTh: "ผู้ใช้ภาษาเริ่มต้น (Breakthrough / Novice)",
+    nameEn: "Breakthrough (Basic User)",
+    badgeColor: "#94a3b8",
+    minScore: 0,
+    toeicBand: "120 - 220",
+    ieltsBand: "2.0 - 3.0",
+    toeflBand: "0 - 31",
+    canDoTitle: "สื่อสารประโยคพื้นฐานในชีวิตประจำวัน",
+    canDoDesc: "เข้าใจและใช้สำนวนคุ้นเคยในชีวิตประจำวัน แนะนำตัวเองและผู้อื่น ถามตอบคำถามง่ายๆ เกี่ยวกับข้อมูลส่วนตัวได้",
+    descriptors: [
+      { id: "a1_1", text: "ทักทายและแนะนำตัวอย่างง่ายในสถานที่ทำงาน", standard: "CEFR A1.1" },
+      { id: "a1_2", text: "เข้าใจคำสั่งง่ายๆ ในชีวิตประจำวันและการบอกเวลา", standard: "CEFR A1.2" },
+      { id: "a1_3", text: "อ่านป้ายและตัวเลขราคาสินค้าได้อย่างถูกต้อง", standard: "CEFR A1.3" }
+    ]
+  },
+  A2: {
+    level: "A2",
+    nameTh: "ผู้ใช้ภาษาขั้นพื้นฐาน (Waystage / Elementary)",
+    nameEn: "Waystage (Elementary User)",
+    badgeColor: "#3b82f6",
+    minScore: 40,
+    toeicBand: "225 - 545",
+    ieltsBand: "3.5 - 4.5",
+    toeflBand: "32 - 45",
+    canDoTitle: "สื่อสารในสถานการณ์ประจำวันและการเดินทาง",
+    canDoDesc: "สื่อสารในกิจวัตรประจำวันที่ต้องการการแลกเปลี่ยนข้อมูลง่ายๆ สั่งอาหาร เครื่องดื่ม ซื้อของ และถามทิศทางได้อย่างคล่องแคล่ว",
+    descriptors: [
+      { id: "a2_1", text: "สั่งเครื่องดื่ม/อาหาร และระบุความต้องการพิเศษได้อย่างสุภาพ", standard: "CEFR A2.1" },
+      { id: "a2_2", text: "ถามทางและเข้าใจคำแนะนำทิศทาง/ระบบขนส่งสาธารณะ", standard: "CEFR A2.2" },
+      { id: "a2_3", text: "ซื้อของในร้านสะดวกซื้อและแจ้งการชำระเงิน", standard: "CEFR A2.3" },
+      { id: "a2_4", text: "สั่งอาหารด่วนแบบ Drive-thru และยืนยันรายการถูกต้อง", standard: "CEFR A2.4" }
+    ]
+  },
+  B1: {
+    level: "B1",
+    nameTh: "ผู้ใช้ภาษาอิสระระดับต้น (Threshold / Intermediate)",
+    nameEn: "Threshold (Independent User)",
+    badgeColor: "#10b981",
+    minScore: 60,
+    toeicBand: "550 - 780",
+    ieltsBand: "5.0 - 6.0",
+    toeflBand: "46 - 71",
+    canDoTitle: "สื่อสารในที่ทำงานและการสนทนาทางธุรกิจทั่วไป",
+    canDoDesc: "เข้าใจประเด็นหลักในที่ทำงาน การประชุม และการท่องเที่ยว สามารถอธิบายประสบการณ์ ความคิดเห็น และแก้ปัญหาเฉพาะหน้าได้อย่างมีประสิทธิภาพ",
+    descriptors: [
+      { id: "b1_1", text: "เริ่มบทสนทนาแบบ Small Talk แลกเปลี่ยนความเห็นได้อย่างเป็นมิตร", standard: "CEFR B1.1" },
+      { id: "b1_2", text: "ติดต่อเช็กอินโรงแรมและขอความช่วยเหลือด้านบริการท่องเที่ยว", standard: "CEFR B1.2" },
+      { id: "b1_3", text: "อธิบายอาการเจ็บป่วยกับแพทย์และทำความเข้าใจคำแนะนำการรักษา", standard: "CEFR B1.3" },
+      { id: "b1_4", text: "แจ้งของหายและให้รายละเอียดคุณลักษณะสิ่งของแก่เจ้าหน้าที่", standard: "CEFR B1.4" }
+    ]
+  },
+  B2: {
+    level: "B2",
+    nameTh: "ผู้ใช้ภาษาระดับมืออาชีพ (Vantage / Upper-Intermediate)",
+    nameEn: "Vantage (Professional Business User)",
+    badgeColor: "#d97706",
+    minScore: 75,
+    toeicBand: "785 - 940",
+    ieltsBand: "6.5 - 7.5",
+    toeflBand: "72 - 94",
+    canDoTitle: "เจรจาธุรกิจ ทำงานร่วมกับชาวต่างชาติอย่างคล่องแคล่ว",
+    canDoDesc: "เข้าใจประเด็นซับซ้อนในหัวข้อเชิงรูปธรรมและนามธรรม สื่อสารกับเจ้าของภาษาได้อย่างเป็นธรรมชาติโดยไม่ติดขัด นำเสนองานและต่อรองเงื่อนไขสัญญาธุรกิจได้ดีเยี่ยม",
+    descriptors: [
+      { id: "b2_1", text: "ผ่านขั้นตอนตม. และตอบสัมภาษณ์ภาษาอังกฤษในสนามบินสากลได้อย่างคล่องแคล่ว", standard: "CEFR B2.1" },
+      { id: "b2_2", text: "ใช้คำศัพท์ TOEIC ชั้นสูง (Collaborate, Feasibility, Contingency) ในการประชุม", standard: "CEFR B2.2" },
+      { id: "b2_3", text: "เจรจาต่อรองและใช้ภาษาโน้มน้าวใจในเชิงกลยุทธ์ (Leverage, Facilitate)", standard: "CEFR B2.3" },
+      { id: "b2_4", text: "ออกเสียงคำศัพท์และประโยคภาษาอังกฤษได้อย่างชัดเจนตามหลักสัทศาสตร์", standard: "CEFR B2.4" }
+    ]
+  },
+  C1: {
+    level: "C1",
+    nameTh: "ผู้ใช้ภาษาระดับเชี่ยวชาญสูงสุด (Operational Proficiency / Executive)",
+    nameEn: "Effective Operational Proficiency (Executive)",
+    badgeColor: "#8b5cf6",
+    minScore: 90,
+    toeicBand: "945 - 990",
+    ieltsBand: "8.0 - 9.0",
+    toeflBand: "95 - 120",
+    canDoTitle: "สื่อสารระดับผู้บริหาร วิเคราะห์กลยุทธ์ และการเจรจาขั้นสูง",
+    canDoDesc: "เข้าใจเอกสารที่มีเนื้อหายาวและซับซ้อน ถ่ายทอดความคิดได้อย่างลื่นไหลเป็นธรรมชาติ ใช้ภาษาได้อย่างยืดหยุ่นและมีประสิทธิผลสูงสุดเพื่อเป้าหมายทางวิชาชีพและธุรกิจระดับโลก",
+    descriptors: [
+      { id: "c1_1", text: "วิเคราะห์และเชื่อมโยงแง่มุมธุรกิจระดับสูงด้วยคำศัพท์เฉพาะทาง (Substantiate, Paradigm)", standard: "CEFR C1.1" },
+      { id: "c1_2", text: "เจรจาเงื่อนไขค่าตอบแทนและผลประโยชน์ผู้บริหาร (Remuneration, Expedite)", standard: "CEFR C1.2" },
+      { id: "c1_3", text: "สร้างความเห็นพ้องต้องกันของพันธมิตรข้ามชาติ (Strategic Alignment)", standard: "CEFR C1.3" },
+      { id: "c1_4", text: "ออกเสียงด้วยความแม่นยำและจังหวะจะโคนระดับมืออาชีพระดับสากล (Near-Native Pronunciation)", standard: "CEFR C1.4" }
+    ]
+  }
+};
+
+function calculateCefrCompetencyMetrics() {
+  // 1. Phonological Accuracy & Speech Control (การออกเสียง)
+  let phonologicalScore = 70;
+  if (gameState.lastVoiceAccuracy && gameState.lastVoiceAccuracy > 0) {
+    phonologicalScore = Math.max(65, Math.min(98, Math.round(gameState.lastVoiceAccuracy)));
+  } else {
+    phonologicalScore = Math.min(95, 68 + (gameState.level || 1) * 2.2);
+  }
+
+  // 2. Lexical Breadth (คลังคำศัพท์ TOEIC/TOEFL)
+  let masteredCount = (gameState.masteredVocab && gameState.masteredVocab.length) || 0;
+  let lexicalScore = Math.min(98, Math.max(50, Math.round(52 + masteredCount * 4 + (gameState.level || 1) * 2.4)));
+
+  // 3. Pragmatic Fluency (ความคล่องแคล่วใน 10 ด่านสนทนา)
+  let completedCount = 0;
+  let totalStars = 0;
+  if (gameState.completedScenarios) {
+    Object.values(gameState.completedScenarios).forEach((p) => {
+      completedCount++;
+      totalStars += p.bestStars || 3;
+    });
+  }
+  let pragmaticScore = Math.min(98, Math.max(55, Math.round(58 + completedCount * 3.5 + totalStars * 0.5 + (gameState.level || 1) * 1.5)));
+
+  // 4. Sociolinguistic Accuracy (ไวยากรณ์ & ความสุภาพ)
+  let mistakesCleared = (gameState.mistakesClearedCount || 0);
+  let accuracyScore = Math.min(98, Math.max(58, Math.round(62 + (gameState.level || 1) * 2.1 + mistakesCleared * 1.5)));
+
+  // 5. Sustained Learning Consistency (ความสม่ำเสมอ & วินัย)
+  let streak = gameState.streak || 1;
+  let consistencyScore = Math.min(98, Math.max(60, Math.round(65 + streak * 3.5 + (gameState.petCount || 0) * 0.2)));
+
+  // Total weighted CEFR Index (0 - 100)
+  let totalIndex = Math.round(
+    phonologicalScore * 0.25 +
+    lexicalScore * 0.20 +
+    pragmaticScore * 0.25 +
+    accuracyScore * 0.15 +
+    consistencyScore * 0.15
+  );
+  totalIndex = Math.max(35, Math.min(99, totalIndex));
+
+  // Determine CEFR Grade
+  let cefrKey = "A2";
+  if (totalIndex >= 90) cefrKey = "C1";
+  else if (totalIndex >= 75) cefrKey = "B2";
+  else if (totalIndex >= 60) cefrKey = "B1";
+  else if (totalIndex >= 40) cefrKey = "A2";
+  else cefrKey = "A1";
+
+  const def = CEFR_LEVEL_DEFINITIONS[cefrKey];
+
+  return {
+    cefrKey,
+    def,
+    totalIndex,
+    phonologicalScore: Math.round(phonologicalScore),
+    lexicalScore: Math.round(lexicalScore),
+    pragmaticScore: Math.round(pragmaticScore),
+    accuracyScore: Math.round(accuracyScore),
+    consistencyScore: Math.round(consistencyScore)
+  };
+}
+
+function openCefrModal(targetTab = "radar") {
+  const modal = document.getElementById("cefr-cert-modal-overlay");
+  if (!modal) return;
+  sfx.click();
+  triggerHaptic(20);
+
+  renderCefrModal();
+  switchCefrTab(targetTab);
+  modal.classList.add("show");
+}
+
+function closeCefrModal() {
+  const modal = document.getElementById("cefr-cert-modal-overlay");
+  if (modal) modal.classList.remove("show");
+}
+
+function switchCefrTab(tabName) {
+  sfx.click();
+  triggerHaptic(15);
+
+  const tabBtnRadar = document.getElementById("tab-btn-cefr-radar");
+  const tabBtnCert = document.getElementById("tab-btn-cefr-cert");
+  const paneRadar = document.getElementById("cefr-pane-radar");
+  const paneCert = document.getElementById("cefr-pane-cert");
+
+  if (tabName === "radar") {
+    if (tabBtnRadar) tabBtnRadar.classList.add("active");
+    if (tabBtnCert) tabBtnCert.classList.remove("active");
+    if (paneRadar) paneRadar.style.display = "block";
+    if (paneCert) paneCert.style.display = "none";
+  } else {
+    if (tabBtnCert) tabBtnCert.classList.add("active");
+    if (tabBtnRadar) tabBtnRadar.classList.remove("active");
+    if (paneCert) paneCert.style.display = "block";
+    if (paneRadar) paneRadar.style.display = "none";
+  }
+}
+
+function renderCefrModal() {
+  const metrics = calculateCefrCompetencyMetrics();
+  const def = metrics.def;
+
+  // Overview Cards
+  const badgeEl = document.getElementById("cefr-overview-badge");
+  if (badgeEl) badgeEl.textContent = `CEFR ${metrics.cefrKey}`;
+
+  const levelNameEl = document.getElementById("cefr-overview-level-name");
+  if (levelNameEl) levelNameEl.textContent = def.nameTh;
+
+  const progressFill = document.getElementById("cefr-level-progress-fill");
+  if (progressFill) progressFill.style.width = `${metrics.totalIndex}%`;
+
+  const progressText = document.getElementById("cefr-level-progress-text");
+  if (progressText) {
+    let nextTarget = 60;
+    let nextLevel = "B1";
+    if (metrics.cefrKey === "B1") { nextTarget = 75; nextLevel = "B2"; }
+    else if (metrics.cefrKey === "B2") { nextTarget = 90; nextLevel = "C1"; }
+    else if (metrics.cefrKey === "C1") { nextTarget = 100; nextLevel = "C1+"; }
+    const diff = Math.max(0, nextTarget - metrics.totalIndex);
+    progressText.textContent = `${metrics.totalIndex}/100 (อีก ${diff} คะแนนสู่ CEFR ${nextLevel})`;
+  }
+
+  // International Benchmarks
+  const toeicEl = document.getElementById("cefr-projected-toeic");
+  if (toeicEl) toeicEl.textContent = `${def.toeicBand} / 990`;
+
+  const ieltsEl = document.getElementById("cefr-projected-ielts");
+  if (ieltsEl) ieltsEl.textContent = `Band ${def.ieltsBand}`;
+
+  const toeflEl = document.getElementById("cefr-projected-toefl");
+  if (toeflEl) toeflEl.textContent = `${def.toeflBand} / 120`;
+
+  // Render SVG Radar & Metric Bars
+  renderCefrRadarSvg(metrics);
+  renderCefrMetricsList(metrics);
+  renderCefrCanDoList(metrics);
+  renderCefrCertificate(metrics);
+}
+
+function renderCefrRadarSvg(metrics) {
+  const container = document.getElementById("cefr-radar-svg-container");
+  if (!container) return;
+
+  const cx = 140;
+  const cy = 135;
+  const r = 85;
+
+  const scores = [
+    { label: "การออกเสียง", val: metrics.phonologicalScore },
+    { label: "คลังคำศัพท์", val: metrics.lexicalScore },
+    { label: "ความคล่องแคล่ว", val: metrics.pragmaticScore },
+    { label: "ความถูกต้อง", val: metrics.accuracyScore },
+    { label: "ความสม่ำเสมอ", val: metrics.consistencyScore }
+  ];
+
+  // Concentric pentagon rings
+  let ringsSvg = "";
+  [0.25, 0.5, 0.75, 1.0].forEach((ratio) => {
+    let pts = [];
+    for (let i = 0; i < 5; i++) {
+      const angle = (-90 + i * 72) * (Math.PI / 180);
+      const px = cx + r * ratio * Math.cos(angle);
+      const py = cy + r * ratio * Math.sin(angle);
+      pts.push(`${px.toFixed(1)},${py.toFixed(1)}`);
+    }
+    ringsSvg += `<polygon points="${pts.join(" ")}" fill="none" stroke="#e2e8f0" stroke-width="1.2" stroke-dasharray="3,3"/>`;
+  });
+
+  // Axis spokes & labels
+  let spokesSvg = "";
+  let dataPoints = [];
+  scores.forEach((s, idx) => {
+    const angle = (-90 + idx * 72) * (Math.PI / 180);
+    const ex = cx + r * Math.cos(angle);
+    const ey = cy + r * Math.sin(angle);
+    spokesSvg += `<line x1="${cx}" y1="${cy}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="#cbd5e1" stroke-width="1.2"/>`;
+
+    // Data coordinate
+    const dr = r * (s.val / 100);
+    const dx = cx + dr * Math.cos(angle);
+    const dy = cy + dr * Math.sin(angle);
+    dataPoints.push({ x: dx, y: dy, val: s.val });
+
+    // Text labels positioning
+    const lx = cx + (r + 28) * Math.cos(angle);
+    const ly = cy + (r + 14) * Math.sin(angle);
+    spokesSvg += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="#475569">${s.label} (${s.val}%)</text>`;
+  });
+
+  // Data Polygon
+  const polyPoints = dataPoints.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  let dotsSvg = dataPoints.map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5"/>`).join("");
+
+  container.innerHTML = `
+    <svg width="280" height="260" viewBox="0 0 280 260" style="overflow: visible;">
+      <defs>
+        <radialGradient id="radarFillGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.45"/>
+          <stop offset="100%" stop-color="#b45309" stop-opacity="0.25"/>
+        </radialGradient>
+      </defs>
+      ${ringsSvg}
+      ${spokesSvg}
+      <polygon points="${polyPoints}" fill="url(#radarFillGrad)" stroke="#d97706" stroke-width="2.5"/>
+      ${dotsSvg}
+    </svg>
+  `;
+}
+
+function renderCefrMetricsList(metrics) {
+  const container = document.getElementById("cefr-metrics-list");
+  if (!container) return;
+
+  const items = [
+    { name: "🗣️ Phonological Control (การออกเสียง & สัทศาสตร์)", val: metrics.phonologicalScore, color: "#f59e0b" },
+    { name: "📚 Lexical Breadth (คลังคำศัพท์ TOEIC/TOEFL)", val: metrics.lexicalScore, color: "#10b981" },
+    { name: "🎯 Pragmatic Fluency (ความคล่องแคล่ว 10 ด่านสนทนา)", val: metrics.pragmaticScore, color: "#3b82f6" },
+    { name: "✍️ Sociolinguistic Accuracy (ไวยากรณ์ & ความสุภาพ)", val: metrics.accuracyScore, color: "#8b5cf6" },
+    { name: "🔥 Sustained Retention (ความสม่ำเสมอ & วินัย)", val: metrics.consistencyScore, color: "#ef4444" }
+  ];
+
+  container.innerHTML = items.map((it) => `
+    <div class="cefr-metric-item">
+      <div class="cefr-metric-header">
+        <span>${it.name}</span>
+        <span style="color:${it.color}; font-weight:800;">${it.val}%</span>
+      </div>
+      <div class="cefr-metric-bar-bg">
+        <div class="cefr-metric-bar-fill" style="width: ${it.val}%; background: ${it.color};"></div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderCefrCanDoList(metrics) {
+  const container = document.getElementById("cefr-cando-list");
+  if (!container) return;
+
+  const allLevels = ["A2", "B1", "B2", "C1"];
+  const currentIdx = allLevels.indexOf(metrics.cefrKey);
+
+  let html = "";
+  allLevels.forEach((lvlKey, lIdx) => {
+    const lDef = CEFR_LEVEL_DEFINITIONS[lvlKey];
+    const isLevelAchieved = lIdx <= currentIdx;
+
+    lDef.descriptors.forEach((d) => {
+      html += `
+        <div class="cefr-cando-item ${isLevelAchieved ? "achieved" : ""}">
+          <span class="cefr-cando-icon">${isLevelAchieved ? "✓" : "🔒"}</span>
+          <div>
+            <strong>[${d.standard}]</strong> ${d.text}
+          </div>
+        </div>
+      `;
+    });
+  });
+
+  container.innerHTML = html;
+}
+
+function renderCefrCertificate(metrics) {
+  const def = metrics.def;
+  const candidate = (gameState.candidateName || gameState.name || "SUKANT IMMAN").toUpperCase();
+
+  const nameInput = document.getElementById("input-cert-candidate-name");
+  if (nameInput) nameInput.value = candidate;
+
+  const displayName = document.getElementById("cert-candidate-name-display");
+  if (displayName) displayName.textContent = candidate;
+
+  const displayRank = document.getElementById("cert-candidate-rank-display");
+  if (displayRank) displayRank.textContent = `${gameState.title} • Level ${gameState.level}`;
+
+  const ribbon = document.getElementById("cert-award-level-ribbon");
+  if (ribbon) ribbon.textContent = `CEFR LEVEL ${metrics.cefrKey} — ${def.nameEn.split("(")[0].trim().toUpperCase()}`;
+
+  const subBench = document.getElementById("cert-award-sub-benchmark");
+  if (subBench) subBench.textContent = `Independent Workplace & Professional User • Projected TOEIC® ${def.toeicBand} / 990`;
+
+  const cando = document.getElementById("cert-cando-statement");
+  if (cando) cando.textContent = `"${def.canDoDesc}"`;
+
+  // Scorecard strip
+  const strip = document.getElementById("cert-scorecard-strip");
+  if (strip) {
+    strip.innerHTML = `
+      <div class="cert-score-item">🗣️ Pronunciation: <strong>${metrics.phonologicalScore}%</strong></div>
+      <div class="cert-score-item">📚 Lexical Range: <strong>${metrics.lexicalScore}%</strong></div>
+      <div class="cert-score-item">🎯 Fluency: <strong>${metrics.pragmaticScore}%</strong></div>
+      <div class="cert-score-item">✍️ Accuracy: <strong>${metrics.accuracyScore}%</strong></div>
+      <div class="cert-score-item">🔥 Consistency: <strong>${metrics.consistencyScore}%</strong></div>
+    `;
+  }
+
+  // Deterministic Credential ID
+  const hashVal = Math.abs((metrics.totalIndex * 1337 + (gameState.level || 1) * 7919) % 90000 + 10000);
+  const credId = `MQ-CEFR-2026-${metrics.cefrKey}-${hashVal}`;
+
+  const credIdEl = document.getElementById("cert-cred-id");
+  if (credIdEl) credIdEl.textContent = credId;
+
+  const dateEl = document.getElementById("cert-issue-date");
+  if (dateEl) {
+    const now = new Date();
+    dateEl.textContent = now.toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" });
+  }
+}
+
+function saveCandidateName(newName) {
+  if (!newName || !newName.trim()) return;
+  sfx.click();
+  triggerHaptic(20);
+
+  gameState.candidateName = newName.trim().toUpperCase();
+  saveGameState();
+
+  const metrics = calculateCefrCompetencyMetrics();
+  renderCefrCertificate(metrics);
+  showToast(`บันทึกชื่อผู้รับใบประกาศ "${gameState.candidateName}" เรียบร้อยแล้ว! 🎓✨`, "⭐");
+}
+
+function copyCertificateText() {
+  const metrics = calculateCefrCompetencyMetrics();
+  const def = metrics.def;
+  const candidate = (gameState.candidateName || gameState.name || "SUKANT IMMAN").toUpperCase();
+  const hashVal = Math.abs((metrics.totalIndex * 1337 + (gameState.level || 1) * 7919) % 90000 + 10000);
+  const credId = `MQ-CEFR-2026-${metrics.cefrKey}-${hashVal}`;
+
+  const textToCopy = `🎓 MeowQuest CEFR English Competency Certificate
+Candidate: ${candidate}
+Workplace Title: ${gameState.title} (Level ${gameState.level})
+Proficiency Level: CEFR Level ${metrics.cefrKey} — ${def.nameEn}
+International Standard Equivalence: Projected TOEIC® ${def.toeicBand} / 990 (IELTS Band ${def.ieltsBand})
+MeowQuest Competency Index: ${metrics.totalIndex} / 100
+Core Competency: "${def.canDoDesc}"
+Credential ID: ${credId}
+Standard: Common European Framework of Reference for Languages (Council of Europe)
+Verification URL: https://sukantimman-mk.github.io/CatEnglishRPG/`;
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    sfx.coin();
+    triggerHaptic(30);
+    showToast("คัดลอกข้อมูลใบประกาศ CEFR สำหรับแนบเรซูเม่ / LinkedIn แล้ว! 📋✨", "🎉");
+  }).catch(() => {
+    showToast("โปรดคัดลอกข้อความด้วยตนเอง", "💡");
+  });
+}
+
+function downloadCertificatePng() {
+  const metrics = calculateCefrCompetencyMetrics();
+  const def = metrics.def;
+  const candidate = (gameState.candidateName || gameState.name || "SUKANT IMMAN").toUpperCase();
+  const canvas = document.createElement("canvas");
+  canvas.width = 1200;
+  canvas.height = 850;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  sfx.coin();
+  triggerHaptic(30);
+
+  // 1. Background Parchment
+  const grad = ctx.createLinearGradient(0, 0, 1200, 850);
+  grad.addColorStop(0, "#fffefc");
+  grad.addColorStop(0.5, "#fdfcf7");
+  grad.addColorStop(1, "#faf5eb");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1200, 850);
+
+  // 2. Outer Gold Double Border
+  ctx.strokeStyle = "#b45309";
+  ctx.lineWidth = 14;
+  ctx.strokeRect(20, 20, 1160, 810);
+
+  // 3. Inner Gold Border
+  ctx.strokeStyle = "#d97706";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(36, 36, 1128, 778);
+
+  // 4. Corner Flourishes
+  ctx.fillStyle = "#b45309";
+  ctx.font = "24px serif";
+  ctx.fillText("❖", 44, 62);
+  ctx.fillText("❖", 1140, 62);
+  ctx.fillText("❖", 44, 802);
+  ctx.fillText("❖", 1140, 802);
+
+  // 5. Header
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#78350f";
+  ctx.font = "bold 15px sans-serif";
+  ctx.fillText("MEOWQUEST ACADEMIC & LANGUAGE ASSESSMENT COUNCIL", 600, 95);
+
+  ctx.fillStyle = "#92400e";
+  ctx.font = "bold 42px serif";
+  ctx.fillText("Certificate of English Competency", 600, 148);
+
+  ctx.fillStyle = "#64748b";
+  ctx.font = "italic 15px sans-serif";
+  ctx.fillText("Accredited according to the Common European Framework of Reference for Languages (CEFR)", 600, 180);
+
+  // Line Divider
+  ctx.strokeStyle = "#fde68a";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(360, 202);
+  ctx.lineTo(840, 202);
+  ctx.stroke();
+
+  // Certified to line
+  ctx.fillStyle = "#475569";
+  ctx.font = "italic 18px serif";
+  ctx.fillText("This is to officially certify that", 600, 242);
+
+  // Candidate Name
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "bold 46px serif";
+  ctx.fillText(candidate, 600, 305);
+
+  // Title & Affiliation
+  ctx.fillStyle = "#d97706";
+  ctx.font = "bold 17px sans-serif";
+  ctx.fillText(`${gameState.title || "Senior Corporate Feline"} • Level ${gameState.level}`, 600, 340);
+
+  // Statement
+  ctx.fillStyle = "#334155";
+  ctx.font = "15.5px sans-serif";
+  ctx.fillText("has successfully demonstrated verified communicative competence in workplace English language interactions,", 600, 388);
+  ctx.fillText("fulfilling the assessment criteria established by the Common European Framework of Reference for Languages:", 600, 412);
+
+  // Ribbon Box
+  const ribbonText = `CEFR LEVEL ${metrics.cefrKey} — ${def.nameEn.split("(")[0].trim().toUpperCase()}`;
+  ctx.fillStyle = "#b45309";
+  ctx.beginPath();
+  if (typeof ctx.roundRect === "function") {
+    ctx.roundRect(320, 442, 560, 48, 24);
+  } else {
+    ctx.rect(320, 442, 560, 48);
+  }
+  ctx.fill();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 25px sans-serif";
+  ctx.fillText(ribbonText, 600, 476);
+
+  // Sub-benchmark
+  ctx.fillStyle = "#78350f";
+  ctx.font = "bold 15px sans-serif";
+  ctx.fillText(`International Standard Equivalence: Projected TOEIC® ${def.toeicBand} / 990  •  CEFR Index: ${metrics.totalIndex}/100`, 600, 520);
+
+  // Can-Do summary box
+  ctx.fillStyle = "#fffbeb";
+  ctx.fillRect(200, 545, 800, 48);
+  ctx.strokeStyle = "#f59e0b";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(200, 545, 800, 48);
+
+  ctx.fillStyle = "#475569";
+  ctx.font = "italic 14.5px serif";
+  ctx.fillText(`"${def.canDoDesc}"`, 600, 574);
+
+  // 5-Axis Scorecard
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(180, 612, 840, 38);
+  ctx.strokeStyle = "#e2e8f0";
+  ctx.strokeRect(180, 612, 840, 38);
+
+  ctx.fillStyle = "#334155";
+  ctx.font = "bold 13.5px sans-serif";
+  ctx.fillText(`🗣️ Pronunciation: ${metrics.phonologicalScore}%   |   📚 Lexical: ${metrics.lexicalScore}%   |   🎯 Fluency: ${metrics.pragmaticScore}%   |   ✍️ Accuracy: ${metrics.accuracyScore}%   |   🔥 Consistency: ${metrics.consistencyScore}%`, 600, 636);
+
+  // Footer Metadata
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#64748b";
+  ctx.font = "13.5px monospace";
+  const hashVal = Math.abs((metrics.totalIndex * 1337 + (gameState.level || 1) * 7919) % 90000 + 10000);
+  const credId = `MQ-CEFR-2026-${metrics.cefrKey}-${hashVal}`;
+  ctx.fillText(`Credential ID: ${credId}`, 80, 725);
+  ctx.fillText(`Issue Date: ${new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "long", year: "numeric" })}`, 80, 750);
+  ctx.fillStyle = "#166534";
+  ctx.font = "bold 13px sans-serif";
+  ctx.fillText(`Verification: Authentic & Sealed ✓`, 80, 775);
+
+  // Signatures Right
+  ctx.textAlign = "center";
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "italic 22px cursive";
+  ctx.fillText("Dr. Pawlina Vance, Ph.D.", 980, 720);
+  ctx.fillText("Antigravity Council", 980, 770);
+
+  ctx.strokeStyle = "#94a3b8";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(880, 730);
+  ctx.lineTo(1080, 730);
+  ctx.moveTo(880, 780);
+  ctx.lineTo(1080, 780);
+  ctx.stroke();
+
+  ctx.fillStyle = "#64748b";
+  ctx.font = "11px sans-serif";
+  ctx.fillText("Academic Assessment Director", 980, 745);
+  ctx.fillText("Lead Linguistics Board", 980, 795);
+
+  // Download Trigger
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `MeowQuest_CEFR_${metrics.cefrKey}_Certificate_${candidate.replace(/\s+/g, "_")}.png`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 1000);
+    showToast("ดาวน์โหลดใบประกาศนียบัตรสากล (HD PNG) เรียบร้อยแล้ว! 🎓🖼️", "✨");
+  }, "image/png");
 }

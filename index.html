@@ -98,6 +98,12 @@
           <span class="hud-podcast-text">วิทยุ 1 นาที</span>
         </button>
 
+        <!-- CEFR Competency & Certificate Button (Header) -->
+        <button id="btn-hud-cefr-cert" class="hud-item hud-cefr-pill" title="รายงานสมรรถนะ CEFR & ใบประกาศนียบัตรสากล">
+          <span>🏅</span>
+          <span id="hud-cefr-level-text" class="hud-cefr-text">CEFR B1</span>
+        </button>
+
         <!-- Install PWA Button (Header) -->
         <button id="btn-hud-install-pwa" class="hud-item hud-install-pill" title="ติดตั้งเป็นแอปมือถือเต็มจอ (Add to Home Screen)">
           <span>📲</span>
@@ -227,6 +233,9 @@
             </button>
             <button id="btn-hero-goto-vocab" class="btn-pet-action btn-pet-vocab" title="พาน้องแมวไปติวการ์ดศัพท์โทอิค/โทเฟล">
               <span>📚</span> ติวการ์ดศัพท์
+            </button>
+            <button id="btn-hero-open-cefr" class="btn-pet-action btn-pet-cefr" title="ดูผลประเมินสมรรถนะ CEFR และออกใบประกาศนียบัตร">
+              <span>🏅</span> ประเมิน CEFR &amp; ใบประกาศ
             </button>
           </div>
         </div>
@@ -750,6 +759,17 @@
           </p>
         </div>
 
+        <!-- CEFR Standards & Certificate Card -->
+        <div class="settings-card cefr-settings-card">
+          <h3><span>🏅</span> มาตรฐานสากล CEFR &amp; ใบประกาศนียบัตร</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+            ตรวจสอบเรดาร์สมรรถนะ 5 มิติ (การออกเสียง, คำศัพท์, ความคล่องแคล่ว, ความถูกต้อง, ความสม่ำเสมอ) และพิมพ์ใบประกาศนียบัตรพร้อมรหัสรับรองสำหรับแนบเรซูเม่
+          </p>
+          <button id="btn-settings-open-cefr" class="btn-primary-action" style="background: linear-gradient(135deg, #d97706, #b45309);">
+            🎓 เปิดใบประกาศ &amp; ผลประเมิน CEFR
+          </button>
+        </div>
+
         <!-- PWA Mobile App Card -->
         <div class="settings-card pwa-settings-card">
           <h3><span>📲</span> ติดตั้งเป็นแอปมือถือเต็มจอ (PWA)</h3>
@@ -943,6 +963,209 @@
         <div class="ios-step-item">
           <span class="ios-step-num">3</span>
           <div>แตะปุ่ม <strong>"เพิ่ม" (Add)</strong> มุมขวาบน จะได้ไอคอนน้องแมวบนหน้าจอโฮมทันที!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================
+       CEFR COMPETENCY RADAR & OFFICIAL CERTIFICATE MODAL
+       ============================================== -->
+  <div id="cefr-cert-modal-overlay" class="modal-overlay">
+    <div class="modal-card cefr-cert-modal-card">
+      <div class="modal-header-row">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">🏅</span>
+          <div>
+            <h3>รายงานสมรรถนะภาษาอังกฤษสากล &amp; ใบประกาศนียบัตร (CEFR Framework)</h3>
+            <p>ประเมินทักษะตามกรอบมาตรฐาน Common European Framework of Reference for Languages</p>
+          </div>
+        </div>
+        <button id="btn-close-cefr-modal" class="btn-modal-close" title="ปิด">✕</button>
+      </div>
+
+      <!-- CEFR Segmented Tabs -->
+      <div class="cefr-modal-tabs">
+        <button id="tab-btn-cefr-radar" class="cefr-tab-btn active">
+          <span>📊</span> เรดาร์สมรรถนะ 5 มิติ (CEFR Radar)
+        </button>
+        <button id="tab-btn-cefr-cert" class="cefr-tab-btn">
+          <span>🎓</span> ใบประกาศนียบัตรรับรอง (Official Certificate)
+        </button>
+      </div>
+
+      <!-- PANE 1: CEFR Competency Radar & Benchmarks -->
+      <div id="cefr-pane-radar" class="cefr-pane active">
+        <!-- Top Level & Score Overview Cards -->
+        <div class="cefr-overview-grid">
+          <div class="cefr-overview-card level-card">
+            <div class="overview-card-label">ระดับสมรรถนะ CEFR ปัจจุบัน</div>
+            <div class="cefr-big-badge" id="cefr-overview-badge">CEFR B1</div>
+            <div class="cefr-big-desc" id="cefr-overview-level-name">ผู้ใช้ภาษาอิสระระดับต้น (Threshold)</div>
+            <div class="cefr-progress-wrap">
+              <div class="cefr-progress-bar-bg">
+                <div id="cefr-level-progress-fill" class="cefr-progress-bar-fill" style="width: 65%;"></div>
+              </div>
+              <span id="cefr-level-progress-text" class="cefr-progress-text">65/100 (อีก 10 คะแนนสู่ CEFR B2)</span>
+            </div>
+          </div>
+
+          <div class="cefr-overview-card toeic-card">
+            <div class="overview-card-label">เทียบเคียงคะแนนสากล (International Benchmarks)</div>
+            <div class="benchmark-score-row">
+              <span class="benchmark-label">🎯 Projected TOEIC®:</span>
+              <strong id="cefr-projected-toeic" class="benchmark-val">550 - 750 / 990</strong>
+            </div>
+            <div class="benchmark-score-row">
+              <span class="benchmark-label">🌐 Projected IELTS:</span>
+              <strong id="cefr-projected-ielts" class="benchmark-val">Band 5.5 - 6.5</strong>
+            </div>
+            <div class="benchmark-score-row">
+              <span class="benchmark-label">📚 Projected TOEFL iBT®:</span>
+              <strong id="cefr-projected-toefl" class="benchmark-val">54 - 78 / 120</strong>
+            </div>
+            <p class="benchmark-note">* คำนวณจากความถูกต้องใน 10 ด่านสนทนา, คลังคำศัพท์ TOEIC และความแม่นยำสำเนียง</p>
+          </div>
+        </div>
+
+        <!-- Radar Chart & 5 Skills Breakdown Container -->
+        <div class="cefr-analytics-row">
+          <!-- Left: SVG Radar Chart -->
+          <div class="cefr-radar-box">
+            <h4 class="analytics-subheading">เรดาร์สมรรถนะ 5 มิติ (Spider Chart)</h4>
+            <div id="cefr-radar-svg-container" class="radar-svg-wrapper">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+          <!-- Right: 5 Dimensional Metric Bars -->
+          <div class="cefr-metrics-box">
+            <h4 class="analytics-subheading">รายละเอียดผลคะแนน 5 ทักษะหลัก</h4>
+            <div id="cefr-metrics-list" class="cefr-metrics-list">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Official CEFR Can-Do Descriptors Checklist -->
+        <div class="cefr-cando-container">
+          <h4 class="analytics-subheading">📋 มาตรฐานทักษะที่ทำได้จริง (Council of Europe Can-Do Descriptors)</h4>
+          <div id="cefr-cando-list" class="cefr-cando-grid">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+
+        <div class="cefr-pane-footer">
+          <span class="cefr-footer-hint">💡 สามารถออกใบประกาศนียบัตรทางการเพื่อระบุชื่อจริง นำไปแนบเรซูเม่หรือแฟ้มผลงานได้</span>
+          <button id="btn-goto-cert-tab" class="btn-primary-action btn-gold-cert">
+            🎓 ดูและออกใบประกาศนียบัตรสากล ➔
+          </button>
+        </div>
+      </div>
+
+      <!-- PANE 2: Official Certificate of Achievement -->
+      <div id="cefr-pane-cert" class="cefr-pane" style="display:none;">
+        <!-- Candidate Name Editor Bar -->
+        <div class="cert-name-config-bar">
+          <div class="cert-name-input-group">
+            <label for="input-cert-candidate-name">✏️ ระบุชื่อ-นามสกุลจริงภาษาอังกฤษ (สำหรับพิมพ์ลงบนใบประกาศ / แนบเรซูเม่):</label>
+            <div style="display: flex; gap: 8px; width: 100%;">
+              <input type="text" id="input-cert-candidate-name" placeholder="เช่น SUKANT IMMAN" maxlength="45">
+              <button id="btn-save-cert-name" class="btn-save-cert-name">บันทึกชื่อ</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Printable / Exportable Official Certificate Component -->
+        <div class="cert-scroll-wrapper">
+          <div id="cefr-certificate-card" class="cefr-certificate-card">
+            <!-- Ornamental Border Container -->
+            <div class="cert-inner-border">
+              <div class="cert-corner corner-tl">❖</div>
+              <div class="cert-corner corner-tr">❖</div>
+              <div class="cert-corner corner-bl">❖</div>
+              <div class="cert-corner corner-br">❖</div>
+
+              <!-- Certificate Header -->
+              <div class="cert-header">
+                <div class="cert-academic-seal">
+                  <div class="cert-seal-icon">🏅</div>
+                  <div class="cert-seal-text">VERIFIED CEFR COMPETENCY</div>
+                </div>
+                <div class="cert-title-group">
+                  <span class="cert-org-name">MEOWQUEST ACADEMIC &amp; LANGUAGE ASSESSMENT COUNCIL</span>
+                  <h1 class="cert-main-title">Certificate of English Competency</h1>
+                  <span class="cert-standard-ref">In Accordance with the Common European Framework of Reference for Languages (CEFR)</span>
+                </div>
+              </div>
+
+              <!-- Certificate Body -->
+              <div class="cert-body">
+                <p class="cert-certify-line">This is to officially certify that</p>
+                <div id="cert-candidate-name-display" class="cert-candidate-name">SUKANT IMMAN</div>
+                <div id="cert-candidate-rank-display" class="cert-candidate-rank">Senior Energetic Feline • Level 7</div>
+                <p class="cert-statement">
+                  has successfully demonstrated verified communicative competence in workplace and daily English language interactions, fulfilling the rigorous assessment criteria established by the Common European Framework of Reference for Languages:
+                </p>
+
+                <!-- Big CEFR Award Ribbon -->
+                <div class="cert-award-box">
+                  <div id="cert-award-level-ribbon" class="cert-award-ribbon">CEFR LEVEL B2 — VANTAGE</div>
+                  <div id="cert-award-sub-benchmark" class="cert-award-sub">Independent Workplace &amp; Professional User • Projected TOEIC® 785 – 850 / 990</div>
+                </div>
+
+                <!-- Verified Can-Do Descriptor Statement -->
+                <div id="cert-cando-statement" class="cert-cando-statement">
+                  "Demonstrates effective operational proficiency in professional workplace English, cross-functional business communication, and spontaneous interpersonal dialogue."
+                </div>
+
+                <!-- 5-Dimensional Competency Scorecard Strip -->
+                <div id="cert-scorecard-strip" class="cert-scorecard-strip">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+
+              <!-- Certificate Footer -->
+              <div class="cert-footer">
+                <div class="cert-footer-meta">
+                  <div><strong>Credential ID:</strong> <span id="cert-cred-id">MQ-CEFR-2026-B2-88741</span></div>
+                  <div><strong>Issue Date:</strong> <span id="cert-issue-date">07 November 2026</span></div>
+                  <div><strong>Verification Status:</strong> <span style="color:#166534; font-weight:700;">Authentic &amp; Cryptographically Sealed ✓</span></div>
+                </div>
+
+                <div class="cert-footer-seal-wrap">
+                  <div class="cert-digital-stamp">
+                    <span style="font-size: 1.8rem;">🐾</span>
+                    <span style="font-size: 0.65rem; font-weight:800; letter-spacing:1px;">OFFICIAL SEAL</span>
+                  </div>
+                </div>
+
+                <div class="cert-signatures">
+                  <div class="cert-sign-col">
+                    <div class="cert-sign-line">Dr. Pawlina Vance, Ph.D.</div>
+                    <span class="cert-sign-title">Academic Assessment Director</span>
+                  </div>
+                  <div class="cert-sign-col">
+                    <div class="cert-sign-line">MeowQuest Board</div>
+                    <span class="cert-sign-title">Lead Linguistics Council</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certificate Export & Share Actions Bar -->
+        <div class="cert-actions-bar">
+          <button id="btn-download-cert-png" class="btn-cert-action btn-cert-download">
+            <span>📥</span> ดาวน์โหลดรูปภาพใบประกาศ (HD PNG)
+          </button>
+          <button id="btn-print-cert" class="btn-cert-action btn-cert-print">
+            <span>🖨️</span> พิมพ์หรือบันทึกเป็น PDF (Print)
+          </button>
+          <button id="btn-copy-cert-text" class="btn-cert-action btn-cert-copy">
+            <span>📋</span> คัดลอกผลประเมินใส่ LinkedIn / เรซูเม่
+          </button>
         </div>
       </div>
     </div>

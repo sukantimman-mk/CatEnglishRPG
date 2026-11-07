@@ -9,12 +9,15 @@ const VOCAB_DECKS = {
     id: "toeic",
     title: "TOEIC Workplace Essentials",
     titleTh: "คำศัพท์ TOEIC สำหรับงานออฟฟิศและสัญญา",
+    cefrLevel: "B1 - B2",
+    cefrBand: "CEFR B1-B2 (TOEIC 550 - 785)",
     icon: "🎯",
     badgeColor: "#ff7b54",
     description: "ศัพท์ที่พบบ่อยที่สุดในข้อสอบ TOEIC และอีเมล สัญญา การประชุมทางธุรกิจ",
     words: [
       {
         id: "w_collab",
+        cefrLevel: "B1",
         word: "Collaborate",
         phonetic: "/kəˈlæb.ə.reɪt/",
         pos: "Verb",
@@ -26,6 +29,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_feasibility",
+        cefrLevel: "B2",
         word: "Feasibility",
         phonetic: "/ˌfiː.zəˈbɪl.ə.ti/",
         pos: "Noun",
@@ -37,6 +41,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_discrepancy",
+        cefrLevel: "B2",
         word: "Discrepancy",
         phonetic: "/dɪˈskrep.ən.si/",
         pos: "Noun",
@@ -48,6 +53,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_implement",
+        cefrLevel: "B1",
         word: "Implement",
         phonetic: "/ˈɪm.plɪ.ment/",
         pos: "Verb",
@@ -70,6 +76,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_contingency",
+        cefrLevel: "B2",
         word: "Contingency",
         phonetic: "/kənˈtɪn.dʒən.si/",
         pos: "Noun",
@@ -146,6 +153,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_facet",
+        cefrLevel: "B2",
         word: "Facet",
         phonetic: "/ˈfæs.ɪt/",
         pos: "Noun",
@@ -161,12 +169,15 @@ const VOCAB_DECKS = {
     id: "business",
     title: "Executive Business English",
     titleTh: "ภาษาอังกฤษเจรจาธุรกิจระดับผู้บริหาร",
+    cefrLevel: "B2 - C1",
+    cefrBand: "CEFR B2-C1 (TOEIC 785 - 990 / Executive)",
     icon: "💼",
     badgeColor: "#67c29c",
     description: "ศัพท์และประโยคระดับ C-Level สำหรับการต่อรองราคา การโน้มน้าวใจในที่ประชุม และการนำเสนอดีล",
     words: [
       {
         id: "w_leverage",
+        cefrLevel: "B2",
         word: "Leverage",
         phonetic: "/ˈliː.vər.ɪdʒ/",
         pos: "Verb / Noun",
@@ -178,6 +189,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_facilitate",
+        cefrLevel: "B2",
         word: "Facilitate",
         phonetic: "/fəˈsɪl.ɪ.teɪt/",
         pos: "Verb",
@@ -189,6 +201,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_remuneration",
+        cefrLevel: "C1",
         word: "Remuneration",
         phonetic: "/rɪˌmjuː.nərˈeɪ.ʃən/",
         pos: "Noun",
@@ -200,6 +213,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_expedite",
+        cefrLevel: "B2",
         word: "Expedite",
         phonetic: "/ˈek.spə.daɪt/",
         pos: "Verb",
@@ -211,6 +225,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_allocate",
+        cefrLevel: "B2",
         word: "Allocate",
         phonetic: "/ˈæl.ə.keɪt/",
         pos: "Verb",
@@ -222,6 +237,7 @@ const VOCAB_DECKS = {
       },
       {
         id: "w_alignment",
+        cefrLevel: "B2",
         word: "Alignment",
         phonetic: "/əˈlaɪn.mənt/",
         pos: "Noun",
