@@ -538,531 +538,412 @@ function triggerHaptic(pattern = 20) {
 // ==========================================
 function renderCatSvg(equipped = gameState.equipped, fur = gameState.furColor || "calico", isHappy = isCatHappyTemp) {
   if (!equipped) equipped = {};
-  // Fur palette definitions
-  let bodyFill = "#ffffff";
-  let bodyStroke = "#d7ccc8";
-  let bellyFill = "#fffbf5";
-  let innerEarFill = "#ffccd5";
-  let eyeColor = "#d97706";
-  let eyeSparkle = "#fbbf24";
-  let pawFill = "#ffffff";
-  let pawStroke = "#d7ccc8";
-  let leftEarBaseFill = bodyFill;
-  let rightEarBaseFill = bodyFill;
-  let extraMarkings = "";
+  const uid = "c3d_" + Math.random().toString(36).substring(2, 7);
 
-  if (fur === "calico") {
-    // Japanese Calico Lucky Cat (Maneki-neko) - Default Character
-    bodyFill = "#ffffff";
-    bodyStroke = "#cfd8dc";
-    bellyFill = "#fffbf5";
-    innerEarFill = "#ffb6c1";
-    eyeColor = "#d97706"; // Warm honey golden amber
-    eyeSparkle = "#fcd34d";
-    pawFill = "#ffffff";
-    pawStroke = "#cfd8dc";
-    leftEarBaseFill = "#37474f"; // Charcoal black left ear
-    rightEarBaseFill = "#ff9800"; // Pastel orange right ear
-    extraMarkings = `
-      <!-- Calico Soft Face Patches -->
-      <path d="M64,36 Q80,34 88,48 Q86,60 74,60 Q66,54 64,36 Z" fill="#ff9800" opacity="0.95"/>
-      <path d="M32,46 Q40,32 50,38 Q48,50 36,54 Z" fill="#37474f" opacity="0.95"/>
-      <!-- Chubby Pink Cheeks -->
-      <ellipse cx="40" cy="62" rx="4.5" ry="3.2" fill="#ff80ab" opacity="0.65"/>
-      <ellipse cx="80" cy="62" rx="4.5" ry="3.2" fill="#ff80ab" opacity="0.65"/>
-      <!-- Body Calico Patches -->
-      <path d="M68,80 Q84,78 82,94 Q72,96 68,88 Z" fill="#ff9800"/>
-      <circle cx="44" cy="88" r="6.5" fill="#37474f"/>
-    `;
-  } else if (fur === "british_blue") {
-    // British Shorthair (Classic Blue)
-    bodyFill = "#78909c";
-    bodyStroke = "#546e7a";
-    bellyFill = "#90a4ae";
-    innerEarFill = "#b0bec5";
-    eyeColor = "#e67e22"; // Deep copper amber
-    eyeSparkle = "#f39c12";
-    pawFill = "#78909c";
-    pawStroke = "#546e7a";
-    leftEarBaseFill = "#78909c";
-    rightEarBaseFill = "#78909c";
-    extraMarkings = `
-      <!-- British Shorthair Chubby Cheeks -->
-      <ellipse cx="40" cy="62" rx="5" ry="3.5" fill="#ffb74d" opacity="0.3"/>
-      <ellipse cx="80" cy="62" rx="5" ry="3.5" fill="#ffb74d" opacity="0.3"/>
-    `;
-  } else if (fur === "siamese") {
-    // Royal Siamese (Wichienmaat)
-    bodyFill = "#f5ebe1";
-    bodyStroke = "#d7ccc8";
-    bellyFill = "#ffffff";
-    innerEarFill = "#4e342e";
-    eyeColor = "#0288d1"; // Deep Sapphire Blue
-    eyeSparkle = "#81d4fa";
-    pawFill = "#4e342e";
-    pawStroke = "#3e2723";
-    leftEarBaseFill = "#4e342e";
-    rightEarBaseFill = "#4e342e";
-    extraMarkings = `
-      <!-- Siamese Dark Face Mask -->
-      <ellipse cx="60" cy="58" rx="19" ry="13" fill="#4e342e" opacity="0.95"/>
-      <ellipse cx="41" cy="63" rx="4" ry="2.8" fill="#81d4fa" opacity="0.3"/>
-      <ellipse cx="79" cy="63" rx="4" ry="2.8" fill="#81d4fa" opacity="0.3"/>
-    `;
-  } else if (fur === "scottish_fold") {
-    // Scottish Fold (Cream Blonde Folded)
-    bodyFill = "#ffe0b2";
-    bodyStroke = "#ffb74d";
-    bellyFill = "#fff8e1";
-    innerEarFill = "#ffcc80";
-    eyeColor = "#4e342e";
-    eyeSparkle = "#ffa726";
-    pawFill = "#fff8e1";
-    pawStroke = "#ffb74d";
-    leftEarBaseFill = "#ffa726";
-    rightEarBaseFill = "#ffa726";
-    extraMarkings = `
-      <!-- Folded Ears caps -->
-      <path d="M34,42 Q44,28 50,38" fill="#ffb74d" stroke="#e65100" stroke-width="1.8"/>
-      <path d="M86,42 Q76,28 70,38" fill="#ffb74d" stroke="#e65100" stroke-width="1.8"/>
-      <ellipse cx="40" cy="62" rx="4.5" ry="3" fill="#ff80ab" opacity="0.6"/>
-      <ellipse cx="80" cy="62" rx="4.5" ry="3" fill="#ff80ab" opacity="0.6"/>
-    `;
-  } else if (fur === "khao_manee" || fur === "white") {
-    // Khao Manee (Diamond Eye Thai White Cat)
-    bodyFill = "#ffffff";
-    bodyStroke = "#cfd8dc";
-    bellyFill = "#ffffff";
-    innerEarFill = "#ffcdd2";
-    eyeColor = "#00b0ff"; // Odd eyes handled below
-    eyeSparkle = "#80d8ff";
-    pawFill = "#ffffff";
-    pawStroke = "#b0bec5";
-    leftEarBaseFill = "#ffffff";
-    rightEarBaseFill = "#ffffff";
-    extraMarkings = `
-      <!-- Radiant Jewel Glisten -->
-      <circle cx="60" cy="38" r="2" fill="#80d8ff" opacity="0.8"/>
-      <ellipse cx="40" cy="62" rx="4" ry="2.8" fill="#ff80ab" opacity="0.5"/>
-      <ellipse cx="80" cy="62" rx="4" ry="2.8" fill="#ff80ab" opacity="0.5"/>
-    `;
-  } else if (fur === "bengal") {
-    // Bengal Leopard Cat
-    bodyFill = "#ffa726";
-    bodyStroke = "#e65100";
-    bellyFill = "#fff3e0";
-    innerEarFill = "#ff8f00";
-    eyeColor = "#2e7d32"; // Emerald Jade
-    eyeSparkle = "#66bb6a";
-    pawFill = "#fff3e0";
-    pawStroke = "#e65100";
-    leftEarBaseFill = "#ffa726";
-    rightEarBaseFill = "#ffa726";
-    extraMarkings = `
-      <!-- Leopard Spots & Rosettes -->
-      <circle cx="70" cy="84" r="5" fill="#5d4037"/><circle cx="70" cy="84" r="2.5" fill="#ffb74d"/>
-      <circle cx="48" cy="92" r="4.5" fill="#5d4037"/><circle cx="48" cy="92" r="2" fill="#ffb74d"/>
-      <path d="M44,53 L38,62" stroke="#5d4037" stroke-width="2" stroke-linecap="round"/>
-      <path d="M76,53 L82,62" stroke="#5d4037" stroke-width="2" stroke-linecap="round"/>
-      <path d="M54,38 L60,44 L66,38" fill="none" stroke="#5d4037" stroke-width="2"/>
-    `;
-  } else if (fur === "persian" || fur === "pink") {
-    // Persian Classic Fluff
-    bodyFill = "#fff0e6";
-    bodyStroke = "#ffccbc";
-    bellyFill = "#ffffff";
-    innerEarFill = "#ffab91";
-    eyeColor = "#d84315";
-    eyeSparkle = "#ff7043";
-    pawFill = "#fff0e6";
-    pawStroke = "#ffccbc";
-    leftEarBaseFill = "#fff0e6";
-    rightEarBaseFill = "#fff0e6";
-    extraMarkings = `
-      <!-- Persian Long Fluff Tufts -->
-      <path d="M26,58 Q18,64 28,72 Q18,78 32,84" fill="#fff0e6" stroke="#ffccbc" stroke-width="1.8"/>
-      <path d="M94,58 Q102,64 92,72 Q102,78 88,84" fill="#fff0e6" stroke="#ffccbc" stroke-width="1.8"/>
-      <ellipse cx="40" cy="62" rx="5" ry="3.5" fill="#ff80ab" opacity="0.6"/>
-      <ellipse cx="80" cy="62" rx="5" ry="3.5" fill="#ff80ab" opacity="0.6"/>
-    `;
-  } else if (fur === "orange_tabby" || fur === "orange") {
-    // Orange Tabby
-    bodyFill = "#ffa726";
-    bodyStroke = "#f57c00";
-    bellyFill = "#fff3e0";
-    innerEarFill = "#ffab91";
-    eyeColor = "#263238";
-    eyeSparkle = "#00b0ff";
-    pawFill = "#fff3e0";
-    pawStroke = "#f57c00";
-    leftEarBaseFill = "#ffa726";
-    rightEarBaseFill = "#ffa726";
-    extraMarkings = `
-      <!-- Orange Tabby Stripes -->
-      <line x1="60" y1="36" x2="60" y2="44" stroke="#e65100" stroke-width="2.2" stroke-linecap="round"/>
-      <line x1="53" y1="38" x2="55" y2="44" stroke="#e65100" stroke-width="2" stroke-linecap="round"/>
-      <line x1="67" y1="38" x2="65" y2="44" stroke="#e65100" stroke-width="2" stroke-linecap="round"/>
-      <path d="M36,52 Q42,50 40,54" stroke="#e65100" stroke-width="1.8" fill="none"/>
-      <path d="M84,52 Q78,50 80,54" stroke="#e65100" stroke-width="1.8" fill="none"/>
-    `;
-  } else if (fur === "tuxedo") {
-    // Tuxedo Cat
-    bodyFill = "#212121";
-    bodyStroke = "#101010";
-    bellyFill = "#ffffff";
-    innerEarFill = "#ffcdd2";
-    pawFill = "#ffffff";
-    pawStroke = "#cfd8dc";
-    leftEarBaseFill = "#212121";
-    rightEarBaseFill = "#212121";
-    extraMarkings = `
-      <!-- Tuxedo White Snout & Chest Bib -->
-      <polygon points="60,54 53,64 67,64" fill="#ffffff"/>
-      <ellipse cx="60" cy="94" rx="14" ry="16" fill="#ffffff"/>
-    `;
-  }
+  // 3D Spherical Color Palettes for each breed
+  const palettes = {
+    calico: {
+      bodyHi: "#ffffff", bodyMid: "#fdf8f4", bodyDark: "#e2d5c8", bodyRim: "#c8b8a8",
+      bellyHi: "#ffffff", bellyMid: "#fff6ed", bellyDark: "#f0dfcf",
+      earInner: "#ffb6c1", earInnerDark: "#e91e63",
+      eyeIrisTop: "#f59e0b", eyeIrisBot: "#78350f", eyeGleam: "#fef3c7",
+      blush: "#ff4081",
+      leftEarHi: "#455a64", leftEarMid: "#263238", leftEarDark: "#102027",
+      rightEarHi: "#ffb74d", rightEarMid: "#ff9800", rightEarDark: "#e65100",
+      markings: `
+        <!-- 3D Soft Calico Patch Left -->
+        <path d="M30,42 Q42,28 52,36 Q50,52 34,54 Z" fill="url(#calicoDarkGrad_${uid})" filter="url(#softBlur_${uid})" opacity="0.95"/>
+        <!-- 3D Soft Calico Patch Right -->
+        <path d="M68,34 Q82,32 90,46 Q88,58 74,58 Q66,50 68,34 Z" fill="url(#calicoOrangeGrad_${uid})" filter="url(#softBlur_${uid})" opacity="0.95"/>
+        <!-- Body Calico Patches -->
+        <circle cx="44" cy="88" r="7.5" fill="url(#calicoDarkGrad_${uid})" opacity="0.9"/>
+        <path d="M68,80 Q84,76 84,94 Q72,98 68,88 Z" fill="url(#calicoOrangeGrad_${uid})" opacity="0.9"/>
+      `
+    },
+    orange_tabby: {
+      bodyHi: "#ffedd5", bodyMid: "#fb923c", bodyDark: "#c2410c", bodyRim: "#9a3412",
+      bellyHi: "#fff7ed", bellyMid: "#fed7aa", bellyDark: "#fdba74",
+      earInner: "#f472b6", earInnerDark: "#db2777",
+      eyeIrisTop: "#10b981", eyeIrisBot: "#064e3b", eyeGleam: "#a7f3d0",
+      blush: "#fb7185",
+      leftEarHi: "#fed7aa", leftEarMid: "#f97316", leftEarDark: "#c2410c",
+      rightEarHi: "#fed7aa", rightEarMid: "#f97316", rightEarDark: "#c2410c",
+      markings: `
+        <!-- 3D Tabby Forehead Stripes -->
+        <path d="M60,34 L60,42 M54,36 L52,44 M66,36 L68,44" stroke="#9a3412" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/>
+        <path d="M38,78 Q48,82 40,86 M82,78 Q72,82 80,86" stroke="#9a3412" stroke-width="2.2" stroke-linecap="round" opacity="0.75"/>
+      `
+    },
+    british_blue: {
+      bodyHi: "#cbd5e1", bodyMid: "#64748b", bodyDark: "#334155", bodyRim: "#1e293b",
+      bellyHi: "#e2e8f0", bellyMid: "#94a3b8", bellyDark: "#475569",
+      earInner: "#fda4af", earInnerDark: "#e11d48",
+      eyeIrisTop: "#ea580c", eyeIrisBot: "#7c2d12", eyeGleam: "#fed7aa",
+      blush: "#fb7185",
+      leftEarHi: "#94a3b8", leftEarMid: "#64748b", leftEarDark: "#334155",
+      rightEarHi: "#94a3b8", rightEarMid: "#64748b", rightEarDark: "#334155",
+      markings: ``
+    },
+    siamese: {
+      bodyHi: "#ffffff", bodyMid: "#fef3c7", bodyDark: "#e5d5be", bodyRim: "#bfa993",
+      bellyHi: "#ffffff", bellyMid: "#fffdf9", bellyDark: "#f5ece1",
+      earInner: "#78350f", earInnerDark: "#451a03",
+      eyeIrisTop: "#0284c7", eyeIrisBot: "#082f49", eyeGleam: "#bae6fd",
+      blush: "#fb7185",
+      leftEarHi: "#5c2d11", leftEarMid: "#3e1c08", leftEarDark: "#1a0b04",
+      rightEarHi: "#5c2d11", rightEarMid: "#3e1c08", rightEarDark: "#1a0b04",
+      markings: `
+        <!-- Siamese 3D Chocolate Mask -->
+        <ellipse cx="60" cy="54" rx="20" ry="15" fill="url(#siameseMask_${uid})" opacity="0.95"/>
+      `
+    },
+    scottish_fold: {
+      bodyHi: "#fdf4ff", bodyMid: "#e879f9", bodyDark: "#a21caf", bodyRim: "#701a75",
+      bellyHi: "#ffffff", bellyMid: "#fae8ff", bellyDark: "#f0abfc",
+      earInner: "#f472b6", earInnerDark: "#be185d",
+      eyeIrisTop: "#f59e0b", eyeIrisBot: "#78350f", eyeGleam: "#fef3c7",
+      blush: "#f43f5e",
+      leftEarHi: "#e879f9", leftEarMid: "#c026d3", leftEarDark: "#86198f",
+      rightEarHi: "#e879f9", rightEarMid: "#c026d3", rightEarDark: "#86198f",
+      markings: ``
+    },
+    khao_manee: {
+      bodyHi: "#ffffff", bodyMid: "#f8fafc", bodyDark: "#e2e8f0", bodyRim: "#cbd5e1",
+      bellyHi: "#ffffff", bellyMid: "#ffffff", bellyDark: "#f1f5f9",
+      earInner: "#fbcfe8", earInnerDark: "#f472b6",
+      eyeIrisTop: "#10b981", eyeIrisBot: "#047857", eyeGleam: "#a7f3d0", // Odd eye left
+      eyeIrisRightTop: "#0284c7", eyeIrisRightBot: "#0369a1", eyeGleamRight: "#bae6fd", // Odd eye right
+      blush: "#fb7185",
+      leftEarHi: "#ffffff", leftEarMid: "#f1f5f9", leftEarDark: "#cbd5e1",
+      rightEarHi: "#ffffff", rightEarMid: "#f1f5f9", rightEarDark: "#cbd5e1",
+      markings: ``
+    },
+    bengal: {
+      bodyHi: "#fef08a", bodyMid: "#eab308", bodyDark: "#854d0e", bodyRim: "#543007",
+      bellyHi: "#fef9c3", bellyMid: "#fde047", bellyDark: "#ca8a04",
+      earInner: "#fb7185", earInnerDark: "#be123c",
+      eyeIrisTop: "#22c55e", eyeIrisBot: "#14532d", eyeGleam: "#bbf7d0",
+      blush: "#f43f5e",
+      leftEarHi: "#eab308", leftEarMid: "#a16207", leftEarDark: "#713f12",
+      rightEarHi: "#eab308", rightEarMid: "#a16207", rightEarDark: "#713f12",
+      markings: `
+        <!-- Bengal 3D Leopard Rosettes -->
+        <circle cx="42" cy="46" r="3.5" fill="#543007"/> <circle cx="42" cy="46" r="2" fill="#ca8a04"/>
+        <circle cx="78" cy="46" r="3.5" fill="#543007"/> <circle cx="78" cy="46" r="2" fill="#ca8a04"/>
+        <circle cx="48" cy="86" r="4.5" fill="#543007"/> <circle cx="48" cy="86" r="2.8" fill="#ca8a04"/>
+        <circle cx="74" cy="86" r="4.5" fill="#543007"/> <circle cx="74" cy="86" r="2.8" fill="#ca8a04"/>
+      `
+    },
+    persian: {
+      bodyHi: "#fff1f2", bodyMid: "#fbcfe8", bodyDark: "#f472b6", bodyRim: "#db2777",
+      bellyHi: "#ffffff", bellyMid: "#fdf2f8", bellyDark: "#fce7f3",
+      earInner: "#fda4af", earInnerDark: "#e11d48",
+      eyeIrisTop: "#0284c7", eyeIrisBot: "#0c4a6e", eyeGleam: "#bae6fd",
+      blush: "#f43f5e",
+      leftEarHi: "#fbcfe8", leftEarMid: "#f472b6", leftEarDark: "#db2777",
+      rightEarHi: "#fbcfe8", rightEarMid: "#f472b6", rightEarDark: "#db2777",
+      markings: ``
+    },
+    tuxedo: {
+      bodyHi: "#334155", bodyMid: "#0f172a", bodyDark: "#020617", bodyRim: "#000000",
+      bellyHi: "#ffffff", bellyMid: "#f8fafc", bellyDark: "#e2e8f0",
+      earInner: "#f472b6", earInnerDark: "#be185d",
+      eyeIrisTop: "#eab308", eyeIrisBot: "#713f12", eyeGleam: "#fef08a",
+      blush: "#fb7185",
+      leftEarHi: "#334155", leftEarMid: "#0f172a", leftEarDark: "#020617",
+      rightEarHi: "#334155", rightEarMid: "#0f172a", rightEarDark: "#020617",
+      markings: ``
+    }
+  };
 
-  // Hat graphics
-  let hatSvg = "";
-  if (equipped.hat === "hat_straw") {
-    hatSvg = `
-      <!-- Straw Hat -->
-      <ellipse cx="60" cy="34" rx="36" ry="9" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
-      <ellipse cx="60" cy="27" rx="18" ry="12" fill="#ffe082" stroke="#8d6e63" stroke-width="2"/>
-      <path d="M43,30 Q60,34 77,30" stroke="#f4511e" stroke-width="3" fill="none"/>
-    `;
-  } else if (equipped.hat === "hat_chef") {
-    hatSvg = `
-      <!-- Chef Hat -->
-      <path d="M42,34 L78,34 L75,22 C80,18 78,8 60,8 C42,8 40,18 45,22 Z" fill="#ffffff" stroke="#90a4ae" stroke-width="2"/>
-      <rect x="42" y="30" width="36" height="8" rx="2" fill="#eceff1" stroke="#90a4ae" stroke-width="1.5"/>
-    `;
-  } else if (equipped.hat === "hat_detective") {
-    hatSvg = `
-      <!-- Detective Cap -->
-      <ellipse cx="60" cy="32" rx="26" ry="11" fill="#795548" stroke="#4e342e" stroke-width="2"/>
-      <path d="M38,32 Q60,18 82,32" fill="#8d6e63" stroke="#4e342e" stroke-width="2"/>
-      <circle cx="60" cy="22" r="3" fill="#ffb74d"/>
-    `;
-  } else if (equipped.hat === "hat_wizard") {
-    hatSvg = `
-      <!-- Wizard Hat -->
-      <polygon points="60,4 40,32 80,32" fill="#5e35b1" stroke="#311b92" stroke-width="2"/>
-      <ellipse cx="60" cy="32" rx="30" ry="8" fill="#7e57c2" stroke="#311b92" stroke-width="2"/>
-      <polygon points="60,14 62,18 66,18 63,21 64,25 60,23 56,25 57,21 54,18 58,18" fill="#ffd54f"/>
-    `;
-  } else if (equipped.hat === "hat_crown") {
-    hatSvg = `
-      <!-- Royal Crown -->
-      <polygon points="42,32 40,16 50,24 60,12 70,24 80,16 78,32" fill="#ffd700" stroke="#b78103" stroke-width="2"/>
-      <circle cx="40" cy="15" r="3" fill="#e91e63"/>
-      <circle cx="60" cy="11" r="3.5" fill="#2196f3"/>
-      <circle cx="80" cy="15" r="3" fill="#4caf50"/>
-    `;
-  }
+  // Map legacy color names
+  let furKey = fur;
+  if (furKey === "orange") furKey = "orange_tabby";
+  if (furKey === "white") furKey = "khao_manee";
+  if (furKey === "pink") furKey = "persian";
+  const pal = palettes[furKey] || palettes.calico;
 
-  // Outfit graphics
-  let outfitSvg = "";
-  if (equipped.outfit === "outfit_hoodie") {
-    outfitSvg = `
-      <!-- Orange Hoodie -->
-      <path d="M40,78 Q60,70 80,78 L84,106 Q60,112 36,106 Z" fill="#ff7043" stroke="#d84315" stroke-width="2"/>
-      <path d="M52,77 L60,88 L68,77" fill="none" stroke="#ffffff" stroke-width="2.5"/>
-    `;
-  } else if (equipped.outfit === "outfit_apron") {
-    outfitSvg = `
-      <!-- Barista Apron -->
-      <path d="M44,78 L76,78 L80,108 L40,108 Z" fill="#2e7d32" stroke="#1b5e20" stroke-width="2"/>
-      <line x1="44" y1="78" x2="36" y2="86" stroke="#ffffff" stroke-width="2"/>
-      <line x1="76" y1="78" x2="84" y2="86" stroke="#ffffff" stroke-width="2"/>
-      <rect x="52" y="90" width="16" height="12" rx="2" fill="#ffffff" opacity="0.3"/>
-    `;
-  } else if (equipped.outfit === "outfit_trench") {
-    outfitSvg = `
-      <!-- Trench Coat -->
-      <path d="M38,76 L82,76 L86,110 L34,110 Z" fill="#a1887f" stroke="#5d4037" stroke-width="2"/>
-      <line x1="60" y1="76" x2="60" y2="110" stroke="#5d4037" stroke-width="2"/>
-      <circle cx="56" cy="88" r="2.5" fill="#4e342e"/>
-      <circle cx="56" cy="98" r="2.5" fill="#4e342e"/>
-    `;
-  } else if (equipped.outfit === "outfit_cyber") {
-    outfitSvg = `
-      <!-- Cyber Neon Suit -->
-      <path d="M38,76 L82,76 L84,108 L36,108 Z" fill="#212121" stroke="#00e5ff" stroke-width="2"/>
-      <line x1="48" y1="80" x2="72" y2="80" stroke="#ff007f" stroke-width="2"/>
-      <line x1="60" y1="84" x2="60" y2="104" stroke="#00e5ff" stroke-width="2.5"/>
-    `;
-  } else if (equipped.outfit === "outfit_tuxedo") {
-    outfitSvg = `
-      <!-- Tuxedo -->
-      <path d="M38,76 L82,76 L84,108 L36,108 Z" fill="#263238" stroke="#102027" stroke-width="2"/>
-      <polygon points="52,76 60,94 68,76" fill="#ffffff"/>
-      <polygon points="56,80 64,80 60,85" fill="#d32f2f"/>
-    `;
-  }
+  // Equipment SVGs
+  const hatSvg = renderHatSvg(equipped.hat);
+  const outfitSvg = renderOutfitSvg(equipped.outfit);
+  const weaponSvg = renderWeaponSvg(equipped.weapon);
+  const vehicleBackSvg = renderVehicleBackSvg(equipped.vehicle);
+  const vehicleFrontSvg = renderVehicleFrontSvg(equipped.vehicle);
 
-  // Weapon / Held item graphics
-  let weaponSvg = "";
-  if (equipped.weapon === "wpn_fishbone") {
-    weaponSvg = `
-      <!-- Lucky Fishbone -->
-      <g transform="translate(86, 75) rotate(-15)">
-        <line x1="0" y1="15" x2="28" y2="15" stroke="#ffa000" stroke-width="3"/>
-        <line x1="8" y1="8" x2="8" y2="22" stroke="#ffa000" stroke-width="2"/>
-        <line x1="16" y1="10" x2="16" y2="20" stroke="#ffa000" stroke-width="2"/>
-        <polygon points="26,15 34,9 34,21" fill="#ffa000"/>
-        <circle cx="2" cy="15" r="4" fill="#ffa000"/>
-      </g>
-    `;
-  } else if (equipped.weapon === "wpn_cup") {
-    weaponSvg = `
-      <!-- Coffee Cup -->
-      <g transform="translate(86, 76)">
-        <rect x="0" y="4" width="16" height="20" rx="3" fill="#ffffff" stroke="#795548" stroke-width="2"/>
-        <path d="M16,9 Q22,14 16,19" fill="none" stroke="#795548" stroke-width="2"/>
-        <path d="M4,1 Q6,-4 8,0 Q10,-4 12,0" fill="none" stroke="#b0bec5" stroke-width="1.5"/>
-      </g>
-    `;
-  } else if (equipped.weapon === "wpn_quill") {
-    weaponSvg = `
-      <!-- Magic Quill -->
-      <g transform="translate(86, 70) rotate(-25)">
-        <path d="M0,30 Q10,15 5,0 Q20,10 10,30 Z" fill="#9c27b0" stroke="#4a148c" stroke-width="1.5"/>
-        <polygon points="2,30 4,36 6,30" fill="#ffd700"/>
-      </g>
-    `;
-  } else if (equipped.weapon === "wpn_mic") {
-    weaponSvg = `
-      <!-- Golden Mic -->
-      <g transform="translate(86, 72) rotate(-10)">
-        <rect x="2" y="0" width="10" height="16" rx="5" fill="#ffd700" stroke="#ff8f00" stroke-width="1.5"/>
-        <rect x="5" y="16" width="4" height="18" fill="#424242"/>
-        <circle cx="7" cy="35" r="4" fill="#ffd700"/>
-      </g>
-    `;
-  } else if (equipped.weapon === "wpn_scepter") {
-    weaponSvg = `
-      <!-- Catnip Scepter -->
-      <g transform="translate(86, 60) rotate(-10)">
-        <line x1="6" y1="12" x2="6" y2="44" stroke="#ffd700" stroke-width="3"/>
-        <circle cx="6" cy="8" r="8" fill="#4caf50" stroke="#ffd700" stroke-width="2"/>
-        <circle cx="6" cy="8" r="3" fill="#ffffff"/>
-      </g>
-    `;
-  }
+  // Odd eye logic for Khao Manee
+  const leftEyeGrad = `url(#eye3dGradL_${uid})`;
+  const rightEyeGrad = pal.eyeIrisRightTop ? `url(#eye3dGradR_${uid})` : leftEyeGrad;
 
-  // Vehicle graphics
-  let vehicleBackSvg = "";
-  let vehicleFrontSvg = "";
-  if (equipped.vehicle === "veh_box") {
-    vehicleFrontSvg = `
-      <!-- Box Kart -->
-      <rect x="26" y="100" width="68" height="20" rx="3" fill="#d7ccc8" stroke="#8d6e63" stroke-width="2"/>
-      <circle cx="38" cy="120" r="5" fill="#424242" stroke="#212121" stroke-width="1.5"/>
-      <circle cx="82" cy="120" r="5" fill="#424242" stroke="#212121" stroke-width="1.5"/>
-      <text x="34" y="114" font-size="7.5" font-weight="bold" fill="#5d4037">MEOW EXPRESS</text>
-    `;
-  } else if (equipped.vehicle === "veh_skate") {
-    vehicleFrontSvg = `
-      <!-- Skateboard -->
-      <rect x="20" y="112" width="80" height="6" rx="3" fill="#ff5722" stroke="#bf360c" stroke-width="1.5"/>
-      <circle cx="34" cy="120" r="4" fill="#ffd54f"/>
-      <circle cx="86" cy="120" r="4" fill="#ffd54f"/>
-    `;
-  } else if (equipped.vehicle === "veh_roomba") {
-    vehicleFrontSvg = `
-      <!-- Roomba Vacuum -->
-      <ellipse cx="60" cy="114" rx="44" ry="10" fill="#37474f" stroke="#263238" stroke-width="2"/>
-      <circle cx="60" cy="112" r="4" fill="#00e676"/>
-    `;
-  } else if (equipped.vehicle === "veh_cloud") {
-    vehicleBackSvg = `
-      <!-- Magical Cloud -->
-      <ellipse cx="60" cy="116" rx="46" ry="14" fill="#e1f5fe" stroke="#81d4fa" stroke-width="2"/>
-      <circle cx="40" cy="112" r="14" fill="#e1f5fe"/>
-      <circle cx="75" cy="110" r="16" fill="#e1f5fe"/>
-    `;
-  } else if (equipped.vehicle === "veh_ufo") {
-    vehicleFrontSvg = `
-      <!-- Alien UFO -->
-      <ellipse cx="60" cy="112" rx="48" ry="12" fill="#7e57c2" stroke="#512da8" stroke-width="2"/>
-      <ellipse cx="60" cy="106" rx="26" ry="8" fill="#b388ff" opacity="0.6"/>
-      <circle cx="35" cy="113" r="2.5" fill="#00e5ff"/>
-      <circle cx="60" cy="115" r="2.5" fill="#00e5ff"/>
-      <circle cx="85" cy="113" r="2.5" fill="#00e5ff"/>
-    `;
-  }
+  // Eyes rendering: cute curved happy arcs when isHappy, or glowing 3D spheres
+  const eyesRender = isHappy ? `
+    <!-- Super Cute Curved Happy Eyes Arc -->
+    <path d="M42,55 Q47,48 52,55" fill="none" stroke="${pal.bodyDark === '#020617' ? '#ffffff' : '#3e2723'}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M68,55 Q73,48 78,55" fill="none" stroke="${pal.bodyDark === '#020617' ? '#ffffff' : '#3e2723'}" stroke-width="3" stroke-linecap="round"/>
+  ` : `
+    <!-- 3D Glass Bead Left Eye -->
+    <g class="cat-3d-eye-l">
+      <ellipse cx="47" cy="54" rx="6.5" ry="7.5" fill="${leftEyeGrad}"/>
+      <ellipse cx="47" cy="54" rx="4.2" ry="5.5" fill="#18181b"/>
+      <!-- Primary Specular Gleam Arc -->
+      <circle cx="45" cy="51.5" r="2.2" fill="#ffffff"/>
+      <!-- Secondary Bounce Light Dot -->
+      <circle cx="48.8" cy="56" r="1.1" fill="#ffffff" opacity="0.85"/>
+      <path d="M44,57 Q47,59 50,57" fill="none" stroke="${pal.eyeGleam}" stroke-width="0.8" opacity="0.75"/>
+    </g>
 
-  // Eyes and Mouth logic: Happy vs Regular Blinking
-  let eyesAndMouthSvg = "";
-  let leftEyeColor = eyeColor;
-  let leftEyeSparkle = eyeSparkle;
-  let rightEyeColor = eyeColor;
-  let rightEyeSparkle = eyeSparkle;
+    <!-- 3D Glass Bead Right Eye -->
+    <g class="cat-3d-eye-r">
+      <ellipse cx="73" cy="54" rx="6.5" ry="7.5" fill="${rightEyeGrad}"/>
+      <ellipse cx="73" cy="54" rx="4.2" ry="5.5" fill="#18181b"/>
+      <!-- Primary Specular Gleam Arc -->
+      <circle cx="71" cy="51.5" r="2.2" fill="#ffffff"/>
+      <!-- Secondary Bounce Light Dot -->
+      <circle cx="74.8" cy="56" r="1.1" fill="#ffffff" opacity="0.85"/>
+      <path d="M70,57 Q73,59 76,57" fill="none" stroke="${pal.eyeGleamRight || pal.eyeGleam}" stroke-width="0.8" opacity="0.75"/>
+    </g>
+  `;
 
-  if (fur === "khao_manee" || fur === "white") {
-    // Odd Eyes (Diamond Eye Khao Manee): Left = Ocean Sapphire Blue, Right = Emerald Green
-    leftEyeColor = "#00b0ff";
-    leftEyeSparkle = "#80d8ff";
-    rightEyeColor = "#00e676";
-    rightEyeSparkle = "#b9f6ca";
-  }
+  // Folded ears for Scottish Fold
+  const isFold = furKey === "scottish_fold";
+  const earLRender = isFold ? `
+    <!-- Scottish Fold Drooped Cute Ear L -->
+    <g class="cat-animated-ear-l">
+      <path d="M36,36 Q42,22 48,28 Q44,42 36,36 Z" fill="url(#ear3dGradL_${uid})" filter="url(#dropShadowEar_${uid})"/>
+      <path d="M38,34 Q42,25 46,30 Q43,38 38,34 Z" fill="${pal.earInner}"/>
+    </g>
+  ` : `
+    <!-- 3D Conical Ear L -->
+    <g class="cat-animated-ear-l">
+      <polygon points="32,44 42,16 54,36" fill="url(#ear3dGradL_${uid})" filter="url(#dropShadowEar_${uid})"/>
+      <polygon points="36,41 43,23 50,35" fill="url(#earInnerGrad_${uid})"/>
+      <line x1="38" y1="35" x2="43" y2="33" stroke="${pal.bodyHi}" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="39" y1="38" x2="45" y2="37" stroke="${pal.bodyHi}" stroke-width="1.6" stroke-linecap="round"/>
+    </g>
+  `;
 
-  if (isHappy) {
-    // Cute closed smiling eyes (^ ^) and happy open mouth
-    eyesAndMouthSvg = `
-      <!-- Happy Smiling Eyes -->
-      <path d="M42,56 Q48,48 54,56" fill="none" stroke="#263238" stroke-width="3" stroke-linecap="round"/>
-      <path d="M66,56 Q72,48 78,56" fill="none" stroke="#263238" stroke-width="3" stroke-linecap="round"/>
-      <!-- Cheerful Open Mouth with tongue -->
-      <polygon points="60,60 57,58 63,58" fill="#ff4081"/>
-      <path d="M54,63 Q60,71 66,63 Z" fill="#e91e63" stroke="#5d4037" stroke-width="1.5"/>
-      <circle cx="60" cy="67" r="2.5" fill="#ff80ab"/>
-    `;
-  } else {
-    // Big sparkly anime eyes with blink animation (Supports Odd Eyes)
-    eyesAndMouthSvg = `
-      <!-- Big Sparkly Anime Eyes -->
-      <g class="cat-animated-eyes">
-        <ellipse cx="48" cy="54" rx="5.5" ry="7" fill="${leftEyeColor}"/>
-        <circle cx="46.5" cy="52" r="2.2" fill="#ffffff"/>
-        <circle cx="50" cy="56.5" r="1.1" fill="${leftEyeSparkle}"/>
-
-        <ellipse cx="72" cy="54" rx="5.5" ry="7" fill="${rightEyeColor}"/>
-        <circle cx="70.5" cy="52" r="2.2" fill="#ffffff"/>
-        <circle cx="74" cy="56.5" r="1.1" fill="${rightEyeSparkle}"/>
-      </g>
-      <!-- Cute :3 Cat Mouth -->
-      <polygon points="60,60 57,58 63,58" fill="#ff4081"/>
-      <path d="M55,62 Q60,66 60,62 Q60,66 65,62" fill="none" stroke="#5d4037" stroke-width="1.8" stroke-linecap="round"/>
-    `;
-  }
+  const earRRender = isFold ? `
+    <!-- Scottish Fold Drooped Cute Ear R -->
+    <g class="cat-animated-ear-r">
+      <path d="M84,36 Q78,22 72,28 Q76,42 84,36 Z" fill="url(#ear3dGradR_${uid})" filter="url(#dropShadowEar_${uid})"/>
+      <path d="M82,34 Q78,25 74,30 Q77,38 82,34 Z" fill="${pal.earInner}"/>
+    </g>
+  ` : `
+    <!-- 3D Conical Ear R -->
+    <g class="cat-animated-ear-r">
+      <polygon points="88,44 78,16 66,36" fill="url(#ear3dGradR_${uid})" filter="url(#dropShadowEar_${uid})"/>
+      <polygon points="84,41 77,23 70,35" fill="url(#earInnerGrad_${uid})"/>
+      <line x1="82" y1="35" x2="77" y2="33" stroke="${pal.bodyHi}" stroke-width="1.6" stroke-linecap="round"/>
+      <line x1="81" y1="38" x2="75" y2="37" stroke="${pal.bodyHi}" stroke-width="1.6" stroke-linecap="round"/>
+    </g>
+  `;
 
   return `
-    <svg viewBox="0 0 120 130" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 120 130" width="100%" height="100%" class="cat-3d-svg-root" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="catBlush" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ff4081" stop-opacity="0.85"/>
-          <stop offset="100%" stop-color="#ff4081" stop-opacity="0"/>
+        <!-- Soft Drop Shadow Filter for True 3D Depth -->
+        <filter id="cat3dGround_${uid}" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+          <feOffset dx="0" dy="4"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer>
+          <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+
+        <filter id="dropShadowEar_${uid}" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+          <feOffset dx="0" dy="1.5"/>
+          <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+          <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+
+        <filter id="softBlur_${uid}">
+          <feGaussianBlur stdDeviation="0.8"/>
+        </filter>
+
+        <!-- 3D Spherical Gradients for Head & Body -->
+        <radialGradient id="head3dGrad_${uid}" cx="38%" cy="32%" r="68%" fx="28%" fy="22%">
+          <stop offset="0%" stop-color="${pal.bodyHi}"/>
+          <stop offset="45%" stop-color="${pal.bodyMid}"/>
+          <stop offset="85%" stop-color="${pal.bodyDark}"/>
+          <stop offset="100%" stop-color="${pal.bodyRim}"/>
+        </radialGradient>
+
+        <radialGradient id="body3dGrad_${uid}" cx="35%" cy="32%" r="72%" fx="25%" fy="22%">
+          <stop offset="0%" stop-color="${pal.bodyHi}"/>
+          <stop offset="42%" stop-color="${pal.bodyMid}"/>
+          <stop offset="82%" stop-color="${pal.bodyDark}"/>
+          <stop offset="100%" stop-color="${pal.bodyRim}"/>
+        </radialGradient>
+
+        <radialGradient id="belly3dGrad_${uid}" cx="45%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="${pal.bellyHi}"/>
+          <stop offset="65%" stop-color="${pal.bellyMid}"/>
+          <stop offset="100%" stop-color="${pal.bellyDark}"/>
+        </radialGradient>
+
+        <radialGradient id="ear3dGradL_${uid}" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="${pal.leftEarHi}"/>
+          <stop offset="60%" stop-color="${pal.leftEarMid}"/>
+          <stop offset="100%" stop-color="${pal.leftEarDark}"/>
+        </radialGradient>
+
+        <radialGradient id="ear3dGradR_${uid}" cx="35%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="${pal.rightEarHi}"/>
+          <stop offset="60%" stop-color="${pal.rightEarMid}"/>
+          <stop offset="100%" stop-color="${pal.rightEarDark}"/>
+        </radialGradient>
+
+        <linearGradient id="earInnerGrad_${uid}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${pal.earInner}"/>
+          <stop offset="100%" stop-color="${pal.earInnerDark}"/>
+        </linearGradient>
+
+        <!-- 3D Jewel Eye Gradient Left -->
+        <radialGradient id="eye3dGradL_${uid}" cx="45%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="${pal.eyeIrisTop}"/>
+          <stop offset="70%" stop-color="${pal.eyeIrisBot}"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </radialGradient>
+
+        <!-- 3D Jewel Eye Gradient Right (for Odd Eyes) -->
+        <radialGradient id="eye3dGradR_${uid}" cx="45%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="${pal.eyeIrisRightTop || pal.eyeIrisTop}"/>
+          <stop offset="70%" stop-color="${pal.eyeIrisRightBot || pal.eyeIrisBot}"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </radialGradient>
+
+        <!-- 3D Chubby Cheeks Blush -->
+        <radialGradient id="blush3dGrad_${uid}" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="${pal.blush}" stop-opacity="0.75"/>
+          <stop offset="70%" stop-color="${pal.blush}" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="${pal.blush}" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Calico Gradients -->
+        <radialGradient id="calicoOrangeGrad_${uid}" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#ffb74d"/>
+          <stop offset="60%" stop-color="#ff9800"/>
+          <stop offset="100%" stop-color="#e65100"/>
+        </radialGradient>
+        <radialGradient id="calicoDarkGrad_${uid}" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#455a64"/>
+          <stop offset="60%" stop-color="#263238"/>
+          <stop offset="100%" stop-color="#102027"/>
+        </radialGradient>
+
+        <!-- Siamese 3D Mask Gradient -->
+        <radialGradient id="siameseMask_${uid}" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#2d1606" stop-opacity="0.95"/>
+          <stop offset="75%" stop-color="#542a0c" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#78350f" stop-opacity="0"/>
         </radialGradient>
       </defs>
 
+      <!-- 3D Soft Floor Contact Shadow -->
+      <ellipse cx="60" cy="118" rx="30" ry="7.5" fill="rgba(30, 15, 10, 0.22)" filter="url(#cat3dGround_${uid})"/>
+
       ${vehicleBackSvg}
 
-      <!-- Cat Animated Tail -->
+      <!-- 3D Animated Tail -->
       <g class="cat-animated-tail">
-        <path d="M35,92 Q12,85 15,64 Q21,60 23,68 Q20,82 38,87" fill="${bodyFill}" stroke="${bodyStroke}" stroke-width="2.2"/>
+        <path d="M35,94 Q10,87 14,64 Q21,58 24,67 Q21,83 38,89" fill="url(#body3dGrad_${uid})" filter="url(#dropShadowEar_${uid})"/>
+        <!-- Soft highlight arc on tail curve -->
+        <path d="M34,92 Q14,85 16,66" fill="none" stroke="${pal.bodyHi}" stroke-width="1.2" opacity="0.6"/>
       </g>
 
-      <!-- Cat Body & Breathing -->
+      <!-- 3D Chubby Body with Breathing Physics -->
       <g class="cat-animated-body">
-        <!-- Body base -->
-        <ellipse cx="60" cy="88" rx="27" ry="22" fill="${bodyFill}" stroke="${bodyStroke}" stroke-width="2.5"/>
-        
-        <!-- Fluffy Belly Spot -->
-        <ellipse cx="60" cy="92" rx="16" ry="14" fill="${bellyFill}"/>
+        <!-- 3D Spherical Body -->
+        <ellipse cx="60" cy="88" rx="28" ry="23" fill="url(#body3dGrad_${uid})" filter="url(#dropShadowEar_${uid})"/>
 
-        <!-- Outfit (Torso layer) -->
+        <!-- 3D Soft Fluffy Belly -->
+        <ellipse cx="60" cy="92" rx="17" ry="15" fill="url(#belly3dGrad_${uid})"/>
+
+        <!-- Outfit (Torso Layer) -->
         ${outfitSvg}
 
-        <!-- Fluffy Chest Collar -->
-        <path d="M52,74 Q60,82 68,74 Q60,70 52,74 Z" fill="${bellyFill}" opacity="0.9"/>
+        <!-- Fluffy 3D Chest Collar Bib -->
+        <path d="M51,74 Q60,82 69,74 Q60,69 51,74 Z" fill="${pal.bellyHi}" opacity="0.95"/>
 
-        <!-- Cat Left Ear with Twitch Animation -->
-        <g class="cat-animated-ear-l">
-          <polygon points="34,44 42,18 54,38" fill="${leftEarBaseFill}" stroke="${bodyStroke}" stroke-width="2"/>
-          <polygon points="38,41 43,24 50,37" fill="${innerEarFill}"/>
-          <!-- Ear tuft fluff -->
-          <line x1="39" y1="36" x2="43" y2="34" stroke="${bellyFill}" stroke-width="1.5"/>
-          <line x1="40" y1="39" x2="45" y2="38" stroke="${bellyFill}" stroke-width="1.5"/>
+        <!-- 3D Left Ear -->
+        ${earLRender}
+
+        <!-- 3D Right Ear -->
+        ${earRRender}
+
+        <!-- 3D Spherical Head (Chubby Cute Cheeks) -->
+        <ellipse cx="60" cy="54" rx="30" ry="23" fill="url(#head3dGrad_${uid})" filter="url(#dropShadowEar_${uid})"/>
+
+        <!-- Soft 3D Cheek Tufts -->
+        <path d="M30,56 Q25,58 31,63 Q26,65 33,67" fill="url(#head3dGrad_${uid})"/>
+        <path d="M90,56 Q95,58 89,63 Q94,65 87,67" fill="url(#head3dGrad_${uid})"/>
+
+        <!-- Breed-Specific 3D Markings -->
+        ${pal.markings}
+
+        <!-- 3D Soft Chubby Cheek Blushes -->
+        <ellipse cx="39" cy="62" rx="6.5" ry="4.5" fill="url(#blush3dGrad_${uid})"/>
+        <ellipse cx="81" cy="62" rx="6.5" ry="4.5" fill="url(#blush3dGrad_${uid})"/>
+
+        <!-- 3D Glass Eyes with Dynamic Highlights -->
+        ${eyesRender}
+
+        <!-- 3D Cute White Muzzle Puff -->
+        <ellipse cx="60" cy="64.5" rx="10.5" ry="7" fill="${pal.bellyHi}" opacity="0.95"/>
+
+        <!-- 3D Tiny Pink Heart Nose Bean -->
+        <path d="M57.5,61.5 Q60,60 62.5,61.5 Q60,65.5 57.5,61.5 Z" fill="#f43f5e"/>
+        <!-- Specular Nose Gleam -->
+        <circle cx="59" cy="61.5" r="0.8" fill="#ffffff"/>
+
+        <!-- Cute W-Mouth Smile -->
+        <path d="M54.5,64.5 Q57,67.5 60,64.5 Q63,67.5 65.5,64.5" fill="none" stroke="#5d4037" stroke-width="1.6" stroke-linecap="round"/>
+
+        <!-- 3D Translucent Whiskers with Specular Shimmer -->
+        <g stroke="${pal.bodyDark === '#020617' ? '#cbd5e1' : '#a8a29e'}" stroke-width="1.1" stroke-linecap="round" opacity="0.85">
+          <!-- Left Whiskers -->
+          <line x1="48" y1="63" x2="24" y2="59"/>
+          <line x1="48" y1="65.5" x2="22" y2="65.5"/>
+          <line x1="48" y1="68" x2="25" y2="72"/>
+          <!-- Right Whiskers -->
+          <line x1="72" y1="63" x2="96" y2="59"/>
+          <line x1="72" y1="65.5" x2="98" y2="65.5"/>
+          <line x1="72" y1="68" x2="95" y2="72"/>
         </g>
 
-        <!-- Cat Right Ear with Twitch Animation -->
-        <g class="cat-animated-ear-r">
-          <polygon points="86,44 78,18 66,38" fill="${rightEarBaseFill}" stroke="${bodyStroke}" stroke-width="2"/>
-          <polygon points="82,41 77,24 70,37" fill="${innerEarFill}"/>
-          <!-- Ear tuft fluff -->
-          <line x1="81" y1="36" x2="77" y2="34" stroke="${bellyFill}" stroke-width="1.5"/>
-          <line x1="80" y1="39" x2="75" y2="38" stroke="${bellyFill}" stroke-width="1.5"/>
+        <!-- 3D Rounded Front Paws with Toe Bean Cues -->
+        <!-- Left Paw -->
+        <g class="cat-3d-paw-l">
+          <ellipse cx="49" cy="106" rx="7" ry="5.5" fill="url(#body3dGrad_${uid})" filter="url(#dropShadowEar_${uid})"/>
+          <!-- Soft Toe Indentations -->
+          <path d="M46,104 Q46,107 46,109 M49,103 Q49,107 49,110 M52,104 Q52,107 52,109" fill="none" stroke="${pal.bodyRim}" stroke-width="0.9" opacity="0.45"/>
+          <!-- Paw Highlight Top -->
+          <ellipse cx="48" cy="104" rx="4" ry="2.2" fill="${pal.bodyHi}" opacity="0.65"/>
+        </g>
+        <!-- Right Paw -->
+        <g class="cat-3d-paw-r">
+          <ellipse cx="71" cy="106" rx="7" ry="5.5" fill="url(#body3dGrad_${uid})" filter="url(#dropShadowEar_${uid})"/>
+          <!-- Soft Toe Indentations -->
+          <path d="M68,104 Q68,107 68,109 M71,103 Q71,107 71,110 M74,104 Q74,107 74,109" fill="none" stroke="${pal.bodyRim}" stroke-width="0.9" opacity="0.45"/>
+          <!-- Paw Highlight Top -->
+          <ellipse cx="70" cy="104" rx="4" ry="2.2" fill="${pal.bodyHi}" opacity="0.65"/>
         </g>
 
-        <!-- Cat Head (Cute Chubby Cheeks) -->
-        <ellipse cx="60" cy="54" rx="29" ry="22" fill="${bodyFill}" stroke="${bodyStroke}" stroke-width="2.5"/>
-        
-        <!-- Fluffy Cheek Tufts -->
-        <path d="M31,56 Q27,58 32,62 Q28,64 34,66" fill="${bodyFill}" stroke="${bodyStroke}" stroke-width="1.8"/>
-        <path d="M89,56 Q93,58 88,62 Q92,64 86,66" fill="${bodyFill}" stroke="${bodyStroke}" stroke-width="1.8"/>
-
-        <!-- Extra Breed Markings -->
-        ${extraMarkings}
-
-        <!-- Eyes & Mouth -->
-        ${eyesAndMouthSvg}
-
-        <!-- Rosy Cheeks Blush -->
-        <circle cx="41" cy="61" r="5.5" fill="url(#catBlush)"/>
-        <circle cx="79" cy="61" r="5.5" fill="url(#catBlush)"/>
-
-        <!-- Whiskers -->
-        <line x1="37" y1="58" x2="19" y2="55" stroke="#795548" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="36" y1="63" x2="18" y2="64" stroke="#795548" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="83" y1="58" x2="101" y2="55" stroke="#795548" stroke-width="1.4" stroke-linecap="round"/>
-        <line x1="84" y1="63" x2="102" y2="64" stroke="#795548" stroke-width="1.4" stroke-linecap="round"/>
-
-        <!-- Paws with Pink Jellybean Pads (อุ้งเท้าเจลลี่ชมพู!) -->
-        <g class="cat-left-paw">
-          <ellipse cx="44" cy="98" rx="8" ry="6" fill="${pawFill}" stroke="${pawStroke}" stroke-width="1.6"/>
-          <!-- Pink center pad -->
-          <ellipse cx="44" cy="98" rx="3.5" ry="2.6" fill="#ff80ab"/>
-          <!-- Toe beans -->
-          <circle cx="41" cy="94" r="1.3" fill="#ff80ab"/>
-          <circle cx="44" cy="93" r="1.3" fill="#ff80ab"/>
-          <circle cx="47" cy="94" r="1.3" fill="#ff80ab"/>
-        </g>
-        <g class="cat-right-paw">
-          <ellipse cx="76" cy="98" rx="8" ry="6" fill="${pawFill}" stroke="${pawStroke}" stroke-width="1.6"/>
-          <!-- Pink center pad -->
-          <ellipse cx="76" cy="98" rx="3.5" ry="2.6" fill="#ff80ab"/>
-          <!-- Toe beans -->
-          <circle cx="73" cy="94" r="1.3" fill="#ff80ab"/>
-          <circle cx="76" cy="93" r="1.3" fill="#ff80ab"/>
-          <circle cx="79" cy="94" r="1.3" fill="#ff80ab"/>
-        </g>
-
-        <!-- Hat (Equipped layer) -->
+        <!-- Hat / Headwear layer -->
         ${hatSvg}
 
-        <!-- Weapon / Held Item -->
+        <!-- Weapon / Handheld accessory layer -->
         ${weaponSvg}
-
-        <!-- Vehicle Foreground -->
-        ${vehicleFrontSvg}
       </g>
+
+      ${vehicleFrontSvg}
     </svg>
   `;
-}
-
-// Refresh all Cat SVG instances on page
-function refreshCatAvatars() {
-  const previewDiv = document.getElementById("cat-preview-render");
-  if (previewDiv) previewDiv.innerHTML = renderCatSvg();
-
-  const stageCharDiv = document.getElementById("stage-cat-avatar");
-  if (stageCharDiv) stageCharDiv.innerHTML = renderCatSvg();
-
-  const heroAvatar = document.getElementById("hero-cat-avatar-render");
-  if (heroAvatar) heroAvatar.innerHTML = renderCatSvg();
-
-  const hudMiniAvatar = document.getElementById("hud-cat-avatar-mini");
-  if (hudMiniAvatar) hudMiniAvatar.innerHTML = renderCatSvg();
-
-  const vocabMiniAvatar = document.getElementById("vocab-cat-avatar-mini");
-  if (vocabMiniAvatar) vocabMiniAvatar.innerHTML = renderCatSvg();
-
-  const miniAvatars = document.querySelectorAll(".cat-avatar-mini");
-  miniAvatars.forEach((el) => {
-    el.innerHTML = renderCatSvg();
-  });
 }
 
 // Interactive Cat Petting / Tap Reaction
@@ -2316,98 +2197,108 @@ function triggerSquadCatClick(breedId, breedInfo, behavior, isMain, catItemEl) {
 }
 
 // Toy Interactions
+// ==============================================
+// REALISTIC INTERACTIVE TOYS & CAT REACTIONS
+// แอนิเมชันปฏิกิริยาสมจริง: วิ่งไล่เลเซอร์, ยัดตัวลงกล่อง, กลิ้งฟินแคทนิป, กระโดดตะปบขนนก
+// ==============================================
+
 function triggerToyLaser() {
   const laserDot = document.getElementById("squad-laser-dot");
   if (!laserDot) return;
 
   sfx.click();
-  triggerHaptic(30);
+  triggerHaptic([30, 40, 30]);
 
   laserDot.style.display = "block";
-  const coords = [
-    { left: "20%", top: "70%" },
-    { left: "65%", top: "45%" },
-    { left: "35%", top: "80%" },
-    { left: "75%", top: "65%" }
+  laserDot.style.opacity = "1";
+
+  // Dynamic Waypoints on the rug
+  const waypoints = [
+    { left: "25%", top: "70%" },
+    { left: "68%", top: "52%" },
+    { left: "38%", top: "82%" },
+    { left: "75%", top: "68%" }
   ];
 
-  let step = 0;
-  const moveLaser = () => {
-    if (step < coords.length) {
-      laserDot.style.left = coords[step].left;
-      laserDot.style.top = coords[step].top;
-      step++;
-      setTimeout(moveLaser, 500);
-    } else {
-      // Pick a random cat to pounce
-      const allCatItems = document.querySelectorAll(".squad-cat-item");
-      if (allCatItems.length > 0) {
-        const randomCat = allCatItems[Math.floor(Math.random() * allCatItems.length)];
-        randomCat.classList.add("cat-chasing-laser");
-        setTimeout(() => {
-          randomCat.classList.remove("cat-chasing-laser");
-          laserDot.style.display = "none";
-          sfx.meow();
-          showToast("เจ้าเหมียวพุ่งตะครุบจุดแดง! แต่จุดแดงดันหายไปไหนแล้วเนี่ย?! 🔴🙀", "🐾");
-        }, 600);
-      } else {
-        laserDot.style.display = "none";
-      }
+  const cats = Array.from(document.querySelectorAll(".squad-cat-item"));
+  if (cats.length === 0) return;
+
+  // Pick up to 2 eager cats to actively chase
+  const chaserCats = cats.slice(0, Math.min(2, cats.length));
+
+  // Store original positions
+  chaserCats.forEach(c => {
+    if (!c.dataset.origLeft) {
+      c.dataset.origLeft = c.style.left || "50%";
+      c.dataset.origTop = c.style.top || "70%";
     }
-  };
-  moveLaser();
-}
-
-function triggerToyCatnip() {
-  const container = document.getElementById("squad-catnip-container");
-  if (!container) return;
-
-  sfx.purr();
-  triggerHaptic([30, 40, 50]);
-
-  // Spawn 14 falling catnip leaves
-  for (let i = 0; i < 14; i++) {
-    const leaf = document.createElement("span");
-    leaf.className = "catnip-leaf";
-    leaf.textContent = i % 2 === 0 ? "🌿" : "🍃";
-    leaf.style.left = `${Math.random() * 90 + 5}%`;
-    leaf.style.animationDelay = `${Math.random() * 0.8}s`;
-    leaf.style.animationDuration = `${2 + Math.random() * 1.2}s`;
-    container.appendChild(leaf);
-    setTimeout(() => leaf.remove(), 3500);
-  }
-
-  // All cats get blissful
-  const allCatItems = document.querySelectorAll(".squad-cat-item");
-  allCatItems.forEach((c) => c.classList.add("catnip-bliss"));
-  setTimeout(() => {
-    allCatItems.forEach((c) => c.classList.remove("catnip-bliss"));
-  }, 3500);
-
-  const bubbleText = document.getElementById("squad-bubble-text");
-  if (bubbleText) {
-    bubbleText.textContent = `"ฟี้ๆๆๆ... กลิ่นแคทนิปหอมฟินเกินต้านนนน นอนกลิ้งหงายพุงทั้งวันเลยดีกว่า! 🌿✨"`;
-  }
-  showToast("เทศกาลแคทนิปเริ่มแล้ว! น้องแมวทุกตัวกลิ้งหงายพุงเคลิ้มฟินสุดๆ~ 🌿❤️", "😻");
-}
-
-function triggerToyFeather() {
-  sfx.meow();
-  triggerHaptic([20, 30, 20]);
-
-  const allCatItems = document.querySelectorAll(".squad-cat-item");
-  allCatItems.forEach((c) => {
-    c.style.transform = "scale(1.15) translateY(-14px)";
-    setTimeout(() => {
-      c.style.transform = "";
-    }, 450);
   });
 
-  const bubbleText = document.getElementById("squad-bubble-text");
-  if (bubbleText) {
-    bubbleText.textContent = `"ขนนกพริ้วๆ ขยับดุ๊กดิ๊ก! อุ้งเล็บกระตุก อยากกระโดดตะปบให้ได้เหมียว! 🪶😼"`;
-  }
-  showToast("สะบัดไม้ขนนกพริ้วๆ! น้องแมวทั้งแก๊งกระโดดตะปบอย่างร่าเริง 🪶🐾", "✨");
+  let step = 0;
+  const runLaserStep = () => {
+    if (step < waypoints.length) {
+      const wp = waypoints[step];
+      laserDot.style.left = wp.left;
+      laserDot.style.top = wp.top;
+
+      // Animate cats running and pouncing towards laser dot
+      chaserCats.forEach((cat, idx) => {
+        // Face the target
+        const currentLeftVal = parseFloat(cat.style.left) || 50;
+        const targetLeftVal = parseFloat(wp.left);
+        const flip = targetLeftVal < currentLeftVal ? "scaleX(-1)" : "scaleX(1)";
+
+        // Offset slightly so cats don't overlap completely
+        const offsetLeft = idx === 0 ? 0 : 8;
+        const offsetTop = idx === 0 ? 0 : 4;
+
+        cat.style.transition = "left 0.45s cubic-bezier(0.25, 1, 0.5, 1), top 0.45s cubic-bezier(0.25, 1, 0.5, 1)";
+        cat.style.left = `calc(${wp.left} + ${offsetLeft}%)`;
+        cat.style.top = `calc(${wp.top} + ${offsetTop}%)`;
+
+        // Pounce jump when arriving
+        setTimeout(() => {
+          sfx.meow();
+          cat.style.transform = `${flip} scale(1.22) translateY(-22px)`;
+          cat.classList.add("cat-laser-pounce");
+          setTimeout(() => {
+            cat.style.transform = `${flip}`;
+            cat.classList.remove("cat-laser-pounce");
+          }, 350);
+        }, 380);
+      });
+
+      step++;
+      setTimeout(runLaserStep, 900);
+    } else {
+      // Laser vanishes
+      laserDot.style.opacity = "0";
+      setTimeout(() => { laserDot.style.display = "none"; }, 300);
+
+      // Cats look around confused with question mark
+      chaserCats.forEach(cat => {
+        cat.style.transform = "rotate(-8deg) scale(1.05)";
+        setTimeout(() => {
+          cat.style.transform = "rotate(8deg) scale(1.05)";
+          setTimeout(() => {
+            cat.style.transform = "";
+            // Return smoothly to home spot
+            cat.style.transition = "left 1.2s ease-in-out, top 1.2s ease-in-out";
+            cat.style.left = cat.dataset.origLeft;
+            cat.style.top = cat.dataset.origTop;
+          }, 500);
+        }, 500);
+      });
+
+      const bubbleText = document.getElementById("squad-bubble-text");
+      if (bubbleText) {
+        bubbleText.textContent = `[${gameState.name}] "เหมียววว?! จุดเลเซอร์แดงหายไปไหนแล้ว?! ออกมาให้จับซะดีๆ น้านุด! 🔴🐾"`;
+      }
+      showToast("จุดเลเซอร์แดงหายไปแล้ว! น้องแมวมองหาตาแป๋วเลยเหมียว 🔴🐱", "🐾");
+    }
+  };
+
+  runLaserStep();
 }
 
 function triggerToyBox() {
@@ -2415,22 +2306,259 @@ function triggerToyBox() {
   if (!boxContainer) return;
 
   sfx.click();
-  triggerHaptic(40);
+  triggerHaptic([30, 40]);
 
-  boxContainer.innerHTML = "📦";
+  // Render 3D Cardboard Box dropping with dust puff
   boxContainer.style.display = "block";
-  boxContainer.style.animation = "none";
-  void boxContainer.offsetWidth; // retrigger
-  boxContainer.style.animation = "boxBounce 0.4s ease";
+  boxContainer.style.left = "48%";
+  boxContainer.style.top = "66%";
+  boxContainer.innerHTML = `
+    <div class="toy-cardboard-box" id="active-toy-box" title="แตะที่กล่องเพื่อเล่นกับน้องแมวในกล่อง!">
+      <div class="box-flap box-flap-l"></div>
+      <div class="box-flap box-flap-r"></div>
+      <div class="box-body-cardboard">
+        <span class="box-delivery-logo">🐾 AMAZ-MEOW</span>
+        <span class="box-fragile-tag">FRAGILE 📦</span>
+      </div>
+      <div class="box-cat-occupant" id="box-cat-occupant" style="display:none;">
+        <!-- Cat head peeking dynamically injected -->
+      </div>
+    </div>
+  `;
+
+  // Nearest cat rushes to box and hops inside!
+  const cats = Array.from(document.querySelectorAll(".squad-cat-item"));
+  if (cats.length > 0) {
+    const luckyCat = cats[0];
+    const origLeft = luckyCat.style.left;
+    const origTop = luckyCat.style.top;
+
+    luckyCat.style.transition = "all 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
+    luckyCat.style.left = "48%";
+    luckyCat.style.top = "64%";
+
+    setTimeout(() => {
+      // Cat jumps inside: hide outer cat, show inside box!
+      luckyCat.style.opacity = "0";
+      sfx.purr();
+      triggerHaptic(25);
+
+      const occupant = document.getElementById("box-cat-occupant");
+      if (occupant) {
+        occupant.style.display = "block";
+        occupant.innerHTML = `
+          <div class="peeking-cat-wrap">
+            <span class="peeking-cat-ears">🐱</span>
+            <div class="peeking-cat-paws">🐾 🐾</div>
+          </div>
+        `;
+      }
+
+      const activeBox = document.getElementById("active-toy-box");
+      if (activeBox) activeBox.classList.add("box-wiggling");
+
+      const bubbleText = document.getElementById("squad-bubble-text");
+      if (bubbleText) {
+        bubbleText.textContent = `[${gameState.name}] "If it fits, I sits! กล่องพัสดุใบใหม่นี้ขนาดพอดีตัวเป๊ะ เป็นของข้าแล้วน้านุด! 📦😻"`;
+      }
+      showToast("น้องแมวกระโดดยัดตัวลงกล่องพัสดุเรียบร้อย! ฟินสุดๆ 📦✨", "📦");
+      spawnFloatingHearts();
+
+      // Hop out after 6 seconds
+      setTimeout(() => {
+        if (occupant) occupant.style.display = "none";
+        luckyCat.style.opacity = "1";
+        luckyCat.style.transition = "all 0.6s ease";
+        luckyCat.style.left = origLeft;
+        luckyCat.style.top = origTop;
+        sfx.meow();
+      }, 6500);
+    }, 600);
+  }
+}
+
+function triggerToyCatnip() {
+  const container = document.getElementById("squad-catnip-container");
+  if (!container) return;
+
+  sfx.purr();
+  triggerHaptic([30, 50, 40]);
+
+  // Spawn 14 animated herbal catnip leaves drifting down
+  for (let i = 0; i < 14; i++) {
+    const leaf = document.createElement("span");
+    leaf.className = "catnip-leaf";
+    leaf.textContent = i % 2 === 0 ? "🌿" : "🌱";
+    leaf.style.left = `${Math.random() * 80 + 10}%`;
+    leaf.style.animationDelay = `${Math.random() * 0.6}s`;
+    leaf.style.animationDuration = `${1.8 + Math.random() * 1.2}s`;
+    container.appendChild(leaf);
+    setTimeout(() => leaf.remove(), 4000);
+  }
+
+  // All cats roll onto their backs/sides with bliss physics!
+  const cats = Array.from(document.querySelectorAll(".squad-cat-item"));
+  cats.forEach((cat, idx) => {
+    setTimeout(() => {
+      const angle = idx % 2 === 0 ? "90deg" : "-90deg";
+      cat.style.transition = "transform 0.4s ease-out";
+      cat.style.transform = `rotate(${angle}) scale(1.15) translateY(-8px)`;
+      cat.classList.add("catnip-bliss");
+
+      // Spawn floating hearts from rolling cat
+      spawnFloatingHearts();
+
+      // Return to normal after rolling around
+      setTimeout(() => {
+        cat.style.transform = "";
+        cat.classList.remove("catnip-bliss");
+      }, 4200);
+    }, idx * 150);
+  });
 
   const bubbleText = document.getElementById("squad-bubble-text");
   if (bubbleText) {
-    bubbleText.textContent = `"กล่องพัสดุใบใหม่มาส่งแล้ว! ใครเร็วใครได้ ก้นอ้วนแค่ไหนก็ยัดลงได้แน่นอน 📦😹"`;
+    bubbleText.textContent = `[${gameState.name}] "ฟินนนนมากกกก... กลิ่นสมุนไพรนี้ทำให้เคลิ้ม หงายพุงให้เกาเลยเหมียว~ 🌿✨"`;
   }
-  showToast("โยนกล่องพัสดุลงกลางห้อง! น้องๆ รีบวิ่งกรูเข้ามายัดตัวลงกล่องทันที 📦🐾", "😹");
+  showToast("โปรยแคทนิปปาร์ตี้! น้องแมวทุกตัวกลิ้งหงายพุงเคลิ้ม ฟินระดับสิบ 🌿😻", "🌿");
 }
 
-// ==============================================
+function triggerToyFeather() {
+  sfx.meow();
+  triggerHaptic([25, 40, 25]);
+
+  // Create or animate dangling feather wand
+  let wand = document.getElementById("squad-feather-wand");
+  const stage = document.getElementById("squad-living-room-stage");
+  if (!wand && stage) {
+    wand = document.createElement("div");
+    wand.id = "squad-feather-wand";
+    wand.className = "squad-feather-wand";
+    wand.innerHTML = `<span class="feather-stem">🪄</span><span class="feather-plume">🪶</span>`;
+    stage.appendChild(wand);
+  }
+
+  if (wand) {
+    wand.style.display = "block";
+    wand.classList.remove("feather-swaying");
+    void wand.offsetWidth;
+    wand.classList.add("feather-swaying");
+  }
+
+  const cats = Array.from(document.querySelectorAll(".squad-cat-item"));
+  if (cats.length > 0) {
+    const jumperCat = cats[0];
+
+    // Step 1: Crouch & Butt Wiggle preparing to jump
+    jumperCat.style.transition = "transform 0.3s ease";
+    jumperCat.style.transform = "scaleY(0.75) translateY(6px)";
+
+    setTimeout(() => {
+      // Step 2: EXPLOSIVE HIGH LEAP & SWIPE
+      sfx.purr();
+      jumperCat.style.transition = "transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)";
+      jumperCat.style.transform = "translateY(-55px) scale(1.28) rotate(-6deg)";
+      triggerHaptic(35);
+
+      // Step 3: Land gracefully
+      setTimeout(() => {
+        jumperCat.style.transition = "transform 0.3s ease";
+        jumperCat.style.transform = "";
+        if (wand) wand.style.display = "none";
+      }, 700);
+    }, 450);
+  }
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `[${gameState.name}] "จับนกได้แล้ว! สายตาและอุ้งเท้านักล่าของแท้ ไม่มีพลาดเหมียว! 🪶⚡"`;
+  }
+  showToast("สะบัดไม้ขนนก! น้องแมวกระโดดลอยตัวตะปบกลางอากาศเป๊ะ! 🪶🐾", "🪶");
+}
+
+function triggerToyYarn() {
+  const yarn = document.getElementById("squad-yarn-ball");
+  if (!yarn) return;
+
+  sfx.click();
+  triggerHaptic([20, 30]);
+
+  // Roll yarn across floor
+  yarn.classList.remove("yarn-rolling");
+  void yarn.offsetWidth;
+  yarn.classList.add("yarn-rolling");
+
+  // Nearest cat chases yarn
+  const cats = Array.from(document.querySelectorAll(".squad-cat-item"));
+  if (cats.length > 0) {
+    const chaser = cats[Math.floor(Math.random() * cats.length)];
+    const origLeft = chaser.style.left;
+    chaser.style.transition = "left 0.4s ease, top 0.4s ease";
+    chaser.style.left = "42%";
+    chaser.style.top = "74%";
+
+    setTimeout(() => {
+      sfx.meow();
+      chaser.style.transform = "scale(1.2) translateY(-12px)";
+      setTimeout(() => {
+        chaser.style.transform = "";
+        chaser.style.left = origLeft;
+      }, 800);
+    }, 450);
+  }
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `[${gameState.name}] "ลูกบอลไหมพรมกลิ้งดุ๊กดิ๊ก ไล่ตะปบสนุกที่สุดเลยเหมียว! 🧶"`;
+  }
+  showToast("ลูกบอลไหมพรมกลิ้งหลุนๆ น้องแมววิ่งไล่ตะปบเพลินเลย! 🧶🐾", "🧶");
+}
+
+function triggerToyFoodDish() {
+  const dish = document.getElementById("squad-food-dish");
+  if (!dish) return;
+
+  sfx.purr();
+  triggerHaptic([30, 40, 30]);
+
+  dish.innerHTML = "🥣🐟";
+  dish.style.transform = "scale(1.3)";
+  setTimeout(() => { dish.style.transform = ""; }, 300);
+
+  // All cats rush over to the food bowl (nom-nom eating!)
+  const cats = Array.from(document.querySelectorAll(".squad-cat-item"));
+  cats.forEach((cat, idx) => {
+    const origLeft = cat.style.left;
+    const origTop = cat.style.top;
+    cat.style.transition = "all 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
+    cat.style.left = `calc(75% + ${(idx - 1) * 6}%)`;
+    cat.style.top = "76%";
+
+    setTimeout(() => {
+      cat.style.transform = "scale(1.1) translateY(4px)";
+      spawnFloatingHearts();
+      setTimeout(() => {
+        cat.style.transform = "";
+        cat.style.left = origLeft;
+        cat.style.top = origTop;
+      }, 2500);
+    }, 600);
+  });
+
+  // Restore happiness & hunger
+  gameState.happiness = 100;
+  gameState.hunger = 100;
+  gameState.exp = (gameState.exp || 0) + 15;
+  saveGameState();
+  updateHUD();
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `[${gameState.name}] "งั่มๆๆ ปลาทูหวานฉ่ำ อร่อยที่สุดเลยน้านุด! +15 EXP 🐟😋"`;
+  }
+  showToast("ป้อนปลาทูแสนอร่อย! น้องแมววิ่งมากินพร้อมหน้า ความสุขเต็ม 100%! 🐟💖", "🐟");
+}
+
 // SQUAD AUTONOMOUS PLAY & REAL CAT BEHAVIORS
 // ระบบวิ่งเล่นอิสระ & ปฏิสัมพันธ์ของแก๊งแมวเหมียว
 // ==============================================
@@ -2862,19 +2990,123 @@ function claimDailyQuestReward(idx) {
 // ==========================================
 // 10. ADVENTURE SCENARIOS GRID
 // ==========================================
+// Current selected pack (1, 2, 3, or 4)
+window.currentPackNumber = window.currentPackNumber || 1;
+
+function isPackUnlocked(packNum) {
+  if (packNum <= 1) return true;
+  const completed = gameState.completedScenarios || {};
+  if (packNum === 2) {
+    // Requires completing at least 8 of Pack 1 (or all 10)
+    const pack1Ids = ["cafe_order", "directions", "clinic_visit", "park_chit_chat", "hotel_checkin", "convenience_store", "airport_flight", "fast_food", "lost_and_found", "movie_theater"];
+    const cleared = pack1Ids.filter(id => completed[id]).length;
+    return cleared >= 8;
+  }
+  if (packNum === 3) {
+    // Requires completing at least 8 of Pack 2
+    const p2Scens = (typeof SCENARIOS !== "undefined" ? SCENARIOS : []).filter(s => s.packNumber === 2);
+    const cleared = p2Scens.filter(s => completed[s.id]).length;
+    return cleared >= 8;
+  }
+  if (packNum === 4) {
+    // Requires completing at least 8 of Pack 3
+    const p3Scens = (typeof SCENARIOS !== "undefined" ? SCENARIOS : []).filter(s => s.packNumber === 3);
+    const cleared = p3Scens.filter(s => completed[s.id]).length;
+    return cleared >= 8;
+  }
+  return false;
+}
+
 function renderAdventureGrid() {
   const container = document.getElementById("scenario-cards-grid");
   if (!container) return;
   container.innerHTML = "";
 
-  SCENARIOS.forEach((sc) => {
-    const card = document.createElement("div");
-    card.className = "scenario-card";
+  const packTabs = document.querySelectorAll(".stage-pack-tab");
+  packTabs.forEach(tab => {
+    const pNum = parseInt(tab.dataset.pack);
+    const isUnlocked = isPackUnlocked(pNum);
+    const statusEl = document.getElementById(`pack-tab-status-${pNum}`);
+    
+    tab.classList.toggle("active", pNum === window.currentPackNumber);
+    tab.classList.toggle("is-locked", !isUnlocked);
 
+    if (statusEl) {
+      if (isUnlocked) {
+        // Count cleared in this pack
+        const packScens = SCENARIOS.filter(s => s.packNumber === pNum);
+        const clearedCount = packScens.filter(s => gameState.completedScenarios[s.id]).length;
+        statusEl.innerHTML = clearedCount === packScens.length ? "✓ ผ่านครบแล้ว (10/10)" : `กำลังฝึก (${clearedCount}/${packScens.length})`;
+        statusEl.style.color = "#166534";
+      } else {
+        statusEl.innerHTML = `🔒 ปลดล็อกเมื่อผ่านชุดที่ ${pNum - 1}`;
+        statusEl.style.color = "#991b1b";
+      }
+    }
+
+    tab.onclick = () => {
+      sfx.click();
+      triggerHaptic(20);
+      if (!isUnlocked) {
+        showToast(`🔒 ชุดที่ ${pNum} ยังไม่ปลดล็อก! กรุณาเคลียร์ชุดที่ ${pNum - 1} ก่อนนะเหมียว`, "🔒");
+        return;
+      }
+      window.currentPackNumber = pNum;
+      renderAdventureGrid();
+    };
+  });
+
+  // Render Pack Header Banner
+  const bannerEl = document.getElementById("stage-pack-banner");
+  const packInfo = {
+    1: { name: "ชุดที่ 1: ชีวิตประจำวันและการเดินทาง (Daily Survival)", cefr: "CEFR A1 – A2", desc: "ฝึกฝนการเอาตัวรอด การสั่งอาหาร การซื้อของ และการสนทนาในชีวิตจริง 10 ด่านแรก" },
+    2: { name: "ชุดที่ 2: การทำงานและออฟฟิศมืออาชีพ (Workplace Career)", cefr: "CEFR B1 – B1+", desc: "พัฒนาการสื่อสารในที่ทำงาน การสัมภาษณ์งาน การประชุมทีม Standup และการตอบอีเมลธุรกิจ" },
+    3: { name: "ชุดที่ 3: ธุรกิจระดับสากลและการเจรจาต่อรอง (Global Business)", cefr: "CEFR B2", desc: "เจรจาดีลธุรกิจ สัญญากฎหมาย การตรวจสอบซัพพลายเออร์ และการแถลงข่าวในภาวะวิกฤต" },
+    4: { name: "ชุดที่ 4: ผู้นำเชิงยุทธศาสตร์และการทูตสากล (Executive Diplomacy)", cefr: "CEFR C1", desc: "ขั้นสูงสุดของ MeowQuest! การกล่าวปาฐกถาเวทีโลก พิธีการทูต และการลงนามสนธิสัญญาสากล" }
+  };
+  const curInfo = packInfo[window.currentPackNumber] || packInfo[1];
+  const curPackScenarios = SCENARIOS.filter(s => (s.packNumber || 1) === window.currentPackNumber);
+  const curClearedCount = curPackScenarios.filter(s => gameState.completedScenarios[s.id]).length;
+
+  if (bannerEl) {
+    bannerEl.innerHTML = `
+      <div class="pack-banner-content">
+        <div class="pack-banner-text">
+          <div class="pack-banner-badge-row">
+            <span class="pack-badge-pill">ชุดที่ ${window.currentPackNumber} / 4</span>
+            <span class="pack-cefr-pill">${curInfo.cefr}</span>
+            <span class="pack-progress-pill">${curClearedCount} / ${curPackScenarios.length} ด่านผ่านแล้ว</span>
+          </div>
+          <h3 class="pack-banner-title">${curInfo.name}</h3>
+          <p class="pack-banner-desc">${curInfo.desc}</p>
+        </div>
+        <div class="pack-banner-progress-wrap">
+          <div class="pack-progress-track">
+            <div class="pack-progress-bar-fill" style="width: ${(curClearedCount / curPackScenarios.length) * 100}%;"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Render 10 Stages for Current Pack with Progressive Lock Logic
+  curPackScenarios.forEach((sc, idx) => {
+    const card = document.createElement("div");
+    
+    // Unlock condition:
+    // First stage in pack is unlocked if the pack is unlocked.
+    // Subsequent stages require previous stage in pack to be completed!
+    const isFirstInPack = idx === 0;
+    const prevScenario = idx > 0 ? curPackScenarios[idx - 1] : null;
+    const isStageUnlocked = isFirstInPack || (prevScenario && gameState.completedScenarios[prevScenario.id]);
     const progress = gameState.completedScenarios[sc.id];
-    const bestStars = progress ? "⭐".repeat(progress.bestStars) : "ยังไม่เคยเล่น";
+    const isCompleted = !!progress;
+    const bestStars = progress ? "⭐".repeat(progress.bestStars) : "☆☆☆";
+
+    card.className = `scenario-card ${!isStageUnlocked ? "is-stage-locked" : ""} ${isCompleted ? "is-stage-completed" : ""}`;
 
     card.innerHTML = `
+      <div class="scenario-stage-num-badge">ด่านที่ ${sc.stageNumber || idx + 1}</div>
       <div class="scenario-header">
         <div class="scenario-icon">${sc.icon}</div>
         <div class="scenario-title-area">
@@ -2883,7 +3115,7 @@ function renderAdventureGrid() {
         </div>
       </div>
       <div class="scenario-meta">
-        <span class="badge ${sc.difficulty === "Beginner" ? "badge-diff-beginner" : "badge-diff-intermediate"}">${sc.difficulty}</span>
+        <span class="badge ${sc.difficulty === "Beginner" ? "badge-diff-beginner" : sc.difficulty === "Intermediate" ? "badge-diff-intermediate" : "badge-diff-advanced"}">${sc.difficulty}</span>
         <span class="badge" style="background:#fef3c7; color:#92400e; font-weight:800; border:1px solid #fde68a;">CEFR ${sc.cefrLevel || "A2"}</span>
         <span class="badge badge-cat">${sc.category}</span>
         <span class="badge" style="background:#e0f2fe; color:#0369a1;">สถิติ: ${bestStars}</span>
@@ -2899,20 +3131,35 @@ function renderAdventureGrid() {
           <span class="reward-exp">+${sc.rewardExp} EXP</span>
           <span class="reward-coin">+${sc.rewardCoins} 🪙</span>
         </div>
-        <button class="btn-play-scenario" data-id="${sc.id}">เริ่มฝึก ➔</button>
+        ${isStageUnlocked ? `
+          <button class="btn-play-scenario ${isCompleted ? "btn-replay" : ""}" data-id="${sc.id}">
+            ${isCompleted ? "ฝึกซ้ำเพื่อความแม่นยำ 🔁" : "เริ่มบทสนทนา ▶"}
+          </button>
+        ` : `
+          <button class="btn-play-scenario btn-locked-stage" data-id="${sc.id}" disabled title="เคลียร์ด่านที่ ${prevScenario.stageNumber || idx} ก่อนเพื่อปลดล็อก">
+            🔒 ปลดล็อกเมื่อผ่านด่านที่ ${prevScenario.stageNumber || idx}
+          </button>
+        `}
       </div>
     `;
 
-    card.querySelector(".btn-play-scenario").onclick = () => {
-      sfx.click();
-      startScenario(sc.id);
-    };
+    if (isStageUnlocked) {
+      card.querySelector(".btn-play-scenario").onclick = () => {
+        sfx.click();
+        triggerHaptic(20);
+        startScenario(sc.id);
+      };
+    } else {
+      card.onclick = () => {
+        triggerHaptic(15);
+        showToast(`🔒 ด่านนี้ยังล็อกอยู่! เคลียร์ด่านที่ ${prevScenario.stageNumber || idx} (${prevScenario.titleTh}) ก่อนนะเหมียว`, "🔒");
+      };
+    }
 
     container.appendChild(card);
   });
 }
 
-// ==========================================
 // 10.5. VOCABULARY FLASHCARD ENGINE (TOEIC & TOEFL)
 // ==========================================
 let currentVocabDeck = "toeic";
@@ -3472,6 +3719,18 @@ window.addEventListener("DOMContentLoaded", () => {
   const btnToyBox = document.getElementById("btn-toy-box");
   if (btnToyBox) btnToyBox.onclick = triggerToyBox;
 
+  const btnToyYarn = document.getElementById("btn-toy-yarn");
+  if (btnToyYarn) btnToyYarn.onclick = triggerToyYarn;
+
+  const btnToyDish = document.getElementById("btn-toy-dish");
+  if (btnToyDish) btnToyDish.onclick = triggerToyFoodDish;
+
+  const squadYarn = document.getElementById("squad-yarn-ball");
+  if (squadYarn) squadYarn.onclick = triggerToyYarn;
+
+  const squadDish = document.getElementById("squad-food-dish");
+  if (squadDish) squadDish.onclick = triggerToyFoodDish;
+
   const btnSquadAdoptMore = document.getElementById("btn-squad-adopt-more");
   if (btnSquadAdoptMore) {
     btnSquadAdoptMore.onclick = () => {
@@ -3731,6 +3990,23 @@ async function triggerPwaInstall() {
 // ==============================================
 
 const CEFR_LEVEL_DEFINITIONS = {
+  "Pre-A1": {
+    level: "Pre-A1",
+    nameTh: "ระดับเริ่มต้นสำรวจ (Novice Explorer)",
+    nameEn: "Pre-A1 (Novice Explorer)",
+    badgeColor: "#64748b",
+    minScore: 0,
+    toeicBand: "10 - 115",
+    ieltsBand: "1.0 - 2.0",
+    toeflBand: "0 - 15",
+    canDoTitle: "การเริ่มต้นปูพื้นฐานการสื่อสาร",
+    canDoDesc: "สามารถจดจำคำศัพท์เดี่ยวและประโยคทักทายง่ายๆ กำลังเริ่มต้นปูพื้นฐานการสื่อสารสากล",
+    descriptors: [
+      { id: "pre_1", text: "จดจำคำทักทายพื้นฐาน (Hello, Hi, Thank you)", standard: "CEFR Pre-A1.1" },
+      { id: "pre_2", text: "จดจำคำศัพท์สิ่งของและสัตว์เลี้ยงเบื้องต้น", standard: "CEFR Pre-A1.2" },
+      { id: "pre_3", text: "เข้าใจคำสั่งง่ายๆ ในชีวิตประจำวัน", standard: "CEFR Pre-A1.3" }
+    ]
+  },
   A1: {
     level: "A1",
     nameTh: "ผู้ใช้ภาษาเริ่มต้น (Breakthrough / Novice)",
@@ -3823,56 +4099,65 @@ const CEFR_LEVEL_DEFINITIONS = {
 };
 
 function calculateCefrCompetencyMetrics() {
-  // 1. Phonological Accuracy & Speech Control (การออกเสียง)
-  let phonologicalScore = 70;
-  if (gameState.lastVoiceAccuracy && gameState.lastVoiceAccuracy > 0) {
-    phonologicalScore = Math.max(65, Math.min(98, Math.round(gameState.lastVoiceAccuracy)));
-  } else {
-    phonologicalScore = Math.min(95, 68 + (gameState.level || 1) * 2.2);
-  }
-
-  // 2. Lexical Breadth (คลังคำศัพท์ TOEIC/TOEFL)
-  let masteredCount = (gameState.masteredVocab && gameState.masteredVocab.length) || 0;
-  let lexicalScore = Math.min(98, Math.max(50, Math.round(52 + masteredCount * 4 + (gameState.level || 1) * 2.4)));
-
-  // 3. Pragmatic Fluency (ความคล่องแคล่วใน 10 ด่านสนทนา)
-  let completedCount = 0;
+  const completedScenarios = gameState.completedScenarios || {};
+  const completedCount = Object.keys(completedScenarios).length;
   let totalStars = 0;
-  if (gameState.completedScenarios) {
-    Object.values(gameState.completedScenarios).forEach((p) => {
-      completedCount++;
-      totalStars += p.bestStars || 3;
-    });
+  Object.values(completedScenarios).forEach(p => {
+    totalStars += (p.bestStars || 1);
+  });
+  const masteredVocab = gameState.masteredVocab || [];
+  const masteredCount = masteredVocab.length;
+  const mistakesCleared = gameState.mistakesClearedCount || 0;
+  const streak = gameState.streak || 1;
+  const voiceAcc = gameState.lastVoiceAccuracy || 0;
+
+  // 1. Phonological Accuracy & Speech Control (0 - 100)
+  let phonologicalScore = 20;
+  if (voiceAcc > 0) {
+    phonologicalScore = Math.min(98, Math.round(20 + voiceAcc * 0.55 + completedCount * 0.6));
+  } else {
+    phonologicalScore = Math.min(90, Math.round(20 + completedCount * 1.5 + (gameState.level || 1) * 0.8));
   }
-  let pragmaticScore = Math.min(98, Math.max(55, Math.round(58 + completedCount * 3.5 + totalStars * 0.5 + (gameState.level || 1) * 1.5)));
 
-  // 4. Sociolinguistic Accuracy (ไวยากรณ์ & ความสุภาพ)
-  let mistakesCleared = (gameState.mistakesClearedCount || 0);
-  let accuracyScore = Math.min(98, Math.max(58, Math.round(62 + (gameState.level || 1) * 2.1 + mistakesCleared * 1.5)));
+  // 2. Lexical Breadth & Vocabulary Depth (0 - 100)
+  let lexicalScore = Math.min(98, Math.round(15 + masteredCount * 1.6 + (gameState.level || 1) * 0.8));
 
-  // 5. Sustained Learning Consistency (ความสม่ำเสมอ & วินัย)
-  let streak = gameState.streak || 1;
-  let consistencyScore = Math.min(98, Math.max(60, Math.round(65 + streak * 3.5 + (gameState.petCount || 0) * 0.2)));
+  // 3. Pragmatic Fluency & Scenario Execution (0 - 100)
+  let pragmaticScore = Math.min(98, Math.round(15 + completedCount * 1.8 + totalStars * 0.4));
+
+  // 4. Sociolinguistic Appropriateness & Nuance (0 - 100)
+  let threeStarClears = Object.values(completedScenarios).filter(p => p.bestStars === 3).length;
+  let accuracyScore = Math.min(98, Math.round(20 + (threeStarClears * 1.6) + (mistakesCleared * 2.5)));
+
+  // 5. Sustained Learning Consistency & Habitual Retention (0 - 100)
+  let consistencyScore = Math.min(98, Math.round(20 + Math.min(streak, 30) * 2.2 + Math.min(gameState.petCount || 0, 50) * 0.2));
 
   // Total weighted CEFR Index (0 - 100)
   let totalIndex = Math.round(
-    phonologicalScore * 0.25 +
-    lexicalScore * 0.20 +
-    pragmaticScore * 0.25 +
+    phonologicalScore * 0.20 +
+    lexicalScore * 0.25 +
+    pragmaticScore * 0.30 +
     accuracyScore * 0.15 +
-    consistencyScore * 0.15
+    consistencyScore * 0.10
   );
-  totalIndex = Math.max(35, Math.min(99, totalIndex));
+  totalIndex = Math.max(10, Math.min(99, totalIndex));
 
-  // Determine CEFR Grade
-  let cefrKey = "A2";
-  if (totalIndex >= 90) cefrKey = "C1";
-  else if (totalIndex >= 75) cefrKey = "B2";
-  else if (totalIndex >= 60) cefrKey = "B1";
-  else if (totalIndex >= 40) cefrKey = "A2";
-  else cefrKey = "A1";
+  // Rigorous CEFR Benchmark Mapping:
+  // Requires actual stage progress and demonstrated vocabulary mastery to reach higher tiers!
+  let cefrKey = "Pre-A1";
+  if (totalIndex >= 90 && completedCount >= 35) {
+    cefrKey = "C1";
+  } else if (totalIndex >= 78 && completedCount >= 25) {
+    cefrKey = "B2";
+  } else if (totalIndex >= 64 && completedCount >= 15) {
+    cefrKey = "B1";
+  } else if (totalIndex >= 48 && completedCount >= 8) {
+    cefrKey = "A2";
+  } else if (totalIndex >= 28 && completedCount >= 3) {
+    cefrKey = "A1";
+  }
 
-  const def = CEFR_LEVEL_DEFINITIONS[cefrKey];
+  const def = CEFR_LEVEL_DEFINITIONS[cefrKey] || CEFR_LEVEL_DEFINITIONS["A1"];
 
   return {
     cefrKey,

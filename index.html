@@ -235,6 +235,12 @@
           <button id="btn-toy-feather" class="btn-squad-toy" title="สะบัดไม้ขนนก - ล่อให้น้องแมวกระโดดตะปบ!">
             🪶 ไม้ตกแมว
           </button>
+          <button id="btn-toy-yarn" class="btn-squad-toy" title="กลิ้งลูกบอลไหมพรม - ให้น้องแมวกระโดดตะปบวิ่งไล่!">
+            🧶 กลิ้งไหมพรม
+          </button>
+          <button id="btn-toy-dish" class="btn-squad-toy" title="ให้อาหารปลาทู - ให้น้องแมวทุกตัววิ่งมากินพร้อมกัน ฟื้นฟูความสุข!">
+            🐟 เติมปลาทู
+          </button>
           <button id="btn-toy-box" class="btn-squad-toy" title="โยนกล่องพัสดุใบใหม่ - แย่งกันยัดตัวลงกล่องแคบๆ!">
             📦 กล่องพัสดุ
           </button>
@@ -270,6 +276,7 @@
 
           <!-- Dynamic Delivery Box Container -->
           <div id="squad-box-container" class="squad-box-container"></div>
+          <div id="squad-feather-wand" class="squad-feather-wand" style="display:none;"><span class="feather-stem">🪄</span><span class="feather-plume">🪶</span></div>
 
           <!-- Dynamic Cats Container rendered by app.js -->
           <div id="squad-cats-container" class="squad-cats-container">
@@ -317,14 +324,47 @@
 
       <div class="section-banner">
         <div>
-          <h2>ด่านสถานการณ์จำลอง (Daily Life Scenarios - 10 ด่าน)</h2>
-          <p>เลือกสถานการณ์ในชีวิตประจำวันเพื่อฝึกการสื่อสารจริง ตอบคำถาม สะสมเหรียญ และพัฒนาทักษะภาษาอังกฤษไปพร้อมกับน้องแมวของคุณ</p>
+          <h2>ด่านสถานการณ์จำลอง (English RPG Scenarios - 40 ด่าน 4 ชุด)</h2>
+          <p>ฝึกฝนการสื่อสารภาษาอังกฤษตั้งแต่ชีวิตประจำวัน การทำงานในออฟฟิศ การเจรจาธุรกิจสากล สู่ภาวะผู้นำและการทูตสากล ปลดล็อกทีละชุด</p>
         </div>
         <div style="font-size: 3.2rem;">🎒</div>
       </div>
 
+      <!-- Stage Packs Navigation Tabs (ชุดละ 10 ด่าน ค่อยๆ ปลดล็อก) -->
+      <div class="stage-pack-tabs" id="stage-pack-tabs">
+        <button class="stage-pack-tab active" data-pack="1" id="pack-tab-1">
+          <span class="pack-tab-badge">ชุดที่ 1</span>
+          <span class="pack-tab-name">🗺️ ชีวิตประจำวัน (1-10)</span>
+          <span class="pack-tab-cefr">CEFR A1–A2</span>
+          <span class="pack-tab-status" id="pack-tab-status-1">เปิดใช้งาน</span>
+        </button>
+        <button class="stage-pack-tab" data-pack="2" id="pack-tab-2">
+          <span class="pack-tab-badge">ชุดที่ 2</span>
+          <span class="pack-tab-name">💼 ทำงาน &amp; ออฟฟิศ (11-20)</span>
+          <span class="pack-tab-cefr">CEFR B1–B1+</span>
+          <span class="pack-tab-status" id="pack-tab-status-2">🔒 ผ่านชุดที่ 1 เพื่อปลดล็อก</span>
+        </button>
+        <button class="stage-pack-tab" data-pack="3" id="pack-tab-3">
+          <span class="pack-tab-badge">ชุดที่ 3</span>
+          <span class="pack-tab-name">🌐 ธุรกิจ &amp; เจรจา (21-30)</span>
+          <span class="pack-tab-cefr">CEFR B2</span>
+          <span class="pack-tab-status" id="pack-tab-status-3">🔒 ผ่านชุดที่ 2 เพื่อปลดล็อก</span>
+        </button>
+        <button class="stage-pack-tab" data-pack="4" id="pack-tab-4">
+          <span class="pack-tab-badge">ชุดที่ 4</span>
+          <span class="pack-tab-name">👑 ผู้นำ &amp; การทูตสากล (31-40)</span>
+          <span class="pack-tab-cefr">CEFR C1</span>
+          <span class="pack-tab-status" id="pack-tab-status-4">🔒 ผ่านชุดที่ 3 เพื่อปลดล็อก</span>
+        </button>
+      </div>
+
+      <!-- Pack Header Banner & Progress Track -->
+      <div class="stage-pack-banner" id="stage-pack-banner">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
       <div id="scenario-cards-grid" class="scenario-grid">
-        <!-- Rendered dynamically by app.js (10 scenarios) -->
+        <!-- Rendered dynamically by app.js (10 scenarios per pack) -->
       </div>
     </section>
 

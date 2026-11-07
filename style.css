@@ -5352,3 +5352,476 @@ footer.app-footer {
     border-width: 6px !important;
   }
 }
+
+
+/* ========================================================
+   3D CUTE FIGURINE & VOLUMETRIC LIGHTING ENHANCEMENTS
+   ======================================================== */
+.cat-3d-svg-root {
+  filter: drop-shadow(0 8px 12px rgba(15, 23, 42, 0.16));
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease;
+  transform-origin: bottom center;
+}
+
+.cat-avatar-interactive {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.cat-avatar-interactive:hover .cat-3d-svg-root {
+  transform: translateY(-8px) scale(1.06);
+  filter: drop-shadow(0 16px 22px rgba(15, 23, 42, 0.24));
+}
+
+.squad-cat-item {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.4s ease, top 0.4s ease;
+  will-change: transform, left, top;
+}
+
+.squad-cat-item:hover {
+  transform: scale(1.12) translateY(-6px);
+  z-index: 45;
+}
+
+.cat-laser-pounce {
+  animation: catLaserPounceKeyframes 0.35s ease-out forwards;
+}
+
+@keyframes catLaserPounceKeyframes {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.25) translateY(-24px); }
+  100% { transform: scale(1.1) translateY(0); }
+}
+
+.catnip-bliss {
+  animation: catnipRollPurr 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes catnipRollPurr {
+  0% { transform: rotate(-75deg) scale(1.15) translateY(-4px); }
+  50% { transform: rotate(0deg) scale(1.22) translateY(-10px); }
+  100% { transform: rotate(75deg) scale(1.15) translateY(-4px); }
+}
+
+/* ========================================================
+   REALISTIC SQUAD TOYS (BOX, FEATHER, YARN, DISH, CATNIP)
+   ======================================================== */
+.toy-cardboard-box {
+  position: absolute;
+  width: 90px;
+  height: 70px;
+  background: linear-gradient(135deg, #d97706, #b45309);
+  border: 3px solid #78350f;
+  border-radius: 8px;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.32), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center bottom;
+  cursor: pointer;
+  z-index: 25;
+}
+
+.box-wiggling {
+  animation: boxWigglePhysics 0.6s ease-in-out infinite;
+}
+
+@keyframes boxWigglePhysics {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-4deg) translateY(-2px); }
+  75% { transform: rotate(4deg) translateY(-2px); }
+}
+
+.box-flap {
+  position: absolute;
+  top: -12px;
+  width: 44px;
+  height: 14px;
+  background: #f59e0b;
+  border: 2px solid #78350f;
+  border-radius: 4px;
+}
+
+.box-flap-l {
+  left: -2px;
+  transform: rotate(-18deg);
+  transform-origin: bottom left;
+}
+
+.box-flap-r {
+  right: -2px;
+  transform: rotate(18deg);
+  transform-origin: bottom right;
+}
+
+.box-delivery-logo {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #fffbeb;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.5px;
+}
+
+.box-fragile-tag {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #7f1d1d;
+  background: #fef08a;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-top: 2px;
+}
+
+.box-cat-occupant {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 26;
+}
+
+.peeking-cat-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.peeking-cat-ears {
+  font-size: 1.8rem;
+  animation: catPeekingBounce 0.8s ease-in-out infinite alternate;
+}
+
+.peeking-cat-paws {
+  font-size: 0.85rem;
+  margin-top: -6px;
+}
+
+@keyframes catPeekingBounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-5px); }
+}
+
+.squad-feather-wand {
+  position: absolute;
+  top: 30%;
+  left: 65%;
+  font-size: 2.2rem;
+  pointer-events: none;
+  z-index: 35;
+}
+
+.feather-swaying {
+  animation: featherSwayPhysics 0.9s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  transform-origin: top center;
+}
+
+@keyframes featherSwayPhysics {
+  0% { transform: rotate(-35deg) scale(1); }
+  100% { transform: rotate(35deg) scale(1.15); }
+}
+
+.squad-yarn-ball {
+  position: absolute;
+  left: 22%;
+  top: 72%;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 20;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.squad-yarn-ball:hover {
+  transform: scale(1.25) rotate(20deg);
+}
+
+.yarn-rolling {
+  animation: yarnRollingPhysics 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes yarnRollingPhysics {
+  0% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(120px) rotate(360deg); }
+  80% { transform: translateX(80px) rotate(270deg); }
+  100% { transform: translateX(95px) rotate(300deg); }
+}
+
+.squad-food-dish {
+  position: absolute;
+  right: 18%;
+  top: 74%;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 20;
+  transition: transform 0.2s ease;
+  user-select: none;
+}
+
+.squad-food-dish:hover {
+  transform: scale(1.25);
+}
+
+.catnip-leaf {
+  position: absolute;
+  top: 15%;
+  font-size: 1.3rem;
+  pointer-events: none;
+  animation: catnipDriftDown linear forwards;
+  z-index: 30;
+}
+
+@keyframes catnipDriftDown {
+  0% { transform: translateY(0) rotate(0deg) scale(0.6); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 0.9; }
+  100% { transform: translateY(220px) rotate(360deg) scale(1.2); opacity: 0; }
+}
+
+/* ========================================================
+   4-PACK CURRICULUM NAVIGATION TABS & PROGRESSIVE LOCKS
+   ======================================================== */
+.stage-pack-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 18px 0 14px 0;
+  width: 100%;
+}
+
+.stage-pack-tab {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.stage-pack-tab:hover:not(.is-locked) {
+  border-color: #93c5fd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.12);
+}
+
+.stage-pack-tab.active {
+  border-color: #2563eb;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0edfe 100%);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.18);
+}
+
+.stage-pack-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  border-radius: 4px 4px 0 0;
+}
+
+.stage-pack-tab.is-locked {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.pack-tab-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #1d4ed8;
+  background: #dbeafe;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.stage-pack-tab.active .pack-tab-badge {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.stage-pack-tab.is-locked .pack-tab-badge {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.pack-tab-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.pack-tab-cefr {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+.pack-tab-status {
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-top: auto;
+}
+
+/* Pack Header Banner */
+.stage-pack-banner {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 22px;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pack-banner-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.pack-badge-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.14);
+  color: #93c5fd;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pack-cefr-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: #f59e0b;
+  color: #78350f;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.pack-progress-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.pack-banner-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  color: #ffffff;
+  letter-spacing: -0.2px;
+}
+
+.pack-banner-desc {
+  font-size: 0.86rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin: 0 0 14px 0;
+}
+
+.pack-progress-track {
+  width: 100%;
+  height: 9px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.pack-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+  border-radius: 6px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Progressive Stage Lock on Cards */
+.scenario-card {
+  position: relative;
+}
+
+.scenario-stage-num-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.scenario-card.is-stage-locked {
+  opacity: 0.72;
+  filter: grayscale(35%);
+  border: 2px dashed #cbd5e1 !important;
+  background: #f8fafc !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+.scenario-card.is-stage-locked:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn-locked-stage {
+  background: #94a3b8 !important;
+  color: #ffffff !important;
+  cursor: not-allowed !important;
+  opacity: 0.88;
+  border: none !important;
+}
+
+.btn-locked-stage:hover {
+  transform: none !important;
+  background: #94a3b8 !important;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 900px) {
+  .stage-pack-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .stage-pack-tabs {
+    grid-template-columns: 1fr;
+  }
+  .stage-pack-banner {
+    padding: 14px 16px;
+  }
+  .pack-banner-title {
+    font-size: 1.1rem;
+  }
+}

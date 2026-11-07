@@ -7,6 +7,9 @@
 const SCENARIOS = [
   {
     id: "cafe_order",
+    stageNumber: 1,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "The Whisker Cafe",
     titleTh: "ร้านกาแฟวิสเกอร์ (การสั่งเครื่องดื่มและปรับแต่ง)",
     category: "Ordering Food",
@@ -202,6 +205,9 @@ const SCENARIOS = [
   },
   {
     id: "directions",
+    stageNumber: 2,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "Lost in Purr-is",
     titleTh: "หลงทางในเมืองเพอร์ริส (การถามทางและรถไฟใต้ดิน)",
     category: "Navigation",
@@ -362,6 +368,9 @@ const SCENARIOS = [
   },
   {
     id: "clinic_visit",
+    stageNumber: 3,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "Paw-some Clinic",
     titleTh: "คลินิกสุขภาพหมอฮูก (การบอกอาการป่วยและถามเรื่องยา)",
     category: "Healthcare",
@@ -522,6 +531,9 @@ const SCENARIOS = [
   },
   {
     id: "park_chit_chat",
+    stageNumber: 4,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "Sunny Park Small Talk",
     titleTh: "ชวนคุยที่สวนสาธารณะ (Small Talk ทั่วไปและงานอดิเรก)",
     category: "Small Talk",
@@ -682,6 +694,9 @@ const SCENARIOS = [
   },
   {
     id: "hotel_checkin",
+    stageNumber: 5,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "Grand Whisker Hotel",
     titleTh: "โรงแรมแกรนด์วิสเกอร์ (การเช็กอินและสอบถามบริการ)",
     category: "Travel",
@@ -842,6 +857,9 @@ const SCENARIOS = [
   },
   {
     id: "convenience_store",
+    stageNumber: 6,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "7-Meowven Store",
     titleTh: "ร้านสะดวกซื้อเซเว่นเหมียว (การซื้อของ & ชำระเงิน)",
     category: "Daily Shopping",
@@ -1002,6 +1020,9 @@ const SCENARIOS = [
   },
   {
     id: "airport_flight",
+    stageNumber: 7,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "SkyPurr Airport & Immigration",
     titleTh: "สนามบินและด่านตรวจคนเข้าเมือง (การเดินทางระหว่างประเทศ)",
     category: "Travel",
@@ -1162,6 +1183,9 @@ const SCENARIOS = [
   },
   {
     id: "fast_food",
+    stageNumber: 8,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "MeowDonald's Drive-Thru",
     titleTh: "ร้านฟาสต์ฟู้ดเหมียวดอนัลด์ (การสั่งเบอร์เกอร์และเซ็ตคอมโบ)",
     category: "Ordering Food",
@@ -1322,6 +1346,9 @@ const SCENARIOS = [
   },
   {
     id: "lost_and_found",
+    stageNumber: 9,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "Police Lost & Found",
     titleTh: "แจ้งของหายที่สถานีตำรวจ (การอธิบายลักษณะสิ่งของ)",
     category: "Emergency & Help",
@@ -1482,6 +1509,9 @@ const SCENARIOS = [
   },
   {
     id: "movie_theater",
+    stageNumber: 10,
+    packNumber: 1,
+    packId: "pack_daily",
     title: "CineMeow Theater",
     titleTh: "โรงภาพยนตร์ซีนีเหมียว (การจองตั๋วหนัง & เลือกที่นั่ง)",
     category: "Entertainment",
@@ -1639,10 +1669,2536 @@ const SCENARIOS = [
         ]
       }
     ]
+  },
+
+  // ========================================================
+  // PACK 2, 3, 4: EXPANDED PROGRESSIVE STAGES (11 - 40)
+  // ========================================================
+  {
+    "id": "job_interview",
+    "stageNumber": 11,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "The Dream Job Interview",
+    "titleTh": "สัมภาษณ์งานภาษาอังกฤษ (Job Interview)",
+    "category": "Career & Workplace",
+    "icon": "💼",
+    "difficulty": "Intermediate",
+    "cefrLevel": "B1",
+    "cefrCanDo": "Can describe past work experience, strengths, and handle professional interview questions.",
+    "canDoSummary": "แนะนำประวัติการทำงาน จุดแข็ง และตอบคำถามสัมภาษณ์งานภาษาอังกฤษอย่างมั่นใจ",
+    "toeicBand": "TOEIC 550 - 650",
+    "rewardExp": 100,
+    "rewardCoins": 75,
+    "npcName": "Victoria Vance (HR Director)",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "เข้าสัมภาษณ์ตำแหน่งงานสำคัญกับผู้อำนวยการฝ่ายบุคคล ตอบคำถามประวัติและเป้าหมายการทำงาน",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Good morning. Could you please introduce yourself and summarize your background?",
+        "npcVoiceText": "Good morning. Could you please introduce yourself and summarize your background?",
+        "contextTh": "ผู้สัมภาษณ์ขอให้คุณแนะนำตัวเองและสรุปประวัติการทำงาน",
+        "hint": "โครงสร้าง: ประสบการณ์หลัก + ความเชี่ยวชาญ + สิ่งที่มุ่งมั่นส่งมอบ",
+        "targetPhrases": [
+          "Certainly. I bring over three years of experience in project coordination, specializing in digital workflows."
+        ],
+        "options": [
+          {
+            "text": "Certainly. I bring over three years of experience in project coordination, specializing in digital workflows.",
+            "isCorrect": true,
+            "feedback": "เปิดตัวได้อย่างมั่นใจ กระชับ และตรงประเด็นอาชีพชัดเจน"
+          },
+          {
+            "text": "I was born in a small village and I love cats.",
+            "isCorrect": false,
+            "feedback": "ควรเน้นทักษะวิชาชีพและประสบการณ์ ไม่ใช่ประวัติส่วนตัวทั่วไป"
+          },
+          {
+            "text": "Everything is written on my resume already.",
+            "isCorrect": false,
+            "feedback": "การตอบตัดบทถือว่าไม่สุภาพอย่างยิ่งในการสัมภาษณ์งาน"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Project coordination",
+            "meaning": "การประสานงานโครงการ"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "What would you consider your greatest professional strength in a team setting?",
+        "npcVoiceText": "What would you consider your greatest professional strength in a team setting?",
+        "contextTh": "ถามถึงจุดแข็งที่โดดเด่นที่สุดในการทำงานร่วมกับผู้อื่น",
+        "hint": "ระบุจุดแข็งด้านการสื่อสารหรือการแก้ปัญหา พร้อมผลลัพธ์ที่เป็นรูปธรรม",
+        "targetPhrases": [
+          "My key strength is clear cross-functional communication and resolving project bottlenecks promptly."
+        ],
+        "options": [
+          {
+            "text": "My key strength is clear cross-functional communication and resolving project bottlenecks promptly.",
+            "isCorrect": true,
+            "feedback": "ใช้คำศัพท์ระดับ B1/B2 (cross-functional communication, bottlenecks) ได้เฉียบคม"
+          },
+          {
+            "text": "I am simply smarter than all my coworkers.",
+            "isCorrect": false,
+            "feedback": "ดูหยิ่งยโสและไม่สามารถทำงานร่วมกับทีมได้"
+          },
+          {
+            "text": "I don't have strengths, I just do what I'm told.",
+            "isCorrect": false,
+            "feedback": "สะท้อนความไม่มั่นใจและขาดความคิดริเริ่ม"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Cross-functional",
+            "meaning": "การทำงานข้ามสายงาน/ข้ามแผนก"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "How do you handle high-pressure deadlines when priorities change suddenly?",
+        "npcVoiceText": "How do you handle high-pressure deadlines when priorities change suddenly?",
+        "contextTh": "ถามถึงการรับมือกับความกดดันเมื่อลำดับความสำคัญเปลี่ยนกะทันหัน",
+        "hint": "เน้นการจัดลำดับความสำคัญใหม่ (re-prioritize) และการประสานงานกับผู้เกี่ยวข้อง",
+        "targetPhrases": [
+          "I immediately re-prioritize critical deliverables and communicate realistic timelines with stakeholders."
+        ],
+        "options": [
+          {
+            "text": "I immediately re-prioritize critical deliverables and communicate realistic timelines with stakeholders.",
+            "isCorrect": true,
+            "feedback": "แสดงถึงทักษะการบริหารความเสี่ยงและการสื่อสารเชิงรุก"
+          },
+          {
+            "text": "I panic and complain loudly to everyone.",
+            "isCorrect": false,
+            "feedback": "ขาดความสามารถในการควบคุมอารมณ์และแก้ปัญหา"
+          },
+          {
+            "text": "I ignore the new priorities and stick to my old plan.",
+            "isCorrect": false,
+            "feedback": "ไม่ยืดหยุ่นและไม่สอดคล้องกับทิศทางขององค์กร"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Re-prioritize deliverables",
+            "meaning": "จัดลำดับความสำคัญของสิ่งที่ต้องส่งมอบใหม่"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "npcText": "Do you have any questions for us regarding the position or our strategic goals?",
+        "npcVoiceText": "Do you have any questions for us regarding the position or our strategic goals?",
+        "contextTh": "เปิดโอกาสให้คุณถามคำถามเกี่ยวกับบทบาทงานหรือทิศทางบริษัท",
+        "hint": "ควรถามถึงตัวชี้วัดความสำเร็จ (success metrics) หรือโครงการสำคัญในระยะ 6 เดือน",
+        "targetPhrases": [
+          "Could you share more about the primary success metrics for this role over the next six months?"
+        ],
+        "options": [
+          {
+            "text": "Could you share more about the primary success metrics for this role over the next six months?",
+            "isCorrect": true,
+            "feedback": "คำถามเชิงกลยุทธ์ที่สร้างความประทับใจให้ผู้บริหารอย่างยิ่ง"
+          },
+          {
+            "text": "How much vacation can I take in my first month?",
+            "isCorrect": false,
+            "feedback": "ไม่ควรถามเรื่องการลาพักร้อนในรอบแรกของการสัมภาษณ์"
+          },
+          {
+            "text": "No questions, can I go now?",
+            "isCorrect": false,
+            "feedback": "ดูไม่ใส่ใจและขาดความกระตือรือร้น"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Success metrics",
+            "meaning": "ตัวชี้วัดความสำเร็จ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "office_onboarding",
+    "stageNumber": 12,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "First Day Onboarding",
+    "titleTh": "แนะนำตัววันแรกกับทีมงาน (Office Onboarding)",
+    "category": "Career & Workplace",
+    "icon": "👋",
+    "difficulty": "Intermediate",
+    "cefrLevel": "B1",
+    "cefrCanDo": "Can introduce oneself in an office environment, explain job role, and ask polite questions about workplace routines.",
+    "canDoSummary": "แนะนำตัวกับเพื่อนร่วมงานใหม่ อธิบายขอบเขตงาน และสอบถามระเบียบการทำงานในออฟฟิศอย่างสุภาพ",
+    "toeicBand": "TOEIC 550 - 650",
+    "rewardExp": 100,
+    "rewardCoins": 75,
+    "npcName": "Senior Whiskers (Team Lead)",
+    "npcAvatar": "🐱‍💻",
+    "bgTheme": "theme-office",
+    "description": "เริ่มต้นวันแรกในที่ทำงาน แนะนำตัวกับหัวหน้าทีมและเพื่อนร่วมงาน เรียนรู้เครื่องมือการทำงานและวัฒนธรรมทีม",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Welcome to the team! How are you settling in this morning?",
+        "npcVoiceText": "Welcome to the team! How are you settling in this morning?",
+        "contextTh": "หัวหน้าทีมกล่าวต้อนรับและถามว่าการเริ่มงานช่วงเช้าเป็นอย่างไรบ้าง",
+        "hint": "กล่าวขอบคุณ แสดงความกระตือรือร้น และรายงานการตั้งค่าโต๊ะทำงาน",
+        "targetPhrases": [
+          "Thank you so much! Everyone has been very welcoming, and my workstation is ready."
+        ],
+        "options": [
+          {
+            "text": "Thank you so much! Everyone has been very welcoming, and my workstation is ready.",
+            "isCorrect": true,
+            "feedback": "สุภาพ เป็นมิตร และแสดงถึงความพร้อมในการทำงาน"
+          },
+          {
+            "text": "The coffee is bad and the room is freezing cold.",
+            "isCorrect": false,
+            "feedback": "การบ่นตั้งแต่วันแรกสร้างภาพลักษณ์แง่ลบ"
+          },
+          {
+            "text": "I want to go home already.",
+            "isCorrect": false,
+            "feedback": "ขาดความอดทนและความมุ่งมั่น"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Workstation",
+            "meaning": "โต๊ะและอุปกรณ์คอมพิวเตอร์ทำงาน"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "Great. We use Slack for daily communication. Could you say hello on the team channel?",
+        "npcVoiceText": "Great. We use Slack for daily communication. Could you say hello on the team channel?",
+        "contextTh": "หัวหน้าทีมให้ทักทายทีมงานในช่องแชต Slack",
+        "hint": "ทักทายอย่างเป็นมิตร แนะนำตำแหน่ง และกล่าวถึงความตื่นเต้นที่จะได้ร่วมงาน",
+        "targetPhrases": [
+          "Hi everyone! Thrilled to join as the new specialist. Looking forward to collaborating with you all!"
+        ],
+        "options": [
+          {
+            "text": "Hi everyone! Thrilled to join as the new specialist. Looking forward to collaborating with you all!",
+            "isCorrect": true,
+            "feedback": "สมบูรณ์แบบ! แสดงมิตรภาพและความเป็นมืออาชีพ"
+          },
+          {
+            "text": "I am here, don't ping me unless it is an emergency.",
+            "isCorrect": false,
+            "feedback": "สร้างกำแพงกั้นเพื่อนร่วมงาน"
+          },
+          {
+            "text": "Hello, pay me my money soon.",
+            "isCorrect": false,
+            "feedback": "หยาบคายและไม่เหมาะสม"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Collaborate",
+            "meaning": "ร่วมมือทำงานร่วมกัน"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "Our daily standup is at 10 AM. Do you have access to our Jira board and Drive folders?",
+        "npcVoiceText": "Our daily standup is at 10 AM. Do you have access to our Jira board and Drive folders?",
+        "contextTh": "แจ้งเวลานัดประชุม 10 โมง และถามถึงสิทธิ์การเข้าถึง Jira และ Drive",
+        "hint": "แจ้งสิ่งที่เข้าได้ และสิ่งที่ยังต้องการการอนุมัติสิทธิ์อย่างชัดเจน",
+        "targetPhrases": [
+          "I have Drive access, but I haven't received the Jira invite yet. Could you grant access when convenient?"
+        ],
+        "options": [
+          {
+            "text": "I have Drive access, but I haven't received the Jira invite yet. Could you grant access when convenient?",
+            "isCorrect": true,
+            "feedback": "แจ้งข้อมูลครบถ้วน และลงท้ายด้วย 'when convenient' อย่างสุภาพ"
+          },
+          {
+            "text": "I have no idea what Jira is, don't ask me.",
+            "isCorrect": false,
+            "feedback": "ไม่กระตือรือร้นในการเรียนรู้ระบบของบริษัท"
+          },
+          {
+            "text": "Everything is broken, as usual.",
+            "isCorrect": false,
+            "feedback": "มองโลกในแง่ร้ายเกินจริง"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Grant access",
+            "meaning": "อนุมัติสิทธิ์การเข้าถึง"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "npcText": "Done! The invite is sent. Let's grab lunch with the team at noon to celebrate your first day!",
+        "npcVoiceText": "Done! The invite is sent. Let's grab lunch with the team at noon to celebrate your first day!",
+        "contextTh": "หัวหน้าส่งคำเชิญให้แล้ว และชวนไปรับประทานอาหารกลางวันกับทีม",
+        "hint": "ตอบรับคำชวนด้วยความยินดี ขอบคุณสำหรับมิตรภาพ",
+        "targetPhrases": [
+          "That sounds wonderful, thank you! I'd love to join everyone and learn more about the projects."
+        ],
+        "options": [
+          {
+            "text": "That sounds wonderful, thank you! I'd love to join everyone and learn more about the projects.",
+            "isCorrect": true,
+            "feedback": "สร้างสายสัมพันธ์เชิงบวก (Rapport) ได้อย่างยอดเยี่ยม"
+          },
+          {
+            "text": "No, I brought my own food and I prefer to eat alone.",
+            "isCorrect": false,
+            "feedback": "ตัดโอกาสการสร้างความสัมพันธ์วันแรก"
+          },
+          {
+            "text": "Is the lunch paid by the company?",
+            "isCorrect": false,
+            "feedback": "ถามเรื่องเงินทันทีอาจดูเสียมารยาท"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Grab lunch",
+            "meaning": "ไปทานอาหารกลางวันด้วยกัน"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "team_standup",
+    "stageNumber": 13,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Daily Agile Standup Meeting",
+    "titleTh": "ประชุมอัปเดตงานประจำวัน (Daily Standup)",
+    "category": "Career & Workplace",
+    "icon": "📊",
+    "difficulty": "Intermediate",
+    "cefrLevel": "B1",
+    "cefrCanDo": "Can report task progress, announce next steps, and flag bottlenecks concisely in a team sync.",
+    "canDoSummary": "รายงานความคืบหน้าของงาน สิ่งที่กำลังจะทำ และแจ้งปัญหาติดขัด (Blockers) ได้อย่างกระชับตรงประเด็น",
+    "toeicBand": "TOEIC 580 - 680",
+    "rewardExp": 110,
+    "rewardCoins": 80,
+    "npcName": "Scrum Master Felix",
+    "npcAvatar": "🐱‍💻",
+    "bgTheme": "theme-office",
+    "description": "เข้าร่วมประชุม Agile Standup ประจำเช้า สรุปงานที่เสร็จ แผนงานวันนี้ และแจ้งปัญหาติดขัด",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Morning team! Mimi, what did you accomplish yesterday?",
+        "npcVoiceText": "Morning team! Mimi, what did you accomplish yesterday?",
+        "contextTh": "Scrum Master ขอให้อัปเดตงานที่ทำเสร็จเมื่อวาน",
+        "hint": "ใช้ Past Tense สรุปสิ่งที่เสร็จอย่างกระชับ เช่น 'Yesterday I finalized...'",
+        "targetPhrases": [
+          "Yesterday I finalized the client onboarding workflow and audited the user data schema."
+        ],
+        "options": [
+          {
+            "text": "Yesterday I finalized the client onboarding workflow and audited the user data schema.",
+            "isCorrect": true,
+            "feedback": "สั้น กระชับ ตรงหลักการ Agile Standup สากล"
+          },
+          {
+            "text": "Yesterday I watched funny cat videos all afternoon.",
+            "isCorrect": false,
+            "feedback": "ไม่ควรพูดเล่นในที่ประชุมอย่างเป็นทางการ"
+          },
+          {
+            "text": "I don't remember what I did.",
+            "isCorrect": false,
+            "feedback": "สะท้อนความไม่รับผิดชอบต่องาน"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Finalized",
+            "meaning": "สรุปผลเสร็จสมบูรณ์"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "Excellent. And what is your core focus for today?",
+        "npcVoiceText": "Excellent. And what is your core focus for today?",
+        "contextTh": "ถามถึงงานหลักที่จะโฟกัสทำในวันนี้",
+        "hint": "ระบุเป้าหมายที่เป็นรูปธรรม เช่น 'Today I am conducting tests...'",
+        "targetPhrases": [
+          "Today I am running automated QA tests and drafting the deployment documentation."
+        ],
+        "options": [
+          {
+            "text": "Today I am running automated QA tests and drafting the deployment documentation.",
+            "isCorrect": true,
+            "feedback": "แผนงานชัดเจน มีผลลัพธ์วัดผลได้"
+          },
+          {
+            "text": "I will just chill and answer a few emails.",
+            "isCorrect": false,
+            "feedback": "ขาดความมุ่งมั่นในการส่งมอบงาน"
+          },
+          {
+            "text": "Nothing, I have no work assigned.",
+            "isCorrect": false,
+            "feedback": "หากว่างควรถามหางานช่วยเหลือทีม"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Automated QA tests",
+            "meaning": "การทดสอบระบบควบคุมคุณภาพแบบอัตโนมัติ"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "Do you have any blockers that might risk our milestone deadline?",
+        "npcVoiceText": "Do you have any blockers that might risk our milestone deadline?",
+        "contextTh": "ถามว่ามีปัญหาติดขัด (Blockers) ที่อาจเสี่ยงต่อกำหนดเวลาหรือไม่",
+        "hint": "แจ้งอุปสรรคและผลกระทบอย่างตรงไปตรงมา",
+        "targetPhrases": [
+          "I am waiting on API credentials from the security team, which might delay the test run if not received by 2 PM."
+        ],
+        "options": [
+          {
+            "text": "I am waiting on API credentials from the security team, which might delay the test run if not received by 2 PM.",
+            "isCorrect": true,
+            "feedback": "ระบุปัญหาชัดเจนและระบุกรอบเวลาที่จำเป็น"
+          },
+          {
+            "text": "Everything is on fire and the project is doomed.",
+            "isCorrect": false,
+            "feedback": "สร้างความตื่นตระหนกโดยไร้แผนแก้ไข"
+          },
+          {
+            "text": "No blockers ever, I can do everything instantly.",
+            "isCorrect": false,
+            "feedback": "ปิดบังปัญหาจะทำให้ทีมช่วยไม่ทัน"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Blocker",
+            "meaning": "อุปสรรคที่ขัดขวางไม่ให้งานเดินหน้า"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "npcText": "Understood. I will escalate the credentials request right now. Thanks for flagging it!",
+        "npcVoiceText": "Understood. I will escalate the credentials request right now. Thanks for flagging it!",
+        "contextTh": "Scrum Master รับจะช่วยเร่งเรื่องขอรหัสผ่านให้",
+        "hint": "ขอบคุณความช่วยเหลือและส่งต่อคิวให้คนถัดไป",
+        "targetPhrases": [
+          "Much appreciated Felix! Passing the mic over to Sarah for her updates."
+        ],
+        "options": [
+          {
+            "text": "Much appreciated Felix! Passing the mic over to Sarah for her updates.",
+            "isCorrect": true,
+            "feedback": "มีมารยาทในการประชุมและส่งต่อคิวอย่างมืออาชีพ"
+          },
+          {
+            "text": "Make sure you do it fast, you are always slow.",
+            "isCorrect": false,
+            "feedback": "ต่อว่าเพื่อนร่วมงานอย่างไร้มารยาท"
+          },
+          {
+            "text": "Whatever.",
+            "isCorrect": false,
+            "feedback": "แสดงความไม่ใส่ใจ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Escalate",
+            "meaning": "ส่งเรื่องต่อให้ผู้มีอำนาจเพื่อเร่งรัด"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "email_request",
+    "stageNumber": 14,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Professional Email Inquiries",
+    "titleTh": "เขียนและตอบอีเมลติดต่องาน (Business Email)",
+    "category": "Career & Workplace",
+    "icon": "📨",
+    "difficulty": "Intermediate",
+    "cefrLevel": "B1",
+    "cefrCanDo": "Can compose polite business inquiries, request documentation, and confirm timelines via formal email.",
+    "canDoSummary": "สอบถามข้อมูลงาน ร้องขอเอกสารสำคัญ และยืนยันกำหนดเวลาผ่านอีเมลธุรกิจได้อย่างสุภาพ",
+    "toeicBand": "TOEIC 600 - 700",
+    "rewardExp": 110,
+    "rewardCoins": 80,
+    "npcName": "Operations Officer Oliver",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "ติดต่อขอรับเอกสารสัญญาและรายงานงบประมาณจากฝ่ายปฏิบัติการ พร้อมกำหนดวันส่งมอบ",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Hi Mimi, how can our operations team assist your project today?",
+        "npcVoiceText": "Hi Mimi, how can our operations team assist your project today?",
+        "contextTh": "ฝ่ายปฏิบัติการถามว่าต้องการให้ช่วยเหลือเรื่องเอกสารอย่างไร",
+        "hint": "ใช้ 'Could you kindly provide...' ระบุเอกสารและกำหนดเวลาที่ต้องการ",
+        "targetPhrases": [
+          "Could you kindly provide the updated vendor audit report for Q3 by this Thursday?"
+        ],
+        "options": [
+          {
+            "text": "Could you kindly provide the updated vendor audit report for Q3 by this Thursday?",
+            "isCorrect": true,
+            "feedback": "สุภาพ ชัดเจน และมีกำหนดเวลาส่งมอบที่แน่นอน"
+          },
+          {
+            "text": "Send me all vendor files right now or else.",
+            "isCorrect": false,
+            "feedback": "ใช้น้ำเสียงข่มขู่ ไม่เหมาะสมกับการทำงาน"
+          },
+          {
+            "text": "Give me something, I forgot the name.",
+            "isCorrect": false,
+            "feedback": "ขาดความชัดเจน"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Could you kindly provide",
+            "meaning": "รบกวนส่งมอบ... (สุภาพทางการ)"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "The vendor audit has sensitive pricing info. Do you have management sign-off?",
+        "npcVoiceText": "The vendor audit has sensitive pricing info. Do you have management sign-off?",
+        "contextTh": "ฝ่ายปฏิบัติการถามว่าได้รับการอนุมัติจากผู้บริหารสำหรับเอกสารลับแล้วหรือไม่",
+        "hint": "ยืนยันว่ามีหนังสืออนุมัติและพร้อมส่งต่ออีเมลยืนยันให้ตรวจสอบ",
+        "targetPhrases": [
+          "Yes, I have written confirmation from Director Vance, which I will forward immediately."
+        ],
+        "options": [
+          {
+            "text": "Yes, I have written confirmation from Director Vance, which I will forward immediately.",
+            "isCorrect": true,
+            "feedback": "ปฏิบัติตามมาตรฐานความปลอดภัยของข้อมูลอย่างถูกต้อง"
+          },
+          {
+            "text": "Why do you ask so many questions? Just send it.",
+            "isCorrect": false,
+            "feedback": "ละเมิดกฎเกณฑ์ความปลอดภัยขององค์กร"
+          },
+          {
+            "text": "I don't have approval, but you should trust me.",
+            "isCorrect": false,
+            "feedback": "ไม่สามารถใช้ความรู้สึกส่วนตัวแทนระเบียบปฏิบัติได้"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Written confirmation",
+            "meaning": "หนังสือ/ข้อความยืนยันเป็นลายลักษณ์อักษร"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "Received the approval! Do you prefer the consolidated PDF or the raw spreadsheet?",
+        "npcVoiceText": "Received the approval! Do you prefer the consolidated PDF or the raw spreadsheet?",
+        "contextTh": "ฝ่ายปฏิบัติการได้รับเอกสารอนุมัติแล้ว และถามรูปแบบไฟล์ที่ต้องการ",
+        "hint": "ขอทั้งสองรูปแบบหากจำเป็น พร้อมชี้แจงวัตถุประสงค์การใช้งาน",
+        "targetPhrases": [
+          "Both would be ideal—the consolidated PDF for the stakeholder briefing, and the spreadsheet for our data analysis."
+        ],
+        "options": [
+          {
+            "text": "Both would be ideal—the consolidated PDF for the stakeholder briefing, and the spreadsheet for our data analysis.",
+            "isCorrect": true,
+            "feedback": "ให้เหตุผลการใช้งานที่ชัดเจนสำหรับแต่ละรูปแบบไฟล์"
+          },
+          {
+            "text": "I don't know the difference, pick one for me.",
+            "isCorrect": false,
+            "feedback": "ดูขาดความรู้ความเข้าใจในเนื้องาน"
+          },
+          {
+            "text": "Don't send PDF, I hate PDF.",
+            "isCorrect": false,
+            "feedback": "ใส่อารมณ์ส่วนตัวในการทำงาน"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Consolidated PDF",
+            "meaning": "เอกสาร PDF ที่รวบรวมสรุปอย่างเป็นทางการ"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "npcText": "Understood. The zip archive has been sent to your inbox. Let me know if you need anything else!",
+        "npcVoiceText": "Understood. The zip archive has been sent to your inbox. Let me know if you need anything else!",
+        "contextTh": "ฝ่ายปฏิบัติการส่งไฟล์เข้าอีเมลเรียบร้อยแล้ว",
+        "hint": "ขอบคุณสำหรับการตอบรับที่รวดเร็ว",
+        "targetPhrases": [
+          "Thank you so much for your prompt assistance, Oliver! Have a productive week."
+        ],
+        "options": [
+          {
+            "text": "Thank you so much for your prompt assistance, Oliver! Have a productive week.",
+            "isCorrect": true,
+            "feedback": "ประโยคปิดท้ายอีเมลที่สมบูรณ์แบบและสร้างความประทับใจ"
+          },
+          {
+            "text": "About time! Don't be so slow next time.",
+            "isCorrect": false,
+            "feedback": "หยาบคายและทำลายความสัมพันธ์ในการทำงาน"
+          },
+          {
+            "text": "Ok.",
+            "isCorrect": false,
+            "feedback": "สั้นและห้วนเกินไป"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Prompt assistance",
+            "meaning": "การช่วยเหลือที่รวดเร็วทันใจ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "deadline_extension",
+    "stageNumber": 15,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Project Deadline Negotiation",
+    "titleTh": "เจรจาขอขยายเวลาส่งงาน (Deadline Negotiation)",
+    "category": "Career & Workplace",
+    "icon": "⏱️",
+    "difficulty": "Intermediate",
+    "cefrLevel": "B1",
+    "cefrCanDo": "Can explain valid reasons for project delay, propose realistic new milestones, and maintain professional accountability.",
+    "canDoSummary": "ชี้แจงเหตุผลความล่าช้าของงานอย่างสมเหตุสมผล เสนอกำหนดส่งมอบใหม่ และรักษาความน่าเชื่อถือ",
+    "toeicBand": "TOEIC 620 - 720",
+    "rewardExp": 120,
+    "rewardCoins": 85,
+    "npcName": "Project Manager Pam",
+    "npcAvatar": "🐱‍💻",
+    "bgTheme": "theme-office",
+    "description": "เจรจากับผู้จัดการโครงการเพื่อขอขยายกำหนดส่งมอบงาน ชี้แจงเหตุผลและเสนอแผนการแก้ไข",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Hi Mimi, our release is scheduled for Friday. How is the final testing proceeding?",
+        "npcVoiceText": "Hi Mimi, our release is scheduled for Friday. How is the final testing proceeding?",
+        "contextTh": "ผู้จัดการถามถึงความคืบหน้าการทดสอบระบบก่อนปล่อยงานวันศุกร์นี้",
+        "hint": "รายงานความคืบหน้าตามจริงและแจ้งปัญหาสำคัญที่พบ",
+        "targetPhrases": [
+          "We have completed 85% of test scenarios, but we uncovered a critical payment gateway bug that requires remediation."
+        ],
+        "options": [
+          {
+            "text": "We have completed 85% of test scenarios, but we uncovered a critical payment gateway bug that requires remediation.",
+            "isCorrect": true,
+            "feedback": "รายงานตรงไปตรงมา พร้อมระบุปัญหาทางเทคนิคชัดเจน"
+          },
+          {
+            "text": "Everything is 100% fine, totally finished.",
+            "isCorrect": false,
+            "feedback": "การปกปิดบั๊กจะทำให้ระบบพังเมื่อใช้งานจริง"
+          },
+          {
+            "text": "The developers did a terrible job, blame them.",
+            "isCorrect": false,
+            "feedback": "การโยนความผิดให้คนอื่นสะท้อนวุฒิภาวะที่ต่ำ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Remediation",
+            "meaning": "การแก้ไขข้อบกพร่อง"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "A payment bug? Will that jeopardize our Friday client release date?",
+        "npcVoiceText": "A payment bug? Will that jeopardize our Friday client release date?",
+        "contextTh": "ผู้จัดการกังวลว่าบั๊กการชำระเงินจะกระทบกำหนดปล่อยระบบวันศุกร์หรือไม่",
+        "hint": "อธิบายความเสี่ยงและเสนอขอเลื่อนกำหนดการเพื่อความปลอดภัยของระบบ",
+        "targetPhrases": [
+          "To protect user transaction security, we strongly recommend a two-day postponement to conduct full regression testing."
+        ],
+        "options": [
+          {
+            "text": "To protect user transaction security, we strongly recommend a two-day postponement to conduct full regression testing.",
+            "isCorrect": true,
+            "feedback": "ยกเรื่องความปลอดภัยของลูกค้าและการทดสอบซ้ำเป็นเหตุผลหลัก"
+          },
+          {
+            "text": "Just ship it anyway. If customers lose money, who cares?",
+            "isCorrect": false,
+            "feedback": "ขาดความรับผิดชอบอย่างร้ายแรงต่อลูกค้า"
+          },
+          {
+            "text": "I don't know, it's not my problem.",
+            "isCorrect": false,
+            "feedback": "ละเลยหน้าที่ในการประเมินความเสี่ยง"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Regression testing",
+            "meaning": "การทดสอบระบบซ้ำเพื่อความเสถียร"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "Two days is acceptable if it guarantees stability. What is your concrete recovery plan?",
+        "npcVoiceText": "Two days is acceptable if it guarantees stability. What is your concrete recovery plan?",
+        "contextTh": "ผู้จัดการยอมรับการขยายเวลา 2 วัน และถามถึงแผนปฏิบัติการกู้คืนงาน",
+        "hint": "แจกแจงขั้นตอนการแก้บั๊ก การทดสอบ และกำหนดส่งมอบใหม่ที่แน่นอน",
+        "targetPhrases": [
+          "The patch will be deployed by 4 PM today, followed by end-to-end testing tomorrow morning, finalizing launch on Tuesday."
+        ],
+        "options": [
+          {
+            "text": "The patch will be deployed by 4 PM today, followed by end-to-end testing tomorrow morning, finalizing launch on Tuesday.",
+            "isCorrect": true,
+            "feedback": "แผนงานชัดเจน มีกำหนดเวลาและขั้นตอนที่น่าเชื่อถือ"
+          },
+          {
+            "text": "We will relax and sleep because we have extra days now.",
+            "isCorrect": false,
+            "feedback": "การขยายเวลามีไว้เพื่อแก้ปัญหา ไม่ใช่เพื่อพักผ่อน"
+          },
+          {
+            "text": "We will just hope for the best without testing.",
+            "isCorrect": false,
+            "feedback": "ขาดมาตรฐานทางวิศวกรรม"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "End-to-end testing",
+            "meaning": "การทดสอบระบบตั้งแต่ต้นจนจบกระบวนการ"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "npcText": "Thank you for the proactive escalation. I will communicate the revised schedule to stakeholders.",
+        "npcVoiceText": "Thank you for the proactive escalation. I will communicate the revised schedule to stakeholders.",
+        "contextTh": "ผู้จัดการขอบคุณที่แจ้งปัญหาล่วงหน้า และจะแจ้งผู้มีส่วนได้ส่วนเสียให้ทราบ",
+        "hint": "ขอบคุณความยืดหยุ่นและสัญญาว่าจะอัปเดตความคืบหน้าอย่างต่อเนื่อง",
+        "targetPhrases": [
+          "Thank you so much for your flexibility and understanding, Pam. I will keep you posted throughout the day."
+        ],
+        "options": [
+          {
+            "text": "Thank you so much for your flexibility and understanding, Pam. I will keep you posted throughout the day.",
+            "isCorrect": true,
+            "feedback": "สร้างความไว้วางใจในการทำงานระดับมืออาชีพ"
+          },
+          {
+            "text": "Good, finally you listened to me.",
+            "isCorrect": false,
+            "feedback": "พูดจาอวดดีและทำลายความสัมพันธ์"
+          },
+          {
+            "text": "Whatever.",
+            "isCorrect": false,
+            "feedback": "ไร้มารยาท"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Keep someone posted",
+            "meaning": "คอยอัปเดตรายงานความคืบหน้าให้ทราบอย่างต่อเนื่อง"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "customer_complaint",
+    "stageNumber": 16,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Handling Irate Customer",
+    "titleTh": "รับมือข้อร้องเรียนลูกค้าอย่างมืออาชีพ (Customer Complaint)",
+    "category": "Career & Workplace",
+    "icon": "📱",
+    "difficulty": "Intermediate",
+    "cefrLevel": "B1",
+    "cefrCanDo": "Can defuse customer frustration using empathetic phrasing, investigate service breakdowns, and propose fair remedies.",
+    "canDoSummary": "ระงับอารมณ์ความไม่พอใจของลูกค้าด้วยคำพูดเห็นอกเห็นใจ ตรวจสอบปัญหา และเสนอแนวทางชดเชยที่ยุติธรรม",
+    "toeicBand": "TOEIC 640 - 740",
+    "rewardExp": 120,
+    "rewardCoins": 85,
+    "npcName": "Mr. Grumpy (VIP Client)",
+    "npcAvatar": "😾",
+    "bgTheme": "theme-office",
+    "description": "รับสายลูกค้าระดับ VIP ที่ไม่พอใจเรื่องการจัดส่งล่าช้าและสินค้าเสียหาย เจรจาแก้ปัญหาและรักษาความสัมพันธ์ลูกค้า",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "This is unacceptable! My express order arrived two days late and the packaging was completely damaged! What are you going to do about this?!",
+        "npcVoiceText": "This is unacceptable! My express order arrived two days late and the packaging was completely damaged! What are you going to do about this?!",
+        "contextTh": "ลูกค้าโวยวายด้วยความโมโหที่พัสดุด่วนส่งช้าไปสองวันและกล่องพัสดุเสียหาย",
+        "hint": "ใช้หลักการ Empathy: แสดงความเสียใจอย่างจริงใจ รับฟังโดยไม่แก้ตัว และขอข้อมูลตรวจสอบ",
+        "targetPhrases": [
+          "I sincerely apologize for the delay and damaged packaging, Mr. Grumpy. I completely understand your frustration and will resolve this immediately."
+        ],
+        "options": [
+          {
+            "text": "I sincerely apologize for the delay and damaged packaging, Mr. Grumpy. I completely understand your frustration and will resolve this immediately.",
+            "isCorrect": true,
+            "feedback": "ประโยคขอโทษที่ยอดเยี่ยม! แสดงความเข้าใจ (I understand your frustration) และให้คำมั่นว่าจะแก้ไข"
+          },
+          {
+            "text": "Stop yelling at me! It's the delivery driver's fault, not mine!",
+            "isCorrect": false,
+            "feedback": "การเถียงและโยนความผิดให้ผู้อื่นจะทำให้ลูกค้าโกรธยิ่งขึ้น"
+          },
+          {
+            "text": "Calm down, it's just a small package, don't be dramatic.",
+            "isCorrect": false,
+            "feedback": "ดูถูกความรู้สึกของลูกค้าอย่างรุนแรง"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Sincerely apologize",
+            "meaning": "ขออภัยอย่างจริงใจ"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "I needed these goods for a critical presentation this morning! Your apology doesn't fix my ruined event!",
+        "npcVoiceText": "I needed these goods for a critical presentation this morning! Your apology doesn't fix my ruined event!",
+        "contextTh": "ลูกค้าย้ำว่าสินค้าจำเป็นต้องใช้ในงานพรีเซนต์เช้านี้ และคำขอโทษไม่ช่วยแก้ปัญหา",
+        "hint": "เสนอทางออกที่เป็นรูปธรรมทันที: การส่งของใหม่ทดแทนด่วนพิเศษ หรือการคืนเงินเต็มจำนวน",
+        "targetPhrases": [
+          "We deeply regret the disruption to your event. I can issue a full refund immediately and dispatch a complimentary replacement via courier."
+        ],
+        "options": [
+          {
+            "text": "We deeply regret the disruption to your event. I can issue a full refund immediately and dispatch a complimentary replacement via courier.",
+            "isCorrect": true,
+            "feedback": "ข้อเสนอชดเชยที่ยุติธรรมและเด็ดขาด (Full refund + complimentary replacement)"
+          },
+          {
+            "text": "Well, you should have ordered earlier then.",
+            "isCorrect": false,
+            "feedback": "การซ้ำเติมลูกค้าเป็นสิ่งต้องห้ามในการบริการ"
+          },
+          {
+            "text": "There's nothing I can do, company policy says no refunds.",
+            "isCorrect": false,
+            "feedback": "การอ้างนโยบายบริษัทอย่างไร้ความยืดหยุ่นทำลายแบรนด์"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Full refund",
+            "meaning": "การคืนเงินเต็มจำนวน"
+          },
+          {
+            "word": "Complimentary replacement",
+            "meaning": "สินค้าทดแทนฟรีโดยไม่คิดค่าใช้จ่าย"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "A full refund and replacement? How fast can the courier deliver the replacement goods to my office?",
+        "npcVoiceText": "A full refund and replacement? How fast can the courier deliver the replacement goods to my office?",
+        "contextTh": "ลูกค้าเริ่มใจเย็นลงและถามว่าแมสเซนเจอร์จะนำสินค้ามาส่งถึงออฟฟิศได้เร็วแค่ไหน",
+        "hint": "ระบุเวลาที่แน่นอนและมีระบบติดตามพัสดุแบบเรียลไทม์",
+        "targetPhrases": [
+          "Our dedicated courier has already picked up the item and will arrive at your address within two hours. I will personally text you the live tracker."
+        ],
+        "options": [
+          {
+            "text": "Our dedicated courier has already picked up the item and will arrive at your address within two hours. I will personally text you the live tracker.",
+            "isCorrect": true,
+            "feedback": "ระบุเวลา 2 ชั่วโมงชัดเจน และสร้างความมั่นใจด้วยการส่งลิงก์ติดตามแบบส่วนตัว"
+          },
+          {
+            "text": "Maybe sometime tomorrow, or next week if there is traffic.",
+            "isCorrect": false,
+            "feedback": "ไม่แน่นอนและทำให้ลูกค้ากังวลซ้ำสอง"
+          },
+          {
+            "text": "Ask the courier yourself, here is their phone number.",
+            "isCorrect": false,
+            "feedback": "ผลักภาระให้ลูกค้า"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Dedicated courier",
+            "meaning": "พนักงานจัดส่งด่วนพิเศษเฉพาะกิจ"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "npcText": "Alright... I appreciate that you took ownership of this and acted quickly. Please ensure the tracker is sent.",
+        "npcVoiceText": "Alright... I appreciate that you took ownership of this and acted quickly. Please ensure the tracker is sent.",
+        "contextTh": "ลูกค้ายอมรับการแก้ปัญหา และชื่นชมที่คุณรับผิดชอบอย่างรวดเร็ว",
+        "hint": "กล่าวขอบคุณความอดทนของลูกค้า และให้คำมั่นว่าจะปรับปรุงบริการ",
+        "targetPhrases": [
+          "Thank you very much for your patience and gracious understanding. The tracking link has just been sent to your mobile."
+        ],
+        "options": [
+          {
+            "text": "Thank you very much for your patience and gracious understanding. The tracking link has just been sent to your mobile.",
+            "isCorrect": true,
+            "feedback": "ปิดการสนทนาได้อย่างยอดเยี่ยม เปลี่ยนลูกค้าที่ไม่พอใจให้กลับมาประทับใจในบริการ"
+          },
+          {
+            "text": "Finally, you stopped complaining. Bye.",
+            "isCorrect": false,
+            "feedback": "ทิ้งท้ายด้วยคำพูดแดกดัน"
+          },
+          {
+            "text": "Don't call us again.",
+            "isCorrect": false,
+            "feedback": "ขับไล่ลูกค้าอย่างไม่น่าให้อภัย"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Gracious understanding",
+            "meaning": "ความเข้าใจอันเปี่ยมด้วยเมตตา"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "business_lunch",
+    "stageNumber": 17,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Client Networking Lunch",
+    "titleTh": "สนทนาธุรกิจบนโต๊ะอาหาร (Business Lunch)",
+    "category": "Career & Workplace",
+    "icon": "🍽️",
+    "difficulty": "Upper-Intermediate",
+    "cefrLevel": "B1+",
+    "cefrCanDo": "Can maintain professional small talk over dining, transition smoothly into commercial topics, and display dining etiquette.",
+    "canDoSummary": "สนทนาสร้างสัมพันธ์บนโต๊ะอาหารอย่างมีมารยาท สลับเข้าสู่หัวข้อธุรกิจอย่างแนบเนียน และรักษาภาพลักษณ์ที่ดี",
+    "toeicBand": "TOEIC 660 - 750",
+    "rewardExp": 130,
+    "rewardCoins": 90,
+    "npcName": "Partner Chloe (Alliance Group)",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-cafe",
+    "description": "รับประทานอาหารกลางวันกับคู่ค้าคนสำคัญ พูดคุยสร้างความคุ้นเคย และหารือแนวทางความร่วมมือทางธุรกิจ",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Thank you for meeting me here, Mimi. The atmosphere at this bistro is lovely! Have you dined here before?",
+        "npcVoiceText": "Thank you for meeting me here, Mimi. The atmosphere at this bistro is lovely! Have you dined here before?",
+        "contextTh": "คู่ค้ากล่าวทักทายและชมบรรยากาศร้านอาหาร พร้อมถามว่าคุณเคยมาทานที่นี่มาก่อนหรือไม่",
+        "hint": "ตอบรับอย่างอบอุ่น แสดงความคิดเห็นเชิงบวก และแนะนำเมนูเด่นของร้าน",
+        "targetPhrases": [
+          "It is a pleasure, Chloe! I come here occasionally—their smoked salmon risotto is exceptional if you enjoy seafood."
+        ],
+        "options": [
+          {
+            "text": "It is a pleasure, Chloe! I come here occasionally—their smoked salmon risotto is exceptional if you enjoy seafood.",
+            "isCorrect": true,
+            "feedback": "การทักทายอย่างมีรสนิยมและแนะนำเมนูอาหารแสดงความเป็นเจ้าภาพที่ดี"
+          },
+          {
+            "text": "I only eat fast food, fancy places like this are boring.",
+            "isCorrect": false,
+            "feedback": "แสดงทัศนคติไม่ให้เกียรติสถานที่และคู่สนทนา"
+          },
+          {
+            "text": "Let's skip lunch and sign the contract right now.",
+            "isCorrect": false,
+            "feedback": "ใจร้อนเกินไป มารยาทสากลควรสร้างสัมพันธ์ก่อนเข้าเรื่องงาน"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Exceptional",
+            "meaning": "ยอดเยี่ยมเป็นพิเศษ"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "That risotto sounds delicious, I will order that! How has business been on your side since the new quarter launched?",
+        "npcVoiceText": "That risotto sounds delicious, I will order that! How has business been on your side since the new quarter launched?",
+        "contextTh": "คู่ค้าสั่งอาหารตามที่คุณแนะนำ และเริ่มเปิดประเด็นถามถึงทิศทางธุรกิจในไตรมาสใหม่",
+        "hint": "แบ่งปันความสำเร็จที่น่าสนใจของบริษัท และเชื่อมโยงไปสู่ความสนใจในธุรกิจของคู่ค้า",
+        "targetPhrases": [
+          "We have seen a 20% growth in digital engagement, and we are now exploring strategic synergies across enterprise clients."
+        ],
+        "options": [
+          {
+            "text": "We have seen a 20% growth in digital engagement, and we are now exploring strategic synergies across enterprise clients.",
+            "isCorrect": true,
+            "feedback": "แชร์ข้อมูลเชิงบวก (20% growth) และใช้คำว่า 'strategic synergies' ปูทางสู่การร่วมมือ"
+          },
+          {
+            "text": "Our business is failing and our stock price crashed.",
+            "isCorrect": false,
+            "feedback": "เปิดเผยข้อมูลวิกฤตที่ทำลายความเชื่อมั่นของพันธมิตร"
+          },
+          {
+            "text": "None of your business, eat your food.",
+            "isCorrect": false,
+            "feedback": "หยาบคายอย่างยิ่ง"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Strategic synergies",
+            "meaning": "การผนึกกำลังเชิงยุทธศาสตร์เพื่อผลประโยชน์ร่วม"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "That aligns well with our direction. We are actually searching for a reliable partner to handle automated analytics.",
+        "npcVoiceText": "That aligns well with our direction. We are actually searching for a reliable partner to handle automated analytics.",
+        "contextTh": "คู่ค้าเผยว่ากำลังมองหาพันธมิตรที่เชี่ยวชาญด้านการวิเคราะห์ข้อมูลอัตโนมัติ",
+        "hint": "นำเสนอความเชี่ยวชาญของทีมคุณอย่างมั่นใจ และเสนอจัดนัดหมายพรีเซนต์เจาะลึก",
+        "targetPhrases": [
+          "That is precisely our core capability! We recently implemented a similar solution for a fintech leader with remarkable efficiency gains."
+        ],
+        "options": [
+          {
+            "text": "That is precisely our core capability! We recently implemented a similar solution for a fintech leader with remarkable efficiency gains.",
+            "isCorrect": true,
+            "feedback": "ดึงดูดความสนใจด้วยการยกตัวอย่างความสำเร็จจริง (case study) ที่น่าเชื่อถือ"
+          },
+          {
+            "text": "We can do that, but only if you pay us double.",
+            "isCorrect": false,
+            "feedback": "ต่อรองเรื่องเงินผิดที่ผิดเวลา"
+          },
+          {
+            "text": "Analytics is boring, let's talk about sports.",
+            "isCorrect": false,
+            "feedback": "พลาดโอกาสทองในการเจรจาธุรกิจ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Core capability",
+            "meaning": "ขีดความสามารถหลักที่โดดเด่น"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "npcText": "Fascinating! Let's arrange a dedicated demonstration for our technical directors next Tuesday. I will cover the bill today!",
+        "npcVoiceText": "Fascinating! Let's arrange a dedicated demonstration for our technical directors next Tuesday. I will cover the bill today!",
+        "contextTh": "คู่ค้าตกลงนัดหมายพรีเซนต์งานในวันอังคารหน้า และเสนอเป็นผู้ดูแลค่าอาหารมื้อนี้",
+        "hint": "ขอบคุณสำหรับมื้ออาหาร ยืนยันการนัดหมาย และกล่าวปิดท้ายอย่างประทับใจ",
+        "targetPhrases": [
+          "Thank you so much for your generous hospitality, Chloe! I will send over the meeting invite and briefing deck this afternoon."
+        ],
+        "options": [
+          {
+            "text": "Thank you so much for your generous hospitality, Chloe! I will send over the meeting invite and briefing deck this afternoon.",
+            "isCorrect": true,
+            "feedback": "มารยาทธุรกิจระดับผู้บริหาร ขอบคุณความมีน้ำใจ (hospitality) และยืนยันส่งเอกสารสรุป"
+          },
+          {
+            "text": "Sure, pay the bill, you are richer than me anyway.",
+            "isCorrect": false,
+            "feedback": "พูดจาเหน็บแนมและขาดความสุภาพ"
+          },
+          {
+            "text": "No, I don't want a meeting.",
+            "isCorrect": false,
+            "feedback": "ปฏิเสธโอกาสทางธุรกิจอย่างน่าเสียดาย"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Generous hospitality",
+            "meaning": "การต้อนรับและไมตรีจิตอันเอื้อเฟื้อ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "remote_zoom_pitch",
+    "stageNumber": 18,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Virtual Zoom Presentation",
+    "titleTh": "พรีเซนต์งานผ่านวิดีโอคอล (Virtual Zoom Pitch)",
+    "category": "Career & Workplace",
+    "icon": "💻",
+    "difficulty": "Upper-Intermediate",
+    "cefrLevel": "B1+",
+    "cefrCanDo": "Can lead a virtual presentation, handle technical audio/screen sharing protocols, and answer audience inquiries confidently.",
+    "canDoSummary": "นำเสนอโครงการผ่านวิดีโอคอล จัดการระบบแชร์หน้าจอ และตอบคำถามผู้ฟังได้อย่างมั่นใจ",
+    "toeicBand": "TOEIC 680 - 760",
+    "rewardExp": 130,
+    "rewardCoins": 90,
+    "npcName": "Stakeholder Simon",
+    "npcAvatar": "🐱‍💻",
+    "bgTheme": "theme-office",
+    "description": "นำเสนอแผนกลยุทธ์ผ่าน Zoom แก่คณะผู้ถือหุ้น ตรวจสอบภาพและเสียง บรรยายสไลด์ และตอบข้อซักถาม",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Good afternoon everyone. Mimi, whenever you are ready, please share your screen and begin your presentation.",
+        "npcVoiceText": "Good afternoon everyone. Mimi, whenever you are ready, please share your screen and begin your presentation.",
+        "contextTh": "ผู้ถือหุ้นให้สัญญาณเริ่มแชร์หน้าจอและเริ่มต้นการนำเสนอ",
+        "hint": "ทักทายผู้เข้าร่วม ตรวจสอบว่าทุกคนเห็นหน้าจอและได้ยินเสียงชัดเจนหรือไม่",
+        "targetPhrases": [
+          "Good afternoon Simon and esteemed guests. Can everyone see my presentation slides and hear me clearly?"
+        ],
+        "options": [
+          {
+            "text": "Good afternoon Simon and esteemed guests. Can everyone see my presentation slides and hear me clearly?",
+            "isCorrect": true,
+            "feedback": "เปิดการนำเสนอตามธรรมเนียมสากล (Can everyone see my slides and hear clearly?)"
+          },
+          {
+            "text": "Wait, I can't find the share button. Where is it?",
+            "isCorrect": false,
+            "feedback": "แสดงถึงความไม่พร้อมในการใช้เครื่องมือประชุม"
+          },
+          {
+            "text": "I'm not ready, give me 20 more minutes.",
+            "isCorrect": false,
+            "feedback": "ทำให้ผู้เข้าร่วมประชุมเสียเวลา"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Esteemed guests",
+            "meaning": "แขกผู้มีเกียรติทุกท่าน"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "npcText": "Loud and clear! The slides are visible. Please walk us through your proposal.",
+        "npcVoiceText": "Loud and clear! The slides are visible. Please walk us through your proposal.",
+        "contextTh": "ผู้ฟังยืนยันว่าภาพและเสียงชัดเจน และขอให้เริ่มบรรยายข้อเสนอ",
+        "hint": "เปิดด้วยวัตถุประสงค์หลัก สรุปปัญหา และแนวทางแก้ไขเชิงนวัตกรรม",
+        "targetPhrases": [
+          "Thank you. Today I will present our automated workflow solution, designed to reduce operational costs by 35% within six months."
+        ],
+        "options": [
+          {
+            "text": "Thank you. Today I will present our automated workflow solution, designed to reduce operational costs by 35% within six months.",
+            "isCorrect": true,
+            "feedback": "เปิดหัวสไลด์ด้วยตัวเลขผลประโยชน์ที่ชัดเจน (reduce costs by 35%) ดึงดูดความสนใจทันที"
+          },
+          {
+            "text": "Here are 50 boring slides with lots of tiny text, read them yourself.",
+            "isCorrect": false,
+            "feedback": "ทัศนคติแย่มากและทำลายความสนใจของผู้ฟัง"
+          },
+          {
+            "text": "I don't know what this project does, someone else made the slides.",
+            "isCorrect": false,
+            "feedback": "ยอมรับว่าไม่ได้เตรียมตัวมา"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Operational costs",
+            "meaning": "ต้นทุนการดำเนินงาน"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "npcText": "A 35% cost reduction is significant. However, what is the estimated timeline for implementation and training?",
+        "npcVoiceText": "A 35% cost reduction is significant. However, what is the estimated timeline for implementation and training?",
+        "contextTh": "ผู้ถือหุ้นสนใจตัวเลขลดต้นทุน 35% แต่ถามถึงกรอบเวลาในการติดตั้งระบบและฝึกอบรมทีม",
+        "hint": "แจกแจงระยะเวลาเป็นระยะ (Phases) ที่สามารถส่งมอบงานได้จริง",
+        "targetPhrases": [
+          "We have structured a phased rollout: two weeks for system integration, followed by three weeks of comprehensive team training."
+        ],
+        "options": [
+          {
+            "text": "We have structured a phased rollout: two weeks for system integration, followed by three weeks of comprehensive team training.",
+            "isCorrect": true,
+            "feedback": "โครงสร้างชัดเจน (Phased rollout: 2 weeks integration, 3 weeks training)"
+          },
+          {
+            "text": "It will take forever because our IT team is lazy.",
+            "isCorrect": false,
+            "feedback": "ต่อว่าทีมงานต่อหน้าผู้ถือหุ้น"
+          },
+          {
+            "text": "Zero days, it works with magic.",
+            "isCorrect": false,
+            "feedback": "คำตอบที่ไม่สมจริงทำลายความน่าเชื่อถือ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Phased rollout",
+            "meaning": "การทยอยเปิดใช้งานระบบเป็นระยะๆ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "team_conflict",
+    "stageNumber": 19,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Cross-Functional Conflict Resolution",
+    "titleTh": "ไกล่เกลี่ยความเห็นต่างระหว่างแผนก (Conflict Resolution)",
+    "category": "Career & Workplace",
+    "icon": "🤝",
+    "difficulty": "Upper-Intermediate",
+    "cefrLevel": "B1+",
+    "cefrCanDo": "Can mediate workplace disagreements diplomatically, find common ground, and agree on collaborative compromises.",
+    "canDoSummary": "ไกล่เกลี่ยข้อขัดแย้งในการทำงานอย่างมีวาทศิลป์ ค้นหาจุดร่วม และตกลงแนวทางประนีประนอมที่เป็นประโยชน์ร่วมกัน",
+    "toeicBand": "TOEIC 700 - 780",
+    "rewardExp": 140,
+    "rewardCoins": 95,
+    "npcName": "Marketing Lead Maya",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "ประชุมไกล่เกลี่ยข้อขัดแย้งระหว่างทีมการตลาดและทีมพัฒนาซอฟต์แวร์เกี่ยวกับฟีเจอร์สินค้าและวันเปิดตัว",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Mimi, marketing needs this feature launched by next week for our campaign! Engineering keeps pushing back and saying it is impossible!",
+        "npcVoiceText": "Mimi, marketing needs this feature launched by next week for our campaign! Engineering keeps pushing back and saying it is impossible!",
+        "contextTh": "หัวหน้าฝ่ายการตลาดบ่นว่าต้องการปล่อยฟีเจอร์สัปดาห์หน้าเพื่องานแคมเปญ แต่วิศวกรบอกว่าทำไม่ทัน",
+        "hint": "รับฟังความกังวลของฝ่ายการตลาด แสดงความเข้าใจในความสำคัญของแคมเปญ และชวนดูข้อจำกัดด้านเทคนิค",
+        "targetPhrases": [
+          "I completely understand the urgency for the marketing campaign, Maya. Let's look at the engineering constraints together to find a viable middle ground."
+        ],
+        "options": [
+          {
+            "text": "I completely understand the urgency for the marketing campaign, Maya. Let's look at the engineering constraints together to find a viable middle ground.",
+            "isCorrect": true,
+            "feedback": "ประโยคไกล่เกลี่ยระดับ Master! รับฟังความสำคัญ (urgency) และชวนหาทางออกร่วมกัน (viable middle ground)"
+          },
+          {
+            "text": "Engineering is right, you marketers never understand technical reality.",
+            "isCorrect": false,
+            "feedback": "เข้าข้างฝ่ายหนึ่งและดูถูกอีกฝ่าย จะทำให้ความขัดแย้งรุนแรงขึ้น"
+          },
+          {
+            "text": "Not my problem, go fight somewhere else.",
+            "isCorrect": false,
+            "feedback": "ปัดความรับผิดชอบ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Viable middle ground",
+            "meaning": "จุดกึ่งกลางที่สามารถทำได้จริงและทุกฝ่ายยอมรับ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "performance_review",
+    "stageNumber": 20,
+    "packNumber": 2,
+    "packId": "pack_workplace",
+    "title": "Annual Performance Review",
+    "titleTh": "ประเมินผลงานและขอปรับเลื่อนขั้น (Performance Review)",
+    "category": "Career & Workplace",
+    "icon": "📈",
+    "difficulty": "Upper-Intermediate",
+    "cefrLevel": "B1+",
+    "cefrCanDo": "Can articulate career achievements with quantifiable impact, discuss growth areas, and advocate for advancement.",
+    "canDoSummary": "สรุปผลงานความสำเร็จรายปีด้วยตัวเลขที่จับต้องได้ พูดคุยเรื่องจุดพัฒนา และเจรจาขอเลื่อนตำแหน่งอย่างมืออาชีพ",
+    "toeicBand": "TOEIC 720 - 785",
+    "rewardExp": 150,
+    "rewardCoins": 100,
+    "npcName": "VP Harrison",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "เข้าพบรองประธานบริษัทเพื่อประเมินผลงานประจำปี สรุปผลงานที่เกินเป้าหมาย และขอรับการพิจารณาเลื่อนขั้น",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Welcome, Mimi. Let's review your past twelve months. What achievements are you most proud of?",
+        "npcVoiceText": "Welcome, Mimi. Let's review your past twelve months. What achievements are you most proud of?",
+        "contextTh": "รองประธานชวนทบทวนผลงาน 12 เดือนที่ผ่านมา และถามถึงความสำเร็จที่คุณภาคภูมิใจที่สุด",
+        "hint": "สรุปผลงานที่มีผลลัพธ์วัดผลได้ (Quantifiable results) เช่น ยอดขาย ประสิทธิภาพ หรือการลดต้นทุน",
+        "targetPhrases": [
+          "Over the past year, I led the cross-functional automation initiative, which increased team output by 30% and saved 400 work hours."
+        ],
+        "options": [
+          {
+            "text": "Over the past year, I led the cross-functional automation initiative, which increased team output by 30% and saved 400 work hours.",
+            "isCorrect": true,
+            "feedback": "ตอบได้อย่างทรงพลัง! ใช้ตัวเลขวัดผลชัดเจน (increased output by 30%, saved 400 hours) แสดงมูลค่าที่สร้างให้บริษัท"
+          },
+          {
+            "text": "I showed up to work almost every day and didn't break anything.",
+            "isCorrect": false,
+            "feedback": "แค่มาทำงานไม่ถือเป็นผลงานที่โดดเด่น"
+          },
+          {
+            "text": "I deserve everything because I am the best.",
+            "isCorrect": false,
+            "feedback": "ขาดหลักฐานความสำเร็จเชิงประจักษ์"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Quantifiable results",
+            "meaning": "ผลลัพธ์ที่วัดผลเป็นตัวเลขได้"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "contract_bargaining",
+    "stageNumber": 21,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Contract Term & SLA Bargaining",
+    "titleTh": "เจรจาเงื่อนไขสัญญาธุรกิจและ SLA (Contract Bargaining)",
+    "category": "Global Business",
+    "icon": "📜",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can negotiate contractual clauses, Service Level Agreements (SLA), and dispute resolution terms with legal precision.",
+    "canDoSummary": "เจรจาเงื่อนไขสัญญา ข้อตกลงระดับการบริการ (SLA) และระเบียบระงับข้อพิพาทด้วยความรัดกุมทางกฎหมายธุรกิจ",
+    "toeicBand": "TOEIC 785 - 830",
+    "rewardExp": 160,
+    "rewardCoins": 110,
+    "npcName": "Legal Counsel Arthur",
+    "npcAvatar": "🐱‍⚖️",
+    "bgTheme": "theme-office",
+    "description": "เจรจาสัญญาส่งมอบบริการระดับนานาชาติ ถกเถียงเงื่อนไข SLA อัตราเบี้ยปรับ และข้อจำกัดความรับผิดชอบทางกฎหมาย",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Counselor, regarding clause 8.2 on Service Level Guarantees, your proposed 99.99% uptime with 20% penalty fee seems excessively punitive.",
+        "npcVoiceText": "Counselor, regarding clause 8.2 on Service Level Guarantees, your proposed 99.99% uptime with 20% penalty fee seems excessively punitive.",
+        "contextTh": "ที่ปรึกษากฎหมายแย้งว่าข้อตกลง SLA 99.99% พร้อมเบี้ยปรับ 20% เป็นเงื่อนไขที่ลงโทษรุนแรงเกินไป",
+        "hint": "เสนอโครงสร้างประนีประนอม เช่น การปรับลดตามระดับความเสียหาย หรือการให้ Service Credits แทนค่าปรับเป็นเงินสด",
+        "targetPhrases": [
+          "We can structure tiered remedies—capping the penalty at 8% via service credits rather than cash liquidated damages."
+        ],
+        "options": [
+          {
+            "text": "We can structure tiered remedies—capping the penalty at 8% via service credits rather than cash liquidated damages.",
+            "isCorrect": true,
+            "feedback": "เจรจาระดับมืออาชีพ! การเสนอ 'tiered remedies' และ 'service credits' เป็นแนวทางสากลที่คุ้มครองทั้งสองฝ่าย"
+          },
+          {
+            "text": "Take it or leave it, we will never change a single word in our contract.",
+            "isCorrect": false,
+            "feedback": "การปฏิเสธการเจรจาอย่างแข็งกร้าวจะทำให้ดีลธุรกิจล่ม"
+          },
+          {
+            "text": "We don't care about uptime, servers crash all the time anyway.",
+            "isCorrect": false,
+            "feedback": "แสดงถึงความไม่ใส่ใจในมาตรฐานการบริการ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Tiered remedies",
+            "meaning": "การเยียวยาชดเชยตามลำดับขั้นความเสียหาย"
+          },
+          {
+            "word": "Service credits",
+            "meaning": "เครดิตค่าบริการทดแทนเงินสด"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "supplier_audit",
+    "stageNumber": 22,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Global Supplier Quality Audit",
+    "titleTh": "ตรวจสอบคุณภาพโรงงานซัพพลายเออร์ (Supplier Quality Audit)",
+    "category": "Global Business",
+    "icon": "🏭",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can lead technical manufacturing audits, address non-compliance issues, and establish Corrective Action Plans (CAP).",
+    "canDoSummary": "ตรวจสอบคุณภาพสายการผลิต ชี้แจงจุดบกพร่องที่ไม่เป็นไปตามมาตรฐานสากล และกำหนดแผนแก้ไข (CAP)",
+    "toeicBand": "TOEIC 800 - 850",
+    "rewardExp": 160,
+    "rewardCoins": 110,
+    "npcName": "Factory Director Chen",
+    "npcAvatar": "🐱‍🏭",
+    "bgTheme": "theme-office",
+    "description": "ลงพื้นที่ตรวจสอบมาตรฐานโรงงานผลิตชิ้นส่วนเทคโนโลยี ตรวจสอบใบรับรอง ISO และควบคุมอัตราของเสีย",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Welcome to our semiconductor cleanroom facility, Mimi. Our batch yield rate has stabilized at 97.4% this month.",
+        "npcVoiceText": "Welcome to our semiconductor cleanroom facility, Mimi. Our batch yield rate has stabilized at 97.4% this month.",
+        "contextTh": "ผู้อำนวยการโรงงานต้อนรับและรายงานอัตราผลผลิตชิ้นส่วนที่ได้มาตรฐานอยู่ที่ 97.4%",
+        "hint": "ชื่นชมผลการดำเนินงาน แต่สอบถามถึงอัตราของเสีย 2.6% และขั้นตอนการคัดแยกเพื่อไม่ให้หลุดไปยังลูกค้า",
+        "targetPhrases": [
+          "97.4% is a commendable yield. Could you walk me through your optical inspection protocol for the remaining 2.6% defect margin?"
+        ],
+        "options": [
+          {
+            "text": "97.4% is a commendable yield. Could you walk me through your optical inspection protocol for the remaining 2.6% defect margin?",
+            "isCorrect": true,
+            "feedback": "การถามเชิงเทคนิคระดับสูง ชื่นชมก่อน (commendable yield) แล้วเจาะลึกกระบวนการตรวจจับของเสีย (inspection protocol)"
+          },
+          {
+            "text": "97% is terrible, you are wasting our money!",
+            "isCorrect": false,
+            "feedback": "ขาดความเข้าใจในสถิติอุตสาหกรรมการผลิตขั้นสูง"
+          },
+          {
+            "text": "I don't understand these numbers, let's just go drink tea.",
+            "isCorrect": false,
+            "feedback": "ละเลยหน้าที่ของผู้ตรวจสอบคุณภาพ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Yield rate",
+            "meaning": "อัตราผลผลิตที่ผ่านมาตรฐาน"
+          },
+          {
+            "word": "Defect margin",
+            "meaning": "อัตราส่วนของเสียที่ยอมรับได้"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "venture_pitch",
+    "stageNumber": 23,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Pitching to Venture Capitalists",
+    "titleTh": "เสนอแผนระดมทุนต่อนักลงทุน VC (Venture Capital Pitch)",
+    "category": "Global Business",
+    "icon": "💼",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can pitch high-growth startup value propositions, articulate unit economics (LTV/CAC), and defend valuation multiples.",
+    "canDoSummary": "นำเสนอโมเดลธุรกิจต่อ Venture Capital ชี้แจงตัวเลขเศรษฐศาสตร์หน่วยย่อย (LTV/CAC) และปกป้องมูลค่ากิจการ",
+    "toeicBand": "TOEIC 820 - 870",
+    "rewardExp": 170,
+    "rewardCoins": 120,
+    "npcName": "Managing Partner Evelyn (Apex Capital)",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "เข้าพบกองทุน Venture Capital ชั้นนำ นำเสนอการระดมทุนรอบ Series A อธิบายโมเดลรายได้ และตอบข้อซักถามของนักลงทุน",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Mimi, your user growth curve looks promising, but your Customer Acquisition Cost (CAC) seems elevated. How do your unit economics hold up?",
+        "npcVoiceText": "Mimi, your user growth curve looks promising, but your Customer Acquisition Cost (CAC) seems elevated. How do your unit economics hold up?",
+        "contextTh": "นักลงทุนชื่นชมการเติบโตของผู้ใช้ แต่ตั้งข้อสังเกตว่าต้นทุนการหาลูกค้า (CAC) ค่อนข้างสูง และถามถึงความคุ้มค่า",
+        "hint": "อธิบายด้วยอัตราส่วน LTV to CAC (มูลค่าตลอดช่วงชีวิตของลูกค้าเทียบกับต้นทุน) และระยะเวลาคืนทุน (Payback Period)",
+        "targetPhrases": [
+          "While initial CAC is $45, our organic referral loop and 94% retention yield a Lifetime Value (LTV) of $320, delivering a healthy 7:1 LTV-to-CAC ratio."
+        ],
+        "options": [
+          {
+            "text": "While initial CAC is $45, our organic referral loop and 94% retention yield a Lifetime Value (LTV) of $320, delivering a healthy 7:1 LTV-to-CAC ratio.",
+            "isCorrect": true,
+            "feedback": "ตอบได้อย่างเฉียบขาดด้วยตัวเลขจริง! LTV/CAC ratio 7:1 แสดงถึงการทำกำไรที่มหาศาลและยั่งยืน"
+          },
+          {
+            "text": "We just burn money on social media ads and hope people like us.",
+            "isCorrect": false,
+            "feedback": "โมเดลธุรกิจที่พึ่งพาการเผาเงินโดยไร้ความคุ้มค่าจะถูกนักลงทุนปฏิเสธทันที"
+          },
+          {
+            "text": "CAC doesn't matter as long as we have millions of followers.",
+            "isCorrect": false,
+            "feedback": "ยอดผู้ติดตามที่สร้างรายได้ไม่ได้ไม่สามารถดึงดูดเงินลงทุนสากล"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Customer Acquisition Cost (CAC)",
+            "meaning": "ต้นทุนการได้มาซึ่งลูกค้าใหม่หนึ่งราย"
+          },
+          {
+            "word": "Lifetime Value (LTV)",
+            "meaning": "มูลค่ารายได้ตลอดช่วงชีวิตของลูกค้า"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crisis_press",
+    "stageNumber": 24,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Crisis PR Press Statement",
+    "titleTh": "แถลงข่าวชี้แจงวิกฤตองค์กร (Crisis PR Management)",
+    "category": "Global Business",
+    "icon": "🎙️",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can manage high-stakes public relations crises, address investigative journalists, and restore organizational credibility.",
+    "canDoSummary": "รับมือวิกฤตการสื่อสารต่อหน้าสื่อมวลชน ตอบคำถามนักข่าวสายสืบสวนอย่างสุขุม และกอบกู้ความเชื่อมั่นองค์กร",
+    "toeicBand": "TOEIC 830 - 880",
+    "rewardExp": 170,
+    "rewardCoins": 120,
+    "npcName": "Senior Journalist Davis",
+    "npcAvatar": "🐱‍📰",
+    "bgTheme": "theme-office",
+    "description": "ยืนแถลงข่าวต่อหน้าสื่อมวลชนกรณีระบบคลาวด์ขัดข้อง ชี้แจงข้อเท็จจริง มาตรการเยียวยา และแผนป้องกันในอนาคต",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Spokesperson Mimi, over two million users experienced transaction interruptions during yesterday's system downtime. Was this a security breach?",
+        "npcVoiceText": "Spokesperson Mimi, over two million users experienced transaction interruptions during yesterday's system downtime. Was this a security breach?",
+        "contextTh": "นักข่าวถามจี้ว่าระบบล่มกระทบผู้ใช้กว่าสองล้านคนเกิดจากการถูกเจาะระบบความปลอดภัย (Security Breach) หรือไม่",
+        "hint": "ชี้แจงข้อเท็จจริงอย่างโปร่งใส ยืนยันความปลอดภัยของข้อมูล และระบุสาเหตุทางเทคนิคที่แท้จริงโดยไม่หลบเลี่ยง",
+        "targetPhrases": [
+          "I want to categorically state that no user data was compromised. The outage was triggered by a configuration error during routine network maintenance."
+        ],
+        "options": [
+          {
+            "text": "I want to categorically state that no user data was compromised. The outage was triggered by a configuration error during routine network maintenance.",
+            "isCorrect": true,
+            "feedback": "การสื่อสารในภาวะวิกฤตที่สมบูรณ์แบบ! ยืนยันชัดเจนว่าข้อมูลไม่รั่วไหล (no data compromised) และชี้แจงสาเหตุตรงไปตรงมา"
+          },
+          {
+            "text": "No comment! Get those cameras out of my face right now!",
+            "isCorrect": false,
+            "feedback": "การพูดว่า 'No comment' หรือปัดกล้องจะทำให้ภาพลักษณ์องค์กรดูมีความผิดทันที"
+          },
+          {
+            "text": "Yes, hackers stole everything and we have no backups.",
+            "isCorrect": false,
+            "feedback": "สร้างความตื่นตระหนกโดยไร้ข้อเท็จจริง"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Categorically state",
+            "meaning": "ยืนยันอย่างชัดเจน เด็ดขาด และหนักแน่น"
+          },
+          {
+            "word": "Data compromised",
+            "meaning": "ข้อมูลถูกละเมิดหรือรั่วไหล"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "crossborder_logistics",
+    "stageNumber": 25,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Cross-Border Freight & Customs",
+    "titleTh": "แก้ปัญหาโลจิสติกส์และศุลกากร (Cross-Border Logistics)",
+    "category": "Global Business",
+    "icon": "🚢",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can handle international shipping disputes, customs tariff classifications (HS Code), and freight demurrage negotiations.",
+    "canDoSummary": "เจรจาแก้ปัญหาการขนส่งสินค้าระหว่างประเทศ พิกัดอัตราศุลกากร (HS Code) และค่าธรรมเนียมตู้สินค้าตกค้าง (Demurrage)",
+    "toeicBand": "TOEIC 840 - 890",
+    "rewardExp": 180,
+    "rewardCoins": 130,
+    "npcName": "Harbor Master Lars",
+    "npcAvatar": "🐱‍⚓",
+    "bgTheme": "theme-office",
+    "description": "ติดต่อท่าเรือระหว่างประเทศเพื่อเคลียร์ตู้สินค้าคอนเทนเนอร์ที่ติดด่านศุลกากร ชี้แจงเอกสารและเจรจาลดค่าปรับตู้สินค้า",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Captain Mimi, customs flagged your twenty containers of electronic components due to an HS Code tariff discrepancy. They are incurring daily demurrage fees.",
+        "npcVoiceText": "Captain Mimi, customs flagged your twenty containers of electronic components due to an HS Code tariff discrepancy. They are incurring daily demurrage fees.",
+        "contextTh": "นายท่าแจ้งว่าตู้สินค้า 20 ตู้ถูกกักเพราะพิกัดศุลกากรไม่ตรง และกำลังถูกปรับค่าตู้สินค้าตกค้างรายวัน",
+        "hint": "ยื่นเอกสารรับรองถิ่นกำเนิดสินค้า (Form E / Certificate of Origin) และขอให้ตรวจสอบพิกัดย่อยใหม่โดยด่วน",
+        "targetPhrases": [
+          "We have uploaded the revised Certificate of Origin and bilateral trade documentation under HS Code 8542.31 to expedite clearance."
+        ],
+        "options": [
+          {
+            "text": "We have uploaded the revised Certificate of Origin and bilateral trade documentation under HS Code 8542.31 to expedite clearance.",
+            "isCorrect": true,
+            "feedback": "แม่นยำในศัพท์การค้าระหว่างประเทศ! ระบุพิกัด HS Code ชัดเจนและส่งเอกสาร Certificate of Origin ทันที"
+          },
+          {
+            "text": "Just throw the cargo into the ocean, we will buy new ones.",
+            "isCorrect": false,
+            "feedback": "สร้างความเสียหายมหาศาลต่อธุรกิจ"
+          },
+          {
+            "text": "Customs officers are all corrupt, why do they want paperwork?",
+            "isCorrect": false,
+            "feedback": "การต่อว่าเจ้าหน้าที่ศุลกากรอาจทำให้ถูกดำเนินคดีทางกฎหมาย"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "HS Code tariff",
+            "meaning": "พิกัดอัตราศุลกากรระบบฮาร์โมไนซ์สากล"
+          },
+          {
+            "word": "Certificate of Origin",
+            "meaning": "หนังสือรับรองถิ่นกำเนิดสินค้า"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "strategic_partnership",
+    "stageNumber": 26,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Strategic M&A Joint Venture",
+    "titleTh": "เจรจาข้อตกลงควบรวมและพันธมิตร (Strategic M&A)",
+    "category": "Global Business",
+    "icon": "🤝",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can structure strategic corporate mergers, negotiate equity distribution, and align governance frameworks.",
+    "canDoSummary": "วางโครงสร้างการควบรวมกิจการเชิงยุทธศาสตร์ เจรจาสัดส่วนการถือหุ้น และจัดวางกรอบการบริหารร่วมกัน",
+    "toeicBand": "TOEIC 850 - 900",
+    "rewardExp": 180,
+    "rewardCoins": 130,
+    "npcName": "Corporate Strategist Julian",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "เจรจาข้อตกลงจัดตั้งบริษัทร่วมทุน (Joint Venture) ระหว่างสองบริษัทยักษ์ใหญ่ ตกลงสัดส่วนผู้ถือหุ้นและอำนาจการบริหาร",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Julian here. Our board agrees on the joint venture concept, but we propose a 60-40 equity split in our favor with majority board seats.",
+        "npcVoiceText": "Julian here. Our board agrees on the joint venture concept, but we propose a 60-40 equity split in our favor with majority board seats.",
+        "contextTh": "คู่เจรจาเสนอการจัดตั้งบริษัทร่วมทุน แต่ขอสัดส่วนหุ้น 60-40 และที่นั่งกรรมการส่วนใหญ่ในบอร์ด",
+        "hint": "เสนอโครงสร้าง 50-50 ที่สมดุล หรือการแบ่งสัดส่วนการบริหารตามสินทรัพย์ทางปัญญาและฐานลูกค้าที่นำมาร่วมกัน",
+        "targetPhrases": [
+          "Given our proprietary intellectual property contribution, we advocate for an equal 50-50 equity joint venture with rotating board leadership."
+        ],
+        "options": [
+          {
+            "text": "Given our proprietary intellectual property contribution, we advocate for an equal 50-50 equity joint venture with rotating board leadership.",
+            "isCorrect": true,
+            "feedback": "วาทศิลป์การเจรจาระดับสูง ยกคุณค่าทรัพย์สินทางปัญญา (IP contribution) มาถ่วงน้ำหนักเพื่อขอสัดส่วน 50-50 อย่างสมเหตุสมผล"
+          },
+          {
+            "text": "Give us 100% or we walk away and destroy you.",
+            "isCorrect": false,
+            "feedback": "น้ำเสียงก้าวร้าวทำลายโอกาสการเป็นพันธมิตร"
+          },
+          {
+            "text": "Fine, take everything, we will just obey whatever you say.",
+            "isCorrect": false,
+            "feedback": "ยอมเสียเปรียบในการเจรจาโดยไม่ปกป้องผลประโยชน์ขององค์กร"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Proprietary IP",
+            "meaning": "ทรัพย์สินทางปัญญาที่เป็นกรรมสิทธิ์เฉพาะ"
+          },
+          {
+            "word": "Rotating leadership",
+            "meaning": "การสลับหมุนเวียนตำแหน่งผู้นำบริหาร"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ip_licensing",
+    "stageNumber": 27,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Intellectual Property Licensing",
+    "titleTh": "เจรจาสิทธิบัตรและลิขสิทธิ์ IP (IP Licensing)",
+    "category": "Global Business",
+    "icon": "⚖️",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can negotiate patent cross-licensing, royalty structures, and territorial exclusivity agreements.",
+    "canDoSummary": "เจรจาสัญญาอนุญาตให้ใช้สิทธิบัตร (Licensing) อัตราค่ารอยัลตี และสิทธิ์การจัดจำหน่ายแต่เพียงผู้เดียวในภูมิภาค",
+    "toeicBand": "TOEIC 860 - 900",
+    "rewardExp": 190,
+    "rewardCoins": 135,
+    "npcName": "Patent Examiner Dr. Aris",
+    "npcAvatar": "🐱‍🎓",
+    "bgTheme": "theme-office",
+    "description": "เจรจาข้อตกลงอนุญาตใช้สิทธิบัตรเทคโนโลยีปัญญาประดิษฐ์กับองค์กรพันธมิตร กำหนดอัตราส่วนแบ่งรายได้และขอบเขตภูมิศาสตร์",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Dr. Aris here. We are interested in licensing your AI optical algorithm for North America, but we require exclusive territorial rights.",
+        "npcVoiceText": "Dr. Aris here. We are interested in licensing your AI optical algorithm for North America, but we require exclusive territorial rights.",
+        "contextTh": "ผู้ตรวจสอบสิทธิบัตรต้องการขอลิขสิทธิ์อัลกอริทึมปัญญาประดิษฐ์ในอเมริกาเหนือ พร้อมขอสิทธิ์ผูกขาดแต่เพียงผู้เดียว",
+        "hint": "เสนอสิทธิ์ผูกขาดแบบมีเงื่อนไข (Conditional Exclusivity) โดยต้องมียอดขายขั้นต่ำรายปีเพื่อรักษาความคุ้มค่า",
+        "targetPhrases": [
+          "We can grant territorial exclusivity in North America subject to an annual minimum performance threshold of three million dollars."
+        ],
+        "options": [
+          {
+            "text": "We can grant territorial exclusivity in North America subject to an annual minimum performance threshold of three million dollars.",
+            "isCorrect": true,
+            "feedback": "กลยุทธ์การออกใบอนุญาตระดับโลก การให้สิทธิ์ผูกขาดต้องผูกกับยอดขายขั้นต่ำ (minimum performance threshold) เสมอ"
+          },
+          {
+            "text": "Sure, take it for free forever, we don't need money.",
+            "isCorrect": false,
+            "feedback": "ยกทรัพย์สินขององค์กรให้ผู้อื่นอย่างไร้มูลค่า"
+          },
+          {
+            "text": "No exclusivity ever! We hate exclusive contracts!",
+            "isCorrect": false,
+            "feedback": "ปฏิเสธโดยไม่เสนอทางเลือกเพื่อการพาณิชย์"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Territorial exclusivity",
+            "meaning": "สิทธิ์ในการดำเนินธุรกิจแต่เพียงผู้เดียวในเขตพื้นที่"
+          },
+          {
+            "word": "Performance threshold",
+            "meaning": "เกณฑ์ขั้นต่ำของผลงาน/ยอดขายที่ต้องบรรลุ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "budget_allocation",
+    "stageNumber": 28,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Fiscal Year Budget Defense",
+    "titleTh": "ชี้แจงและขออนุมัติงบประมาณประจำปี (Budget Defense)",
+    "category": "Global Business",
+    "icon": "💰",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can defend department capital expenditures (CapEx) and operational expenditures (OpEx) before executive finance committees.",
+    "canDoSummary": "ชี้แจงและปกป้องงบลงทุน (CapEx) และงบดำเนินงาน (OpEx) ต่อคณะกรรมการการเงินระดับสูงด้วยผลตอบแทน ROI",
+    "toeicBand": "TOEIC 870 - 900",
+    "rewardExp": 190,
+    "rewardCoins": 135,
+    "npcName": "Chief Financial Officer Fiona",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "เข้าชี้แจงคำของบประมาณฝ่ายนวัตกรรมประจำปีต่อประธานเจ้าหน้าที่ฝ่ายการเงิน (CFO) แสดงผลตอบแทนความคุ้มค่า (ROI)",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Mimi, your division is requesting a 40% increase in capital expenditure for infrastructure. How do you justify this expenditure in a lean fiscal year?",
+        "npcVoiceText": "Mimi, your division is requesting a 40% increase in capital expenditure for infrastructure. How do you justify this expenditure in a lean fiscal year?",
+        "contextTh": "CFO ถามว่าทำไมของบลงทุน CapEx เพิ่มขึ้นถึง 40% ในปีที่บริษัทมีนโยบายรัดเข็มขัดงบประมาณ",
+        "hint": "ชี้แจงด้วยผลตอบแทนจากการลงทุน (ROI) และการประหยัดต้นทุนในระยะยาวที่มากกว่าเม็ดเงินลงทุน",
+        "targetPhrases": [
+          "This investment will modernize our legacy architecture, reducing ongoing operational costs by 28% and generating complete ROI within fourteen months."
+        ],
+        "options": [
+          {
+            "text": "This investment will modernize our legacy architecture, reducing ongoing operational costs by 28% and generating complete ROI within fourteen months.",
+            "isCorrect": true,
+            "feedback": "คำตอบทางการเงินระดับยอดเยี่ยม! ชี้ให้เห็นการลดต้นทุนต่อเนื่อง (28% ongoing reduction) และระยะเวลาคืนทุน (14 months ROI)"
+          },
+          {
+            "text": "We want fancy new computers because our old ones look boring.",
+            "isCorrect": false,
+            "feedback": "เหตุผลที่ไร้สาระจะถูกตัดงบทันที"
+          },
+          {
+            "text": "Money doesn't matter, just give us whatever is in the bank.",
+            "isCorrect": false,
+            "feedback": "ขาดความตระหนักรู้ทางการเงินและวินัยงบประมาณ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Capital expenditure (CapEx)",
+            "meaning": "รายจ่ายเพื่อการได้มาซึ่งสินทรัพย์ถาวร/การลงทุน"
+          },
+          {
+            "word": "Generate complete ROI",
+            "meaning": "สร้างผลตอบแทนคุ้มค่าการลงทุนครบถ้วน"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tech_architecture",
+    "stageNumber": 29,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Tech Stack & Cloud Architecture",
+    "titleTh": "ถกเถียงการออกแบบสถาปัตยกรรมระบบ (Cloud Architecture)",
+    "category": "Global Business",
+    "icon": "☁️",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can lead technical debates on microservices vs monolith, distributed fault tolerance, and latency optimization.",
+    "canDoSummary": "นำการอภิปรายเชิงเทคนิคเกี่ยวกับระบบสถาปัตยกรรมคลาวด์ การกระจายโหลด ความพร้อมใช้งานสูง และความหน่วงต่ำ",
+    "toeicBand": "TOEIC 880 - 900",
+    "rewardExp": 200,
+    "rewardCoins": 140,
+    "npcName": "Chief Technology Officer Trent",
+    "npcAvatar": "🐱‍💻",
+    "bgTheme": "theme-office",
+    "description": "ร่วมประชุมระดับผู้นำเทคโนโลยีกับ CTO เพื่อสรุปโครงสร้างสถาปัตยกรรมคลาวด์สำหรับรองรับผู้ใช้งานพร้อมกัน 10 ล้านคน",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Trent here. Our core monolith database is hitting CPU bottlenecks under peak traffic. Should we migrate to event-driven microservices?",
+        "npcVoiceText": "Trent here. Our core monolith database is hitting CPU bottlenecks under peak traffic. Should we migrate to event-driven microservices?",
+        "contextTh": "CTO กังวลว่าฐานข้อมูลหลักแบบ Monolith ทำงานหนักจน CPU ตันในช่วงทราฟฟิกสูงสุด และถามว่าควรย้ายไประบบ Microservices หรือไม่",
+        "hint": "วิเคราะห์ข้อดีข้อเสีย เสนอแนวทางไฮบริดหรือทยอยแยกโมดูลเพื่อลดความเสี่ยงระบบล่ม",
+        "targetPhrases": [
+          "A full rewrite carries high operational risk. We recommend decoupling high-throughput services first using an asynchronous Kafka message queue."
+        ],
+        "options": [
+          {
+            "text": "A full rewrite carries high operational risk. We recommend decoupling high-throughput services first using an asynchronous Kafka message queue.",
+            "isCorrect": true,
+            "feedback": "คำตอบระดับ Chief Architect! เตือนความเสี่ยงการรื้อทำใหม่ทั้งหมด (rewrite risk) และเสนอการแยกเซอร์วิสแบบอะซิงโครนัส"
+          },
+          {
+            "text": "Delete the database and let users wait forever.",
+            "isCorrect": false,
+            "feedback": "คำตอบที่ทำลายระบบ"
+          },
+          {
+            "text": "I know nothing about computers, why am I here?",
+            "isCorrect": false,
+            "feedback": "ไม่สมบทบาทผู้นำการออกแบบระบบ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Decoupling services",
+            "meaning": "การแยกส่วนบริการให้ทำงานเป็นอิสระต่อกัน"
+          },
+          {
+            "word": "Asynchronous message queue",
+            "meaning": "คิวส่งผ่านข้อมูลแบบอะซิงโครนัสเพื่อลดความแออัด"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "board_meeting",
+    "stageNumber": 30,
+    "packNumber": 3,
+    "packId": "pack_business",
+    "title": "Board of Directors Defense",
+    "titleTh": "รายงานทิศทางต่อคณะกรรมการบริษัท (Board of Directors Defense)",
+    "category": "Global Business",
+    "icon": "🏛️",
+    "difficulty": "Advanced",
+    "cefrLevel": "B2",
+    "cefrCanDo": "Can present strategic governance roadmaps, manage inquisitive board scrutiny, and secure unanimous committee endorsement.",
+    "canDoSummary": "นำเสนอแผนยุทธศาสตร์องค์กรต่อคณะกรรมการบริษัท ตอบข้อซักถามเชิงลึกของผู้ถือหุ้น และได้รับมติรับรองเป็นเอกฉันท์",
+    "toeicBand": "TOEIC 890 - 900",
+    "rewardExp": 220,
+    "rewardCoins": 150,
+    "npcName": "Chairman Sterling",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "ก้าวขึ้นสู่ห้องประชุมบอร์ดบริหารระดับสูงสุด นำเสนอแผนยุทธศาสตร์การขยายธุรกิจระดับสากลต่อหน้าประธานกรรมการและผู้ถือหุ้นใหญ่",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Mimi, the board has reviewed your three-year global expansion proposal. What is your risk mitigation contingency if macroeconomic headwinds intensify?",
+        "npcVoiceText": "Mimi, the board has reviewed your three-year global expansion proposal. What is your risk mitigation contingency if macroeconomic headwinds intensify?",
+        "contextTh": "ประธานบอร์ดถามถึงแผนรับมือความเสี่ยง (Contingency Plan) หากภาวะเศรษฐกิจมหภาคทั่วโลกชะลอตัวรุนแรงขึ้น",
+        "hint": "แสดงแผนกลยุทธ์รับมือความเสี่ยงที่มีความยืดหยุ่น การกระจายความเสี่ยงข้ามภูมิภาค และการรักษาสภาพคล่องทางการเงิน",
+        "targetPhrases": [
+          "We have embedded defensive triggers: maintaining twelve months of operating runway and structuring dynamic revenue diversification across three non-correlated markets."
+        ],
+        "options": [
+          {
+            "text": "We have embedded defensive triggers: maintaining twelve months of operating runway and structuring dynamic revenue diversification across three non-correlated markets.",
+            "isCorrect": true,
+            "feedback": "การปกป้องยุทธศาสตร์ระดับบอร์ดบริหาร! รักษาเงินทุนสำรอง 12 เดือน (12 months runway) และกระจายความเสี่ยงในตลาดที่ไม่เชื่อมโยงกัน"
+          },
+          {
+            "text": "If the economy crashes, we will all just go bankrupt and give up.",
+            "isCorrect": false,
+            "feedback": "ทัศนคติสิ้นหวังที่ไม่คู่ควรกับตำแหน่งผู้นำองค์กร"
+          },
+          {
+            "text": "The economy never crashes, we don't need contingency plans.",
+            "isCorrect": false,
+            "feedback": "ประมาทเลินเล่อและไร้วิสัยทัศน์"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Risk mitigation contingency",
+            "meaning": "แผนปฏิบัติการฉุกเฉินเพื่อบรรเทาความเสี่ยง"
+          },
+          {
+            "word": "Non-correlated markets",
+            "meaning": "ตลาดที่ไม่มีความเกี่ยวโยงของความผันผวนทางเศรษฐกิจ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "diplomatic_protocol",
+    "stageNumber": 31,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "High-Stakes Diplomatic Protocol",
+    "titleTh": "พิธีการทูตและการเจรจาระดับรัฐ (Diplomatic Protocol)",
+    "category": "Diplomacy & Leadership",
+    "icon": "🕊️",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can converse with foreign dignitaries using exquisite diplomatic etiquette, formal register, and nuanced statecraft rhetoric.",
+    "canDoSummary": "สนทนากับคณะทูตานุทูตต่างประเทศด้วยระดับภาษาที่เป็นทางการสูงสุด ถูกต้องตามธรรมเนียมพิธีการทูตสากล",
+    "toeicBand": "TOEIC 905 - 930 (International Expert)",
+    "rewardExp": 250,
+    "rewardCoins": 160,
+    "npcName": "Ambassador Philippe",
+    "npcAvatar": "🐱‍🎓",
+    "bgTheme": "theme-office",
+    "description": "ต้อนรับคณะเอกอัครราชทูตและผู้แทนระดับสูงจากต่างประเทศ เจรจาแลกเปลี่ยนความร่วมมือทางวัฒนธรรมและเศรษฐกิจ",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Your Excellency, on behalf of our diplomatic mission, we convey the warmest greetings of our government. How do you assess the trajectory of our bilateral accord?",
+        "npcVoiceText": "Your Excellency, on behalf of our diplomatic mission, we convey the warmest greetings of our government. How do you assess the trajectory of our bilateral accord?",
+        "contextTh": "เอกอัครราชทูตกล่าวทักทายอย่างเป็นทางการสูงสุด และถามถึงทิศทางของสนธิสัญญาความร่วมมือทวิภาคี",
+        "hint": "ใช้ภาษาการทูตระดับสูง เช่น 'profound gratitude', 'shared multilateral values', 'enduring partnership'",
+        "targetPhrases": [
+          "We express our profound gratitude to Your Excellency. We are confident that our shared commitment to mutual prosperity will reinforce our enduring bilateral partnership."
+        ],
+        "options": [
+          {
+            "text": "We express our profound gratitude to Your Excellency. We are confident that our shared commitment to mutual prosperity will reinforce our enduring bilateral partnership.",
+            "isCorrect": true,
+            "feedback": "ภาษาการทูตระดับ C1 ไร้ที่ติ! ถ้อยคำงดงาม สุภาพ เปี่ยมด้วยบารมีและศักดิ์ศรีของตัวแทนประเทศ"
+          },
+          {
+            "text": "Hey Philippe, what's up? Hope your president didn't send you here empty handed.",
+            "isCorrect": false,
+            "feedback": "การทักทายแบบไม่ให้เกียรติเป็นความผิดพลาดร้ายแรงทางการทูต (Diplomatic blunder)"
+          },
+          {
+            "text": "We don't care about your accord, we have more money than you.",
+            "isCorrect": false,
+            "feedback": "สร้างความบาดหมางระหว่างประเทศทันที"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Profound gratitude",
+            "meaning": "ความขอบพระคุณอย่างสุดซึ้ง"
+          },
+          {
+            "word": "Bilateral accord",
+            "meaning": "ข้อตกลงทวิภาคีระหว่างสองฝ่าย"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hostage_mediation",
+    "stageNumber": 32,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "High-Tension Corporate Mediation",
+    "titleTh": "ไกล่เกลี่ยข้อพิพาทความขัดแย้งระดับสูง (Corporate Mediation)",
+    "category": "Diplomacy & Leadership",
+    "icon": "⚖️",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can arbitrate entrenched disputes between adversarial factions, de-escalate hostility, and forge binding consensus.",
+    "canDoSummary": "ไกล่เกลี่ยข้อพิพาทรุนแรงระหว่างกลุ่มผลประโยชน์ที่ขัดแย้ง ลดความตึงเครียด และสร้างฉันทามติที่มีผลผูกพันทางกฎหมาย",
+    "toeicBand": "TOEIC 910 - 940",
+    "rewardExp": 250,
+    "rewardCoins": 160,
+    "npcName": "Neutral Arbiter Madame Genevieve",
+    "npcAvatar": "🐱‍⚖️",
+    "bgTheme": "theme-office",
+    "description": "นั่งหัวโต๊ะการไกล่เกลี่ยข้อพิพาทสัญญามูลค่าพันล้านเหรียญ ระหว่างสองฝ่ายที่ไม่ยอมลงรอยกัน เพื่อหลีกเลี่ยงการฟ้องร้องในศาลโลก",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Mediator Mimi, both corporations have reached an absolute impasse over patent indemnification. Neither party is willing to yield. How will you bridge this deadlock?",
+        "npcVoiceText": "Mediator Mimi, both corporations have reached an absolute impasse over patent indemnification. Neither party is willing to yield. How will you bridge this deadlock?",
+        "contextTh": "ผู้ไกล่เกลี่ยแจ้งว่าทั้งสองบริษัทยืนกรานไม่ยอมกันในเรื่องความรับผิดชอบชดใช้ค่าเสียหายสิทธิบัตร และถามว่าจะผ่าทางตันอย่างไร",
+        "hint": "เสนอโครงสร้างการชดใช้ความเสียหายแบบจำกัดความรับผิดชอบร่วมกัน (Capped Mutual Indemnification) หรือการจัดตั้งกองทุนคุ้มครองร่วม",
+        "targetPhrases": [
+          "I propose a mutual indemnification covenant capped at ten million dollars, paired with an expedited binding arbitration tribunal for future claims."
+        ],
+        "options": [
+          {
+            "text": "I propose a mutual indemnification covenant capped at ten million dollars, paired with an expedited binding arbitration tribunal for future claims.",
+            "isCorrect": true,
+            "feedback": "ข้อเสนอไกล่เกลี่ยระดับ Master of Dispute Resolution! สร้างความยุติธรรมและขจัดความกังวลของทั้งสองฝ่ายพร้อมกัน"
+          },
+          {
+            "text": "Let them sue each other into bankruptcy, who cares?",
+            "isCorrect": false,
+            "feedback": "ล้มเหลวในหน้าที่ของผู้ไกล่เกลี่ย"
+          },
+          {
+            "text": "I will flip a coin to decide who wins.",
+            "isCorrect": false,
+            "feedback": "การตัดสินด้วยการเสี่ยงทายขาดความเป็นมืออาชีพทางกฎหมาย"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Mutual indemnification covenant",
+            "meaning": "ข้อตกลงคุ้มครองและชดใช้ค่าเสียหายร่วมกัน"
+          },
+          {
+            "word": "Expedited binding arbitration",
+            "meaning": "กระบวนการอนุญาโตตุลาการแบบเร่งรัดที่มีผลผูกพัน"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "global_keynote",
+    "stageNumber": 33,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "World Tech Summit Keynote",
+    "titleTh": "กล่าวปาฐกถาบนเวทีการประชุมระดับโลก (World Tech Keynote)",
+    "category": "Diplomacy & Leadership",
+    "icon": "🎤",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can deliver visionary keynote orations before global forums, compelling international delegates and articulating humanity-centric tech ethics.",
+    "canDoSummary": "กล่าวปาฐกถาเชิงวิสัยทัศน์บนเวทีผู้นำระดับโลก สร้างแรงบันดาลใจ และประกาศหลักจริยธรรมเทคโนโลยีเพื่อมนุษยชาติ",
+    "toeicBand": "TOEIC 920 - 950",
+    "rewardExp": 260,
+    "rewardCoins": 170,
+    "npcName": "Summit Moderator Marcus",
+    "npcAvatar": "🐱‍🎤",
+    "bgTheme": "theme-office",
+    "description": "ขึ้นสู่เวที World Technology Forum ต่อหน้าผู้แทนจาก 80 ประเทศและผู้ชมนับล้าน กล่าวสุนทรพจน์เรื่องอนาคตของ AI และมนุษยชาติ",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Ladies and gentlemen, please welcome Keynote Speaker Mimi! The stage is yours to address our global delegates on the future of ethical artificial intelligence.",
+        "npcVoiceText": "Ladies and gentlemen, please welcome Keynote Speaker Mimi! The stage is yours to address our global delegates on the future of ethical artificial intelligence.",
+        "contextTh": "พิธีกรเชิญขึ้นสู่เวทีเพื่อกล่าวปาฐกถาเรื่องจริยธรรมปัญญาประดิษฐ์ต่อคณะผู้แทนทั่วโลก",
+        "hint": "ใช้ศิลปะการพูดระดับสุนทรพจน์ (Oratory Skill): เปิดด้วยวิสัยทัศน์ที่ยิ่งใหญ่ ผูกโยงเทคโนโลยีเข้ากับศักดิ์ศรีความเป็นมนุษย์",
+        "targetPhrases": [
+          "Distinguished delegates, the true benchmark of technological innovation is not the velocity of our algorithms, but the elevation of human dignity and opportunity."
+        ],
+        "options": [
+          {
+            "text": "Distinguished delegates, the true benchmark of technological innovation is not the velocity of our algorithms, but the elevation of human dignity and opportunity.",
+            "isCorrect": true,
+            "feedback": "สุนทรพจน์ระดับผู้นำโลกที่สะกดทุกสายตา! 'Elevation of human dignity' เป็นถ้อยคำระดับปรัชญาสากล"
+          },
+          {
+            "text": "Hello everyone, buy our software because we want to make lots of money.",
+            "isCorrect": false,
+            "feedback": "สุนทรพจน์ระดับโลกไม่ควรพูดถึงแต่การขายของตัวเอง"
+          },
+          {
+            "text": "AI is going to take over the world and destroy everyone, goodbye.",
+            "isCorrect": false,
+            "feedback": "สร้างความหวาดกลัวโดยไร้วิสัยทัศน์ในการแก้ไข"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Benchmark of innovation",
+            "meaning": "หมุดหมายบรรทัดฐานของนวัตกรรม"
+          },
+          {
+            "word": "Elevation of human dignity",
+            "meaning": "การยกระดับศักดิ์ศรีคุณค่าความเป็นมนุษย์"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "regulatory_antitrust",
+    "stageNumber": 34,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "Antitrust & SEC Regulatory Defense",
+    "titleTh": "ชี้แจงกฎหมายต่อต้านการผูกขาด (Antitrust Regulatory Defense)",
+    "category": "Diplomacy & Leadership",
+    "icon": "🏛️",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can navigate hostile regulatory investigations, defend market competitiveness, and establish enforceable compliance covenants.",
+    "canDoSummary": "ชี้แจงต่อคณะกรรมาธิการกำกับดูแลการแข่งขันทางการค้า ปกป้องเสรีภาพทางธุรกิจ และกำหนดกรอบธรรมาภิบาล",
+    "toeicBand": "TOEIC 930 - 960",
+    "rewardExp": 270,
+    "rewardCoins": 180,
+    "npcName": "Commissioner Vance (Regulatory Board)",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "เข้าชี้แจงต่อคณะกรรมการกำกับดูแลการแข่งขันทางการค้าสากล (Antitrust Commission) เพื่อพิสูจน์ว่าการควบรวมกิจการไม่ผูกขาดตลาด",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Commissioner Vance presiding. Mimi, your conglomerate now controls 44% of regional cloud infrastructure. How do you refute allegations of monopolistic predatory pricing?",
+        "npcVoiceText": "Commissioner Vance presiding. Mimi, your conglomerate now controls 44% of regional cloud infrastructure. How do you refute allegations of monopolistic predatory pricing?",
+        "contextTh": "กรรมาธิการตั้งข้อซักถามว่าบริษัทครองส่วนแบ่งคลาวด์ 44% และถูกกล่าวหาว่าตั้งราคาตัดคู่แข่งเพื่อผูกขาดตลาด (Predatory Pricing)",
+        "hint": "โต้แย้งด้วยหลักฐานเชิงประจักษ์: ชี้แจงโครงสร้างต้นทุนจริง การเปิดระบบให้คู่แข่งเชื่อมต่อ (Interoperability) และการสร้างระบบนิเวศแบบเปิด",
+        "targetPhrases": [
+          "We respectfully refute the allegation. Our pricing reflects economies of scale passed directly to consumers, and our APIs remain fully open and interoperable for all competing platforms."
+        ],
+        "options": [
+          {
+            "text": "We respectfully refute the allegation. Our pricing reflects economies of scale passed directly to consumers, and our APIs remain fully open and interoperable for all competing platforms.",
+            "isCorrect": true,
+            "feedback": "การชี้แจงทางกฎหมายเศรษฐศาสตร์ที่สมบูรณ์แบบ! อธิบายเรื่อง 'economies of scale' และยืนยันความเปิดกว้าง 'open and interoperable'"
+          },
+          {
+            "text": "We are a monopoly and we are proud of it. Deal with it.",
+            "isCorrect": false,
+            "feedback": "ยอมรับข้อกล่าวหาทันที ซึ่งจะนำไปสู่การถูกสั่งยุบหรือปรับเงินมหาศาล"
+          },
+          {
+            "text": "The government has no right to inspect our private business.",
+            "isCorrect": false,
+            "feedback": "การละเมิดอำนาจศาลและองค์กรกำกับดูแลจะทำให้ถูกเพิกถอนใบอนุญาต"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Economies of scale",
+            "meaning": "การประหยัดจากขนาดการผลิต/การดำเนินงานขนาดใหญ่"
+          },
+          {
+            "word": "Open and interoperable",
+            "meaning": "ระบบเปิดที่สามารถทำงานร่วมกับระบบอื่นได้เสรี"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hostile_takeover",
+    "stageNumber": 35,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "Hostile Takeover Defense Strategy",
+    "titleTh": "วางกลยุทธ์ป้องกันการเทกโอเวอร์ (Hostile Takeover Defense)",
+    "category": "Diplomacy & Leadership",
+    "icon": "🛡️",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can devise defensive corporate finance maneuvers (Poison Pill, White Knight), rally shareholder proxies, and safeguard institutional sovereignty.",
+    "canDoSummary": "วางกลยุทธ์การเงินเพื่อป้องกันการเข้าซื้อกิจการแบบไม่เป็นมิตร รวบรวมเสียงโหวตผู้ถือหุ้น และรักษาเอกราชขององค์กร",
+    "toeicBand": "TOEIC 940 - 970",
+    "rewardExp": 280,
+    "rewardCoins": 190,
+    "npcName": "Defense Advisor Raymond",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "ประชุมวอร์รูมฉุกเฉินรับมือการกว้านซื้อหุ้นแบบไม่เป็นมิตรจากกลุ่มทุนคู่แข่ง กำหนดยุทธวิธีกลืนยาพิษ (Poison Pill) และหาอัศวินม้าขาว",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Mimi, an offshore raider fund has acquired 14% of our voting shares on the open market and launched a tender offer. What is our immediate counter-strategy?",
+        "npcVoiceText": "Mimi, an offshore raider fund has acquired 14% of our voting shares on the open market and launched a tender offer. What is our immediate counter-strategy?",
+        "contextTh": "ที่ปรึกษาแจ้งว่ากลุ่มทุนล่ากิจการกว้านซื้อหุ้นไปแล้ว 14% และเริ่มเปิดรับซื้อหุ้นต่อสาธารณะ (Tender Offer) ถามว่าจะตอบโต้อย่างไร",
+        "hint": "ประกาศใช้กลยุทธ์ Shareholder Rights Plan (Poison Pill) เจรจาหาพันธมิตร White Knight และสื่อสารกับผู้ถือหุ้นสถาบัน",
+        "targetPhrases": [
+          "We should trigger our Shareholder Rights Plan to dilute unauthorized accumulations, while engaging our friendly sovereign wealth partner as a White Knight."
+        ],
+        "options": [
+          {
+            "text": "We should trigger our Shareholder Rights Plan to dilute unauthorized accumulations, while engaging our friendly sovereign wealth partner as a White Knight.",
+            "isCorrect": true,
+            "feedback": "กลยุทธ์ระดับเทพการเงินวอลล์สตรีต! ใช้ 'Shareholder Rights Plan' เจือจางหุ้น และดึง 'White Knight' เข้ามาพิทักษ์องค์กร"
+          },
+          {
+            "text": "Let them buy the whole company, I want to retire early anyway.",
+            "isCorrect": false,
+            "feedback": "ยอมแพ้และทรยศต่อผู้ถือหุ้นและพนักงานทุกคน"
+          },
+          {
+            "text": "Let's hack their computers and delete their bank accounts.",
+            "isCorrect": false,
+            "feedback": "การกระทำผิดกฎหมายอาชญากรรมไซเบอร์"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Shareholder Rights Plan (Poison Pill)",
+            "meaning": "แผนสิทธิผู้ถือหุ้นเพื่อเจือจางการกว้านซื้อแบบไม่เป็นมิตร"
+          },
+          {
+            "word": "White Knight",
+            "meaning": "พันธมิตรที่เป็นมิตรที่เข้ามาช่วยซื้อหุ้นเพื่อป้องกันการเทกโอเวอร์"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "esg_summit",
+    "stageNumber": 36,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "Global ESG & Sustainability Accord",
+    "titleTh": "เจรจาข้อตกลงความยั่งยืนระดับนานาชาติ (Global ESG Accord)",
+    "category": "Diplomacy & Leadership",
+    "icon": "🌍",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can negotiate international environmental protocols, establish science-based Net-Zero targets, and lead corporate ESG stewardship.",
+    "canDoSummary": "เจรจาข้อตกลงด้านสิ่งแวดล้อมสากล กำหนดเป้าหมายปล่อยคาร์บอนสุทธิเป็นศูนย์ (Net-Zero) และเป็นผู้นำด้านความยั่งยืน",
+    "toeicBand": "TOEIC 950 - 980",
+    "rewardExp": 290,
+    "rewardCoins": 200,
+    "npcName": "UN Climate Envoy Dr. Astrid",
+    "npcAvatar": "🐱‍🌾",
+    "bgTheme": "theme-office",
+    "description": "เข้าร่วมการประชุมสหประชาชาติว่าด้วยสภาพภูมิอากาศ เจรจาเป้าหมาย Net-Zero และระดมทุนกองทุนการเปลี่ยนผ่านสู่พลังงานสะอาด",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Envoy Astrid here. Developing nations require technological subsidies to decarbonize their infrastructure. How will your industry coalition contribute to the global climate fund?",
+        "npcVoiceText": "Envoy Astrid here. Developing nations require technological subsidies to decarbonize their infrastructure. How will your industry coalition contribute to the global climate fund?",
+        "contextTh": "ทูตสิ่งแวดล้อมแห่งสหประชาชาติถามว่ากลุ่มพันธมิตรอุตสาหกรรมของคุณจะสมทบทุนช่วยเหลือประเทศกำลังพัฒนาในการลดคาร์บอนอย่างไร",
+        "hint": "ประกาศความมุ่งมั่นที่เป็นรูปธรรม: การถ่ายทอดเทคโนโลยีสีเขียวโดยไม่คิดค่าลิขสิทธิ์ และการสมทบทุนจัดตั้งกองทุน Green Innovation Fund",
+        "targetPhrases": [
+          "Our coalition commits to an open-source patent waiver for solar-harvesting technologies and a dedicated fifty-million-dollar transition grant for emerging markets."
+        ],
+        "options": [
+          {
+            "text": "Our coalition commits to an open-source patent waiver for solar-harvesting technologies and a dedicated fifty-million-dollar transition grant for emerging markets.",
+            "isCorrect": true,
+            "feedback": "การแสดงภาวะผู้นำระดับโลกที่แท้จริง! มอบสิทธิบัตรแบบ Open-source และสนับสนุนเงินทุนช่วยเหลือประเทศกำลังพัฒนา"
+          },
+          {
+            "text": "Climate change is a hoax, we will burn as much coal as we want.",
+            "isCorrect": false,
+            "feedback": "ปฏิเสธหลักการทางวิทยาศาสตร์และทำลายเกียรติภูมิในเวทีโลก"
+          },
+          {
+            "text": "Developing countries should solve their own problems without our help.",
+            "isCorrect": false,
+            "feedback": "ขาดความรับผิดชอบต่อส่วนรวมในฐานะองค์กรสากล"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Open-source patent waiver",
+            "meaning": "การสละสิทธิ์การผูกขาดสิทธิบัตรเพื่อให้ใช้ประโยชน์ฟรี"
+          },
+          {
+            "word": "Decarbonize infrastructure",
+            "meaning": "การปรับเปลี่ยนโครงสร้างพื้นฐานเพื่อลดการปล่อยคาร์บอน"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "c_suite_retention",
+    "stageNumber": 37,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "Executive Succession & Retention",
+    "titleTh": "สรรหาและรักษาผู้บริหารระดับ C-Suite (Executive Retention)",
+    "category": "Diplomacy & Leadership",
+    "icon": "👑",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can negotiate high-stakes executive compensation packages, performance-vesting equity, and leadership governance charters.",
+    "canDoSummary": "เจรจาแพ็กเกจค่าตอบแทนผู้บริหารระดับสูง หุ้นแบบมีเงื่อนไขระยะยาว (Vesting Equity) และวางแผนสืบทอดตำแหน่งผู้นำ",
+    "toeicBand": "TOEIC 950 - 980",
+    "rewardExp": 290,
+    "rewardCoins": 200,
+    "npcName": "Managing Director Alistair",
+    "npcAvatar": "🐱‍💼",
+    "bgTheme": "theme-office",
+    "description": "เจรจากับผู้บริหารระดับสูงที่เป็นหัวใจของบริษัท เพื่อเสนอแผนผลประโยชน์ระยะยาวและแผนการสืบทอดตำแหน่งประธานเจ้าหน้าที่บริหาร (CEO)",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Alistair speaking. A competing multinational has offered me their global presidency with significant equity. What reason do I have to remain here?",
+        "npcVoiceText": "Alistair speaking. A competing multinational has offered me their global presidency with significant equity. What reason do I have to remain here?",
+        "contextTh": "กรรมการผู้จัดการแจ้งว่าได้รับข้อเสนอตำแหน่งประธานระดับโลกจากคู่แข่ง และถามว่ามีเหตุผลอะไรที่เขาควรอยู่ต่อที่นี่",
+        "hint": "นำเสนอวิสัยทัศน์การเติบโต แผนสืบทอดตำแหน่งสู่ CEO และแพ็กเกจหุ้นระยะยาวที่มีมูลค่าสูงกว่าในระยะ 5 ปี",
+        "targetPhrases": [
+          "Beyond our long-term equity vesting package, the Board has formally designated you as the primary successor for the Group CEO chair next year."
+        ],
+        "options": [
+          {
+            "text": "Beyond our long-term equity vesting package, the Board has formally designated you as the primary successor for the Group CEO chair next year.",
+            "isCorrect": true,
+            "feedback": "ข้อเสนอเจรจาที่ปฏิเสธไม่ได้! เสนอตำแหน่งประธานเจ้าหน้าที่บริหารสูงสุด (Group CEO) ควบคู่กับแพ็กเกจหุ้นระยะยาว"
+          },
+          {
+            "text": "If you want to leave, just leave today, we can replace you tomorrow.",
+            "isCorrect": false,
+            "feedback": "การท้าทายผู้บริหารระดับสูงจะทำให้บริษัทสูญเสียบุคลากรและองค์ความรู้สำคัญ"
+          },
+          {
+            "text": "I will beg you on my knees to stay.",
+            "isCorrect": false,
+            "feedback": "การอ้อนวอนสะท้อนความอ่อนแอและลดทอนอำนาจต่อรองขององค์กร"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Equity vesting package",
+            "meaning": "แพ็กเกจหุ้นที่ทยอยมอบให้ตามอายุงานและผลงาน"
+          },
+          {
+            "word": "Designated successor",
+            "meaning": "ผู้ที่ได้รับการแต่งตั้งให้เป็นผู้สืบทอดตำแหน่งอย่างเป็นทางการ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "geopolitical_risk",
+    "stageNumber": 38,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "Geopolitical Supply Chain Rerouting",
+    "titleTh": "วางแผนรับมือวิกฤตภูมิรัฐศาสตร์โลก (Geopolitical Crisis)",
+    "category": "Diplomacy & Leadership",
+    "icon": "🌐",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can lead strategic contingency planning amid international embargoes, trade sanctions, and critical supply chain disruptions.",
+    "canDoSummary": "วางแผนยุทธศาสตร์ฉุกเฉินรับมือการคว่ำบาตรทางการค้า ข้อพิพาททางภูมิรัฐศาสตร์ และปรับเส้นทางห่วงโซ่อุปทานระดับโลก",
+    "toeicBand": "TOEIC 960 - 990",
+    "rewardExp": 300,
+    "rewardCoins": 210,
+    "npcName": "Geopolitical Analyst Dr. Kincaid",
+    "npcAvatar": "🐱‍💻",
+    "bgTheme": "theme-office",
+    "description": "ประชุมรับมือสถานการณ์ฉุกเฉินระดับโลกเมื่อเกิดการปิดช่องแคบทางทะเลสำคัญ ต้องวางแผนเปลี่ยนเส้นทางเดินเรือและจัดหาวัตถุดิบทดแทน",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Dr. Kincaid reporting. Naval skirmishes in the primary maritime transit strait have halted 60% of our rare-earth raw material shipments. How do we secure continuity?",
+        "npcVoiceText": "Dr. Kincaid reporting. Naval skirmishes in the primary maritime transit strait have halted 60% of our rare-earth raw material shipments. How do we secure continuity?",
+        "contextTh": "นักวิเคราะห์ภูมิรัฐศาสตร์รายงานว่าความขัดแย้งทางทะเลทำให้การขนส่งแร่หายากหยุดชะงัก 60% และถามถึงแผนรักษาความต่อเนื่องของธุรกิจ",
+        "hint": "เปิดใช้งานยุทธศาสตร์ห่วงโซ่อุปทานแบบ Dual-Sourcing ย้ายโควตาไปยังซัพพลายเออร์สำรองในทวีปอื่น และสำรองแร่ในคลังสินค้าด่วน",
+        "targetPhrases": [
+          "We must immediately activate our alternate supply corridor across allied inland rail networks and draw upon our ninety-day strategic rare-earth stockpiles."
+        ],
+        "options": [
+          {
+            "text": "We must immediately activate our alternate supply corridor across allied inland rail networks and draw upon our ninety-day strategic rare-earth stockpiles.",
+            "isCorrect": true,
+            "feedback": "การตัดสินใจระดับจอมทัพยุทธศาสตร์! สลับไปใช้เส้นทางรถไฟบนบก (inland rail networks) และเบิกใช้คลังสำรองฉุกเฉิน 90 วัน"
+          },
+          {
+            "text": "There's nothing we can do, let the factories shut down forever.",
+            "isCorrect": false,
+            "feedback": "ยอมจำนนต่อวิกฤตจะทำให้บริษัทล้มละลาย"
+          },
+          {
+            "text": "Let's hire private pirates to fight our way through the strait.",
+            "isCorrect": false,
+            "feedback": "การใช้กำลังทหารผิดกฎหมายระหว่างประเทศอย่างร้ายแรง"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Alternate supply corridor",
+            "meaning": "ระเบียงเส้นทางจัดหาวัตถุดิบทดแทน"
+          },
+          {
+            "word": "Strategic stockpiles",
+            "meaning": "คลังทรัพยากรสำรองเชิงยุทธศาสตร์ฉุกเฉิน"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "live_investigative_qa",
+    "stageNumber": 39,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "Live Investigative Media Interview",
+    "titleTh": "ตอบคำถามสดสื่อมวลชนสืบสวนเชิงลึก (Investigative Media Q&A)",
+    "category": "Diplomacy & Leadership",
+    "icon": "📺",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can withstand aggressive prime-time television grilling, pivot masterfully from accusatory inquiries, and maintain composure under fire.",
+    "canDoSummary": "รับมือการสัมภาษณ์สดทางโทรทัศน์กับนักข่าวสายสืบสวนที่ซักไซ้อย่างดุเดือด พลิกประเด็นอย่างชาญฉลาด และคุมสติได้อย่างสง่างาม",
+    "toeicBand": "TOEIC 960 - 990",
+    "rewardExp": 320,
+    "rewardCoins": 220,
+    "npcName": "Chief Anchorwoman Brenda",
+    "npcAvatar": "🐱‍🎤",
+    "bgTheme": "theme-office",
+    "description": "นั่งถ่ายทอดสดในรายการข่าวไพรม์ไทม์ระดับชาติ ตอบคำถามนักข่าวสายสืบสวนชื่อดังที่พยายามซักฟอกเรื่องภาษีและจริยธรรมองค์กร",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Brenda here, live on national television. Documents leaked this morning allege that your European subsidiaries utilized offshore jurisdictions to minimize corporate tax. Is this tax avoidance, Mimi?",
+        "npcVoiceText": "Brenda here, live on national television. Documents leaked this morning allege that your European subsidiaries utilized offshore jurisdictions to minimize corporate tax. Is this tax avoidance, Mimi?",
+        "contextTh": "ผู้ประกาศข่าวชื่อดังยิงคำถามสดกล่าวหาว่าบริษัทใช้บริษัทย่อยในต่างแดนเพื่อหลบเลี่ยงภาษี และถามตรงๆ ว่านี่คือการหนีภาษีหรือไม่",
+        "hint": "ใช้เทคนิคการตอบแบบผู้นำ: ตอบอย่างสุขุม ยืนยันความโปร่งใส ปฏิบัติตามกฎหมายสากลอย่างเคร่งครัด และชี้แจงการลงทุนจริงในท้องถิ่น",
+        "targetPhrases": [
+          "Brenda, we operate with uncompromised integrity. All our international operations are fully compliant with OECD guidelines, and we contribute over two billion dollars annually in domestic infrastructure and wages."
+        ],
+        "options": [
+          {
+            "text": "Brenda, we operate with uncompromised integrity. All our international operations are fully compliant with OECD guidelines, and we contribute over two billion dollars annually in domestic infrastructure and wages.",
+            "isCorrect": true,
+            "feedback": "การตอบระดับปรมาจารย์แห่งการสัมภาษณ์สด! ยืนยันความโปร่งใสตามมาตรฐาน OECD และตอกย้ำเงินภาษีและค่าจ้างที่สร้างให้เศรษฐกิจกว่า 2 พันล้านเหรียญ"
+          },
+          {
+            "text": "Your TV network is fake news! Turn off the camera right now!",
+            "isCorrect": false,
+            "feedback": "การกล่าวหาว่า Fake News หรือหนีกล้องจะทำให้สังคมตราหน้าว่ามีความผิดทันที"
+          },
+          {
+            "text": "Yes we avoid tax, everybody does it so why can't we?",
+            "isCorrect": false,
+            "feedback": "การยอมรับการเลี่ยงภาษีกลางรายการสดจะทำให้ถูกดำเนินคดีอาญาทันที"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Uncompromised integrity",
+            "meaning": "ความซื่อสัตย์สุจริตที่ไม่มีการประนีประนอม"
+          },
+          {
+            "word": "OECD guidelines",
+            "meaning": "แนวปฏิบัติสากลขององค์การเพื่อความร่วมมือทางเศรษฐกิจและการพัฒนา"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "grand_consortium",
+    "stageNumber": 40,
+    "packNumber": 4,
+    "packId": "pack_executive",
+    "title": "The Global Multi-Nation Consortium",
+    "titleTh": "ลงนามพันธมิตรเศรษฐกิจหลายชาติ (Grand Global Consortium)",
+    "category": "Diplomacy & Leadership",
+    "icon": "📜⭐",
+    "difficulty": "Master",
+    "cefrLevel": "C1",
+    "cefrCanDo": "Can lead multi-national treaty ratifications, synthesize diverse cultural and legal doctrines, and finalize historic global accords.",
+    "canDoSummary": "เป็นผู้นำการลงนามสนธิสัญญาความร่วมมือทางเศรษฐกิจระดับโลก หลอมรวมความหลากหลายทางวัฒนธรรม และปิดฉากความสำเร็จสูงสุด",
+    "toeicBand": "TOEIC 980 - 990 (Perfect Native Mastery)",
+    "rewardExp": 500,
+    "rewardCoins": 350,
+    "npcName": "Chancellor Thorne (Consortium Chairman)",
+    "npcAvatar": "🐱‍👑",
+    "bgTheme": "theme-office",
+    "description": "ด่านสุดท้ายสูงสุดของ MeowQuest! ขึ้นสู่แท่นพิธีลงนามสนธิสัญญาพันธมิตรเศรษฐกิจและเทคโนโลยีข้ามชาติ 40 ชาติ ณ หอประชุมใหญ่",
+    "dialogues": [
+      {
+        "id": 1,
+        "npcText": "Chancellor Thorne presiding. Mimi, sixty nations and global industry leaders have convened in this grand chamber. As the designated architect of this historic charter, please present your concluding declaration.",
+        "npcVoiceText": "Chancellor Thorne presiding. Mimi, sixty nations and global industry leaders have convened in this grand chamber. As the designated architect of this historic charter, please present your concluding declaration.",
+        "contextTh": "ประธานใหญ่แห่งสภาความร่วมมือสากลขอให้คุณในฐานะสถาปนิกผู้ออกแบบสนธิสัญญากล่าวคำประกาศปิดการลงนามครั้งประวัติศาสตร์",
+        "hint": "ใช้ภาษาที่เปี่ยมด้วยวิสัยทัศน์สูงสุด สรุปความร่วมมือ ความเท่าเทียม และการสร้างประวัติศาสตร์ร่วมกันเพื่อคนรุ่นต่อไป",
+        "targetPhrases": [
+          "Honorable Chancellor, delegates, and visionaries: Today, we transcend borders to sign a binding covenant for equitable innovation, sustainable stewardship, and enduring global peace."
+        ],
+        "options": [
+          {
+            "text": "Honorable Chancellor, delegates, and visionaries: Today, we transcend borders to sign a binding covenant for equitable innovation, sustainable stewardship, and enduring global peace.",
+            "isCorrect": true,
+            "feedback": "สุนทรพจน์ระดับมหากาพย์แห่งประวัติศาสตร์โลก! 'Transcending borders for equitable innovation and enduring peace' สะท้อนคุณสมบัติผู้เชี่ยวชาญภาษาอังกฤษระดับ C1 สูงสุด"
+          },
+          {
+            "text": "Finally we are done! Hand over the money and let's go party!",
+            "isCorrect": false,
+            "feedback": "ทำลายความศักดิ์สิทธิ์ของพิธีการลงนามระดับโลก"
+          },
+          {
+            "text": "I sign this because I was forced to, I don't believe in any of this.",
+            "isCorrect": false,
+            "feedback": "ทรยศต่อความร่วมมือระดับนานาชาติ"
+          }
+        ],
+        "vocab": [
+          {
+            "word": "Equitable innovation",
+            "meaning": "นวัตกรรมที่มีความเท่าเทียมและทั่วถึง"
+          },
+          {
+            "word": "Enduring global peace",
+            "meaning": "สันติภาพอันยั่งยืนของมนุษยชาติ"
+          }
+        ]
+      }
+    ]
   }
 ];
 
-// Shop Items Catalog
 const SHOP_CATALOG = {
   breeds: [
     {
