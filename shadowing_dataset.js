@@ -810,8 +810,7 @@ const SHADOWING_DATASET = [
     targetWords: ["nine", "nimble", "noble", "kittens", "nibbled", "ninety", "nutty", "nuggets", "nicely"],
     expReward: 24,
     coinReward: 9
-  }
-];
+  },
 
   // ------------------------------------------------------------
   // เพิ่มเติม: ท่องเที่ยว โรงแรม และร้านอาหาร (Travel & Dining Plus)

@@ -4164,7 +4164,8 @@ window.addEventListener("DOMContentLoaded", () => {
         sendUserFreeTalkMessage(prompt);
       }
     };
-  
+  });
+
   // Wire Shadowing Practice Studio
   const btnHeroShadowing = document.getElementById("btn-hero-shadowing");
   if (btnHeroShadowing) {
@@ -4250,8 +4251,6 @@ window.addEventListener("DOMContentLoaded", () => {
   if (btnShadowNext) {
     btnShadowNext.addEventListener("click", () => navigateShadowing("next"));
   }
-
-});
 
 });
 
