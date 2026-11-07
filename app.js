@@ -65,6 +65,8 @@ const DEFAULT_STATE = {
   },
   completedScenarios: {},
   dailyQuests: [],
+  mistakes: [],
+  podcastCompletedToday: false,
   settings: {
     mode: "silent", // 'silent' (default) or 'voice'
     soundFx: true,
@@ -116,6 +118,7 @@ function loadGameState() {
       if (!parsed.furColor) parsed.furColor = "calico";
       if (!parsed.equipped) parsed.equipped = {};
       parsed.equipped.breed = parsed.furColor;
+      if (!parsed.mistakes) parsed.mistakes = [];
 
       return { ...DEFAULT_STATE, ...parsed };
     }
@@ -403,6 +406,116 @@ function calculateMatchAccuracy(spoken, targets) {
     if (finalScore > bestScore) bestScore = finalScore;
   }
   return Math.round(bestScore);
+}
+
+// ==============================================
+// PRONUNCIATION HEATMAP & WORD-LEVEL DRILL ENGINE
+// ==============================================
+function evaluateDetailedPronunciation(spoken, targetPhrase) {
+  if (!targetPhrase) return { overallAccuracy: 0, words: [] };
+  const clean = (s) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim();
+  const cleanSpokenWords = clean(spoken).split(/\s+/).filter(Boolean);
+  const targetWords = targetPhrase.trim().split(/\s+/).filter(Boolean);
+
+  const wordsAnalysis = targetWords.map((tWord) => {
+    const cleanTWord = clean(tWord);
+    // 1. Exact match
+    if (cleanSpokenWords.includes(cleanTWord)) {
+      return {
+        word: tWord,
+        status: "word-perfect",
+        label: "ออกเสียงชัดเป๊ะ ✨",
+        tip: "สำเนียงและเสียงพยัญชนะชัดเจนดีมาก!"
+      };
+    }
+    // 2. Near / Partial match
+    const nearMatch = cleanSpokenWords.find((sWord) => {
+      return (
+        sWord.startsWith(cleanTWord.slice(0, -1)) ||
+        cleanTWord.startsWith(sWord) ||
+        (cleanTWord.length > 4 && sWord.length > 4 && cleanTWord.slice(0, 4) === sWord.slice(0, 4))
+      );
+    });
+    if (nearMatch) {
+      return {
+        word: tWord,
+        status: "word-near",
+        label: "ใกล้เคียง ⚡",
+        tip: `จับเสียงได้เป็น "${nearMatch}" พยายามเน้นเสียงท้ายคำ (Ending sound) ให้ชัดอีกนิด`
+      };
+    }
+    // 3. Missing or substituted
+    return {
+      word: tWord,
+      status: "word-miss",
+      label: "ข้าม/ไม่ชัด ⚠️",
+      tip: "คำนี้อาจพูดเร็วเกินไปหรือหลุดเสียงหลัก ลองกดปุ่มฟังเสียงช้า (0.75x) แล้วฝึกเฉพาะคำนี้ดูนะ"
+    };
+  });
+
+  const perfectCount = wordsAnalysis.filter((w) => w.status === "word-perfect").length;
+  const nearCount = wordsAnalysis.filter((w) => w.status === "word-near").length;
+  const overallAccuracy = Math.round(((perfectCount * 1.0 + nearCount * 0.6) / targetWords.length) * 100);
+
+  return {
+    overallAccuracy: Math.min(100, overallAccuracy),
+    words: wordsAnalysis
+  };
+}
+
+function renderPronunciationHeatmap(spoken, targetPhrase) {
+  const box = document.getElementById("pronunciation-heatmap-box");
+  const tray = document.getElementById("heatmap-chips-tray");
+  const drillCard = document.getElementById("heatmap-drill-card");
+  if (!box || !tray) return;
+
+  const result = evaluateDetailedPronunciation(spoken, targetPhrase);
+  tray.innerHTML = "";
+  box.style.display = "block";
+  if (drillCard) drillCard.style.display = "none";
+
+  result.words.forEach((item) => {
+    const chip = document.createElement("div");
+    chip.className = `heatmap-chip ${item.status}`;
+    const icon = item.status === "word-perfect" ? "✓" : item.status === "word-near" ? "~" : "!";
+    chip.innerHTML = `<span>${item.word}</span> <small style="opacity:0.75; font-size:0.72rem;">${icon}</small>`;
+
+    chip.onclick = () => {
+      triggerHaptic(15);
+      if (drillCard) {
+        drillCard.style.display = "flex";
+        drillCard.innerHTML = `
+          <div class="drill-word-info">
+            <span class="drill-word-main">"${item.word}"</span>
+            <span class="drill-word-tip">${item.label}: ${item.tip}</span>
+          </div>
+          <div class="drill-actions-wrap">
+            <button id="btn-drill-slow-audio" class="btn-drill-listen" title="ฟังเสียงช้า 0.75x">🔊 ฟังช้า (0.75x)</button>
+          </div>
+        `;
+        const btnSlow = document.getElementById("btn-drill-slow-audio");
+        if (btnSlow) {
+          btnSlow.onclick = () => {
+            sfx.click();
+            speakSlowWord(item.word);
+          };
+        }
+      }
+      speakSlowWord(item.word);
+    };
+
+    tray.appendChild(chip);
+  });
+}
+
+function speakSlowWord(word) {
+  if (!window.speechSynthesis) return;
+  const clean = word.replace(/[^a-zA-Z]/g, "");
+  const utter = new SpeechSynthesisUtterance(clean);
+  utter.lang = "en-US";
+  utter.rate = 0.72; // Slow rate for clear phonetic articulation
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
 }
 
 // Mobile Haptic Touch Vibration Helper
@@ -1216,6 +1329,7 @@ function updateHUD() {
   // Render Adopted Breeds List & Squad Living Lounge
   renderAdoptedBreeds();
   renderCatSquadLounge();
+  updateMistakesHUD();
 
   const currentHouse = SHOP_CATALOG.houses.find((h) => h.id === gameState.equipped.house);
   const houseDecor = document.getElementById("house-decor-icon");
@@ -1383,12 +1497,20 @@ function renderQuietOptions(turn) {
         }, 1800);
 
         stageScore += 100;
-        showTurnFeedback(true, "ตอบถูกต้อง! ยอดเยี่ยมมาก 🎉", opt.feedback, turn.vocab);
+        showTurnFeedback(true, "ตอบถูกต้อง! ยอดเยี่ยมมาก 🎉", opt.feedback, turn.vocab, turn, null);
       } else {
         btn.classList.add("selected-wrong");
         sfx.wrong();
         stageScore = Math.max(0, stageScore - 20);
-        showTurnFeedback(false, "ยังไม่ถูกต้องเท่าไหร่ ลองดูคำแนะนำด้านล่างนะ 🐾", opt.feedback, turn.vocab);
+        const correctOpt = turn.options.find((o) => o.isCorrect);
+        recordPlayerMistake(
+          "scenario",
+          turn.contextTh || "Scenario Turn",
+          opt.text,
+          correctOpt ? correctOpt.text : (turn.targetPhrases ? turn.targetPhrases[0] : ""),
+          opt.feedback
+        );
+        showTurnFeedback(false, "ยังไม่ถูกต้องเท่าไหร่ ลองดูคำแนะนำด้านล่างนะ 🐾", opt.feedback, turn.vocab, turn, null);
       }
       document.getElementById("btn-next-turn").classList.add("show");
     };
@@ -1435,17 +1557,28 @@ function setupVoiceModeTurn(turn) {
           showTurnFeedback(
             true,
             `ออกเสียงได้ยอดเยี่ยมมาก! (${accuracy}%) 🎉`,
-            `ประโยคที่คุณพูดใกล้เคียงกับเจ้าของภาษา: "${turn.targetPhrases[0]}"`,
-            turn.vocab
+            `ประโยคที่คุณพูด: "${transcript}"`,
+            turn.vocab,
+            turn,
+            transcript
           );
           checkDailyQuestVoiceSuccess();
         } else {
           sfx.wrong();
+          recordPlayerMistake(
+            "voice",
+            turn.contextTh || "Scenario Voice",
+            transcript,
+            turn.targetPhrases[0],
+            `ออกเสียงได้ ${accuracy}% แตะที่คำสีแดงใน Heatmap ด้านล่างเพื่อฟังเสียงช้าและซ้อมเฉพาะคำนะเหมียว`
+          );
           showTurnFeedback(
             false,
             `ลองใหม่อีกนิด! (${accuracy}%)`,
-            `ลองฟังเสียงตัวอย่างและพูดตามประโยคนี้: "${turn.targetPhrases[0]}"`,
-            turn.vocab
+            `แตะที่คำเพื่อฟังเสียงช้า (0.75x) และซ้อมพูดเฉพาะคำได้นะเหมียว:`,
+            turn.vocab,
+            turn,
+            transcript
           );
         }
         document.getElementById("btn-next-turn").classList.add("show");
@@ -1459,13 +1592,27 @@ function setupVoiceModeTurn(turn) {
   };
 }
 
-function showTurnFeedback(isSuccess, title, desc, vocabList) {
+function showTurnFeedback(isSuccess, title, desc, vocabList, turn = null, spoken = null) {
   const feedbackCard = document.getElementById("turn-feedback-card");
   feedbackCard.style.display = "block";
   feedbackCard.className = "turn-feedback-card " + (isSuccess ? "show" : "show wrong");
 
   document.getElementById("feedback-title").textContent = title;
   document.getElementById("feedback-detail").textContent = desc;
+
+  // Render Pronunciation Heatmap if spoken exists
+  const currentTurn = turn || (currentScenario ? currentScenario.dialogues[currentDialogueIdx] : null);
+  if (spoken && currentTurn && currentTurn.targetPhrases) {
+    renderPronunciationHeatmap(spoken, currentTurn.targetPhrases[0]);
+  } else {
+    const box = document.getElementById("pronunciation-heatmap-box");
+    if (box) box.style.display = "none";
+  }
+
+  // Render Nuance Drawer if currentTurn exists
+  if (currentTurn) {
+    renderNuanceDrawer(currentTurn);
+  }
 
   const vocabTray = document.getElementById("turn-vocab-tray");
   vocabTray.innerHTML = "";
@@ -1477,6 +1624,334 @@ function showTurnFeedback(isSuccess, title, desc, vocabList) {
       vocabTray.appendChild(pill);
     });
   }
+}
+
+// ==============================================
+// NUANCE & POLITENESS COACH ENGINE
+// ==============================================
+function renderNuanceDrawer(turn) {
+  const drawer = document.getElementById("nuance-coach-drawer");
+  const panel = document.getElementById("nuance-content-panel");
+  const arrow = document.getElementById("nuance-arrow");
+  const toggleBtn = document.getElementById("btn-toggle-nuance");
+  if (!drawer || !panel) return;
+
+  drawer.style.display = "block";
+  panel.style.display = "none";
+  if (arrow) arrow.classList.remove("open");
+
+  const phrases = turn.targetPhrases || [turn.options.find((o) => o.isCorrect)?.text || ""];
+  const correctOpt = turn.options.find((o) => o.isCorrect);
+  const baseSentence = correctOpt ? correctOpt.text : phrases[0];
+
+  const tiers = [
+    {
+      level: "Casual",
+      badgeClass: "casual",
+      label: "เป็นกันเอง / คุยสบายๆ",
+      text: phrases[0] || baseSentence,
+      note: "เหมาะสำหรับคุยกับเพื่อน หรือการสื่อสารทั่วไปในชีวิตประจำวัน"
+    },
+    {
+      level: "Polite",
+      badgeClass: "polite",
+      label: "สุภาพ / ทางการขึ้น",
+      text: phrases[1] || phrases[0] || baseSentence,
+      note: "เหมาะกับการสั่งอาหาร โรงแรม หรือคุยกับคนไม่คุ้นเคยอย่างให้เกียรติ"
+    },
+    {
+      level: "Executive",
+      badgeClass: "exec",
+      label: "มืออาชีพ / ในที่ทำงาน",
+      text: phrases[2] || phrases[1] || phrases[0] || baseSentence,
+      note: "เหมาะสำหรับประชุมงาน ติดต่องาน หรือเจรจาธุรกิจอย่างเป็นทางการ"
+    }
+  ];
+
+  panel.innerHTML = tiers.map((t) => `
+    <div class="nuance-tier-item">
+      <div class="nuance-tier-content">
+        <div class="nuance-tier-header">
+          <span class="nuance-tier-badge ${t.badgeClass}">${t.level}</span>
+          <small style="color:#64748b; font-weight:700;">${t.label}</small>
+        </div>
+        <div class="nuance-tier-text">"${t.text}"</div>
+        <div class="nuance-tier-th">💡 ${t.note}</div>
+      </div>
+      <button class="btn-nuance-speak" data-text="${t.text.replace(/"/g, '&quot;')}" title="ฟังเสียงสำเนียงนี้">🔊</button>
+    </div>
+  `).join("");
+
+  panel.querySelectorAll(".btn-nuance-speak").forEach((btn) => {
+    btn.onclick = () => {
+      sfx.click();
+      speech.speak(btn.dataset.text);
+    };
+  });
+
+  if (toggleBtn) {
+    toggleBtn.onclick = () => {
+      const isOpen = panel.style.display === "flex";
+      panel.style.display = isOpen ? "none" : "flex";
+      if (arrow) arrow.classList.toggle("open", !isOpen);
+    };
+  }
+}
+
+// ==============================================
+// SMART MISTAKE VAULT (SPACED REPETITION SYSTEM)
+// ==============================================
+function recordPlayerMistake(type, questionText, playerAnswer, correctAnswer, explanation) {
+  if (!gameState.mistakes) gameState.mistakes = [];
+
+  const existingIdx = gameState.mistakes.findIndex((m) => m.questionText === questionText);
+  if (existingIdx >= 0) {
+    gameState.mistakes[existingIdx].repeats = (gameState.mistakes[existingIdx].repeats || 1) + 1;
+    gameState.mistakes[existingIdx].lastDate = getTodayDateString();
+  } else {
+    gameState.mistakes.push({
+      id: "mistake_" + Date.now(),
+      type: type,
+      questionText: questionText,
+      playerAnswer: playerAnswer,
+      correctAnswer: correctAnswer,
+      explanation: explanation,
+      repeats: 1,
+      lastDate: getTodayDateString()
+    });
+  }
+  saveGameState();
+  updateMistakesHUD();
+}
+
+function updateMistakesHUD() {
+  const pill = document.getElementById("btn-hud-mistakes");
+  const countEl = document.getElementById("hud-mistakes-count");
+  if (!pill) return;
+
+  const count = (gameState.mistakes || []).length;
+  if (count > 0) {
+    pill.style.display = "flex";
+    if (countEl) countEl.textContent = `${count} จุดพลาด`;
+  } else {
+    pill.style.display = "none";
+  }
+}
+
+function openMistakesModal() {
+  const modal = document.getElementById("mistakes-modal-overlay");
+  const container = document.getElementById("mistakes-list-container");
+  if (!modal || !container) return;
+
+  sfx.click();
+  const mistakes = gameState.mistakes || [];
+
+  if (mistakes.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 30px; color: #16a34a;">
+        <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
+        <h4>ยอดเยี่ยมมาก! ไม่มีจุดพลาดค้างอยู่เลย</h4>
+        <p style="font-size: 0.85rem; color: #64748b;">คุณฝึกบทสนทนาและคำศัพท์ได้อย่างแม่นยำ ลุยด่านต่อไปเพื่อเก็บ EXP ได้เลย!</p>
+      </div>
+    `;
+  } else {
+    container.innerHTML = mistakes.map((m, idx) => `
+      <div class="mistake-item-card">
+        <div class="mistake-item-header">
+          <span>⚠️ จุดที่เคยตอบผิด (${m.type === "scenario" ? "ด่านสนทนา" : "คำศัพท์"})</span>
+          <span>ทบทวนซ้ำ: ${m.repeats} ครั้ง</span>
+        </div>
+        <div class="mistake-question-text">บริบท: ${m.questionText}</div>
+        <div class="mistake-comparison">
+          <div class="mistake-wrong-row">❌ คำตอบที่เลือก: "${m.playerAnswer}"</div>
+          <div class="mistake-correct-row">✅ คำตอบที่ถูกต้อง: "${m.correctAnswer}"</div>
+        </div>
+        <div style="font-size:0.8rem; color:#475569;">💡 <strong>คำแนะนำ:</strong> ${m.explanation}</div>
+        <div class="mistake-actions-row">
+          <button class="btn-mistake-drill" data-idx="${idx}">🎯 เข้าใจแล้ว &amp; ลบออกจากสมุด (+15 EXP)</button>
+        </div>
+      </div>
+    `).join("");
+
+    container.querySelectorAll(".btn-mistake-drill").forEach((btn) => {
+      btn.onclick = () => {
+        const idx = parseInt(btn.dataset.idx, 10);
+        resolveMistake(idx);
+      };
+    });
+  }
+
+  modal.classList.add("show");
+}
+
+function resolveMistake(index) {
+  if (!gameState.mistakes || !gameState.mistakes[index]) return;
+  sfx.levelUp();
+  triggerHaptic([30, 40, 30]);
+  gameState.mistakes.splice(index, 1);
+  saveGameState();
+  gainExpAndCoins(15, 5);
+  showToast("ทบทวนจุดพลาดสำเร็จ! ได้รับ +15 EXP และ 5 🪙", "🎉");
+  openMistakesModal(); // re-render
+  updateMistakesHUD();
+}
+
+function closeMistakesModal() {
+  const modal = document.getElementById("mistakes-modal-overlay");
+  if (modal) modal.classList.remove("show");
+}
+
+// ==============================================
+// 60-SECOND DAILY LISTENING PODCAST ENGINE
+// ==============================================
+const PODCAST_EPISODES = [
+  {
+    id: "ep1",
+    title: "EP 1: Morning Coffee & Productivity ☕",
+    titleTh: "ตอนที่ 1: กาแฟยามเช้าและการเริ่มงานอย่างสดใส",
+    lines: [
+      { en: "Good morning! Starting the day with a hot cup of coffee always boosts my productivity.", th: "อรุณสวัสดิ์! การเริ่มวันใหม่ด้วยกาแฟร้อนสักแก้วช่วยเพิ่มประสิทธิภาพการทำงานได้เสมอ" },
+      { en: "Before checking emails, I like to list my top three priorities for today.", th: "ก่อนเช็กอีเมล ฉันชอบเขียนลิสต์ 3 สิ่งสำคัญที่สุดที่ต้องทำในวันนี้" },
+      { en: "Taking short five-minute breaks helps keep your mind sharp and creative.", th: "การพักสั้นๆ 5 นาทีช่วยให้สมองเฉียบคมและมีความคิดสร้างสรรค์" },
+      { en: "Let us make today a productive and joyful day together!", th: "มาร่วมทำให้วันนี้เป็นวันที่ productive และมีความสุขไปด้วยกันนะ!" }
+    ]
+  },
+  {
+    id: "ep2",
+    title: "EP 2: Airport Gate Announcement ✈️",
+    titleTh: "ตอนที่ 2: ประกาศขึ้นเครื่องที่สนามบินนานาชาติ",
+    lines: [
+      { en: "Ladies and gentlemen, flight SQ 318 to London is now ready for boarding.", th: "ท่านสุภาพบุรุษและสุภาพสตรี เที่ยวบิน SQ 318 สู่ลอนดอน พร้อมเปิดให้ขึ้นเครื่องแล้วค่ะ" },
+      { en: "Please have your boarding pass and passport ready for inspection at Gate B12.", th: "กรุณาเตรียมบัตรโดยสารและหนังสือเดินทางให้พร้อมสำหรับการตรวจที่ประตู B12" },
+      { en: "Passengers traveling with small children are invited to board first.", th: "ขอเชิญผู้โดยสารที่เดินทางพร้อมเด็กเล็กขึ้นเครื่องก่อนได้เลยค่ะ" },
+      { en: "Thank you for choosing SkyPurr Airlines. Have a pleasant flight!", th: "ขอบคุณที่เลือกเดินทางกับสายการบิน SkyPurr ขอให้เดินทางโดยสวัสดิภาพค่ะ!" }
+    ]
+  },
+  {
+    id: "ep3",
+    title: "EP 3: Executive Meeting Kickoff 💼",
+    titleTh: "ตอนที่ 3: เปิดการประชุมผู้บริหารและการวางกลยุทธ์",
+    lines: [
+      { en: "Thank you all for being here on time. Let us begin our quarterly review.", th: "ขอบคุณทุกคนที่มาตรงเวลาครับ ขอเริ่มการประชุมทบทวนผลงานประจำไตรมาสกันเลย" },
+      { en: "Our primary objective today is to streamline operations and explore new market opportunities.", th: "เป้าหมายหลักของเราในวันนี้คือการปรับลดขั้นตอนการทำงานและมองหาโอกาสใหม่ในตลาด" },
+      { en: "I would like to invite each team lead to briefly present their key achievements.", th: "ผมขอเชิญหัวหน้าทีมแต่ละฝ่ายนำเสนอความสำเร็จสำคัญสั้นๆ ได้เลยครับ" },
+      { en: "Let us maintain an open dialogue and collaborate for optimal outcomes.", th: "ขอให้ทุกคนเปิดใจพูดคุยและร่วมมือกันเพื่อผลลัพธ์ที่ดีที่สุดครับ" }
+    ]
+  }
+];
+
+let currentPodcastEp = PODCAST_EPISODES[0];
+let podcastPlaying = false;
+let podcastLineIdx = 0;
+let podcastRate = 1.0;
+
+function openPodcastModal() {
+  const modal = document.getElementById("podcast-modal-overlay");
+  const select = document.getElementById("podcast-episode-select");
+  if (!modal || !select) return;
+
+  sfx.click();
+  select.innerHTML = PODCAST_EPISODES.map((ep) => `
+    <option value="${ep.id}" ${ep.id === currentPodcastEp.id ? "selected" : ""}>${ep.title}</option>
+  `).join("");
+
+  select.onchange = (e) => {
+    stopPodcast();
+    currentPodcastEp = PODCAST_EPISODES.find((ep) => ep.id === e.target.value) || PODCAST_EPISODES[0];
+    renderPodcastScript();
+  };
+
+  renderPodcastScript();
+  modal.classList.add("show");
+}
+
+function closePodcastModal() {
+  stopPodcast();
+  const modal = document.getElementById("podcast-modal-overlay");
+  if (modal) modal.classList.remove("show");
+}
+
+function renderPodcastScript() {
+  const container = document.getElementById("podcast-script-container");
+  if (!container) return;
+  container.innerHTML = currentPodcastEp.lines.map((l, idx) => `
+    <div class="podcast-script-line ${idx === podcastLineIdx && podcastPlaying ? "active" : ""}" data-idx="${idx}">
+      <div class="en">${l.en}</div>
+      <div class="th">${l.th}</div>
+    </div>
+  `).join("");
+
+  container.querySelectorAll(".podcast-script-line").forEach((el) => {
+    el.onclick = () => {
+      podcastLineIdx = parseInt(el.dataset.idx, 10);
+      playPodcastCurrentLine();
+    };
+  });
+}
+
+function togglePodcastPlayback() {
+  if (podcastPlaying) {
+    stopPodcast();
+  } else {
+    podcastPlaying = true;
+    const playIcon = document.getElementById("podcast-play-icon");
+    const playLabel = document.getElementById("podcast-play-label");
+    if (playIcon) playIcon.textContent = "⏸️";
+    if (playLabel) playLabel.textContent = "หยุดชั่วคราว";
+    playPodcastCurrentLine();
+  }
+}
+
+function stopPodcast() {
+  podcastPlaying = false;
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  const icon = document.getElementById("podcast-play-icon");
+  const label = document.getElementById("podcast-play-label");
+  if (icon) icon.textContent = "▶️";
+  if (label) label.textContent = "เล่นเสียง";
+}
+
+function playPodcastCurrentLine() {
+  if (!podcastPlaying || !window.speechSynthesis) return;
+  const lines = currentPodcastEp.lines;
+
+  if (podcastLineIdx >= lines.length) {
+    stopPodcast();
+    podcastLineIdx = 0;
+    const claimBtn = document.getElementById("btn-claim-podcast-reward");
+    if (claimBtn) claimBtn.style.display = "block";
+    sfx.levelUp();
+    showToast("ฟังวิทยุแมว 1 นาทีจบแล้ว! กดรับรางวัลได้เลย 🎧🎉", "✨");
+    return;
+  }
+
+  renderPodcastScript();
+  const progressFill = document.getElementById("podcast-progress-fill");
+  if (progressFill) {
+    progressFill.style.width = `${((podcastLineIdx + 1) / lines.length) * 100}%`;
+  }
+
+  const line = lines[podcastLineIdx];
+  const utter = new SpeechSynthesisUtterance(line.en);
+  utter.lang = "en-US";
+  utter.rate = podcastRate;
+
+  utter.onend = () => {
+    if (podcastPlaying) {
+      podcastLineIdx++;
+      setTimeout(playPodcastCurrentLine, 600);
+    }
+  };
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utter);
+}
+
+function togglePodcastSpeed() {
+  podcastRate = podcastRate === 1.0 ? 0.8 : 1.0;
+  const label = document.getElementById("podcast-speed-label");
+  if (label) label.textContent = `⚡ ${podcastRate.toFixed(1)}x`;
+  sfx.click();
 }
 
 function nextTurn() {
@@ -2755,6 +3230,36 @@ window.addEventListener("DOMContentLoaded", () => {
       }
       showToast("แก้วกาแฟตกโต๊ะดังเพล้ง! เจ้าเหมียวทำหน้าไม่รู้ไม่ชี้ ☕😹", "💥");
       setTimeout(() => coffeeCup.classList.remove("tipped"), 1800);
+    };
+  }
+
+  // Smart Mistake Vault Modals
+  const btnHudMistakes = document.getElementById("btn-hud-mistakes");
+  if (btnHudMistakes) btnHudMistakes.onclick = openMistakesModal;
+
+  const btnCloseMistakes = document.getElementById("btn-close-mistakes-modal");
+  if (btnCloseMistakes) btnCloseMistakes.onclick = closeMistakesModal;
+
+  // 60-Second Daily Listening Podcast Modals & Player
+  const btnHudPodcast = document.getElementById("btn-hud-podcast");
+  if (btnHudPodcast) btnHudPodcast.onclick = openPodcastModal;
+
+  const btnClosePodcast = document.getElementById("btn-close-podcast-modal");
+  if (btnClosePodcast) btnClosePodcast.onclick = closePodcastModal;
+
+  const btnPodcastPlay = document.getElementById("btn-podcast-play");
+  if (btnPodcastPlay) btnPodcastPlay.onclick = togglePodcastPlayback;
+
+  const btnPodcastSpeed = document.getElementById("btn-podcast-speed");
+  if (btnPodcastSpeed) btnPodcastSpeed.onclick = togglePodcastSpeed;
+
+  const btnClaimPodcast = document.getElementById("btn-claim-podcast-reward");
+  if (btnClaimPodcast) {
+    btnClaimPodcast.onclick = () => {
+      gainExpAndCoins(20, 10);
+      showToast("รับรางวัลฟังวิทยุแมวสำเร็จ! +20 EXP และ +10 🪙", "🎉");
+      btnClaimPodcast.style.display = "none";
+      closePodcastModal();
     };
   }
 

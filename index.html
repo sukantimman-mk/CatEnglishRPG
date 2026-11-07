@@ -80,6 +80,18 @@
           <span>🔥</span>
           <span id="hud-streak-text">1 วัน</span>
         </div>
+
+        <!-- Smart Mistake Vault Quick Pill (Spaced Repetition) -->
+        <button id="btn-hud-mistakes" class="hud-item hud-mistakes-pill" style="display:none;" title="สมุดจดจุดพลาดของน้องแมว (ทบทวน 2 นาที)">
+          <span>📖</span>
+          <span id="hud-mistakes-count">0 จุดพลาด</span>
+        </button>
+
+        <!-- 60-Second Daily Listening Podcast Button -->
+        <button id="btn-hud-podcast" class="hud-item hud-podcast-pill" title="วิทยุแมวเล่าเรื่องสั้น 1 นาที (ฝึกการฟัง + EXP)">
+          <span>🎧</span>
+          <span class="hud-podcast-text">วิทยุ 1 นาที</span>
+        </button>
       </div>
     </div>
   </header>
@@ -505,6 +517,32 @@
           <div id="turn-feedback-card" class="turn-feedback-card">
             <h4 id="feedback-title">ผลการตอบ</h4>
             <p id="feedback-detail">คำอธิบาย</p>
+
+            <!-- Real-Time Pronunciation Heatmap -->
+            <div id="pronunciation-heatmap-box" class="pronunciation-heatmap-box" style="display:none;">
+              <div class="heatmap-header">
+                <span>🎯 <strong>Pronunciation Heatmap (สแกนเสียงรายคำ):</strong></span>
+                <span class="heatmap-tip-hint">แตะที่คำเพื่อฟังเสียงช้า 0.75x &amp; เคล็ดลับ</span>
+              </div>
+              <div id="heatmap-chips-tray" class="heatmap-chips-tray">
+                <!-- Word chips injected dynamically -->
+              </div>
+              <div id="heatmap-drill-card" class="heatmap-drill-card" style="display:none;">
+                <button id="btn-drill-slow-audio" class="btn-drill-listen" style="display:none;" title="ฟังเสียงช้า 0.75x">🔊 ฟังช้า (0.75x)</button>
+              </div>
+            </div>
+
+            <!-- Nuance & Politeness Coach Drawer -->
+            <div id="nuance-coach-drawer" class="nuance-coach-drawer" style="display:none;">
+              <button id="btn-toggle-nuance" class="btn-toggle-nuance" type="button">
+                <span>👔 แมวติวเตอร์แนะวิธีพูดให้โปรขึ้น (3 Levels of Nuance)</span>
+                <span id="nuance-arrow" class="nuance-arrow">▾</span>
+              </button>
+              <div id="nuance-content-panel" class="nuance-content-panel" style="display:none;">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
             <div id="turn-vocab-tray" class="vocab-tray"></div>
           </div>
 
@@ -767,6 +805,75 @@
       </div>
 
       <button id="btn-claim-victory" class="btn-victory-claim">รับรางวัล & กลับสู่แผนที่</button>
+    </div>
+  </div>
+
+  <!-- SMART MISTAKES VAULT MODAL (Spaced Repetition) -->
+  <div id="mistakes-modal-overlay" class="modal-overlay">
+    <div class="modal-card mistakes-card">
+      <div class="modal-header-row">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">📖</span>
+          <div>
+            <h3>สมุดจดจุดพลาดของน้องแมว (Mistake Vault)</h3>
+            <p>ทบทวนคำศัพท์และประโยคที่คุณเคยตอบผิดสั้นๆ 2 นาที เพื่อปิดจุดอ่อนให้เป็น 0!</p>
+          </div>
+        </div>
+        <button id="btn-close-mistakes-modal" class="btn-modal-close" title="ปิด">✕</button>
+      </div>
+      <div id="mistakes-list-container" class="mistakes-list-container">
+        <!-- Dynamic list of mistake items -->
+      </div>
+      <div class="modal-footer-actions">
+        <span class="mistakes-summary-note" id="mistakes-summary-text">ทบทวนถูกต้อง รับทันที +15 EXP ต่อข้อ!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 60-SECOND DAILY PODCAST MODAL (Comprehensible Input) -->
+  <div id="podcast-modal-overlay" class="modal-overlay">
+    <div class="modal-card podcast-card">
+      <div class="modal-header-row">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">🎧</span>
+          <div>
+            <h3>วิทยุแมวเล่าเรื่อง 1 นาที (60-Sec Daily Listening)</h3>
+            <p>ฝึกหูให้คุ้นชินสำเนียงธรรมชาติ ฟังวันละ 1 คลิป รับทันที +20 EXP และเหรียญทอง!</p>
+          </div>
+        </div>
+        <button id="btn-close-podcast-modal" class="btn-modal-close" title="ปิด">✕</button>
+      </div>
+      
+      <div class="podcast-episode-selector">
+        <select id="podcast-episode-select" class="podcast-select">
+          <!-- Populated by JS -->
+        </select>
+      </div>
+
+      <div class="podcast-player-box">
+        <div class="podcast-controls-row">
+          <button id="btn-podcast-play" class="btn-podcast-ctrl play" title="เล่น / หยุดชั่วคราว">
+            <span id="podcast-play-icon">▶️</span> <span id="podcast-play-label">เล่นเสียง</span>
+          </button>
+          <button id="btn-podcast-speed" class="btn-podcast-ctrl speed" title="ปรับความเร็วเสียง">
+            <span id="podcast-speed-label">⚡ 1.0x</span>
+          </button>
+        </div>
+        <div class="podcast-progress-bar">
+          <div id="podcast-progress-fill" class="podcast-progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Line-by-Line Karaoke Script -->
+      <div id="podcast-script-container" class="podcast-script-container">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="modal-footer-actions">
+        <button id="btn-claim-podcast-reward" class="btn-claim-podcast-reward" style="display:none;">
+          🎉 รับรางวัลฟังจบ (+20 EXP &amp; +10 🪙)
+        </button>
+      </div>
     </div>
   </div>
 
