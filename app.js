@@ -1097,7 +1097,7 @@ function triggerCatPet(e) {
     refreshCatAvatars();
   }, 1600);
 
-  // Show cute thought bubble on both Wardrobe and Hero Card
+  // Show cute thought bubble on both Wardrobe, Hero Card and Squad Lounge
   const randomPhrase = CAT_PET_PHRASES[Math.floor(Math.random() * CAT_PET_PHRASES.length)];
   const bubbleWardrobe = document.getElementById("cat-pet-speech-bubble");
   if (bubbleWardrobe) {
@@ -1109,6 +1109,10 @@ function triggerCatPet(e) {
     bubbleHero.dataset.petting = "true";
     bubbleHero.textContent = randomPhrase;
     bubbleHero.style.display = "block";
+  }
+  const squadBubble = document.getElementById("squad-bubble-text");
+  if (squadBubble) {
+    squadBubble.textContent = `[${gameState.name}] "${randomPhrase}"`;
   }
   clearTimeout(triggerCatPet._bubbleTimeout);
   triggerCatPet._bubbleTimeout = setTimeout(() => {
@@ -1338,6 +1342,38 @@ function updateHUD() {
   if (cefrHudText && typeof calculateCefrCompetencyMetrics === "function") {
     const cefrData = calculateCefrCompetencyMetrics();
     cefrHudText.textContent = `CEFR ${cefrData.cefrKey}`;
+  }
+
+  // Update Daily Habit Quick Play Card (Motivating continuous learning)
+  const quickPlayTitle = document.getElementById("daily-quick-play-title");
+  const quickPlayDesc = document.getElementById("daily-quick-play-desc");
+  if (quickPlayTitle && typeof SCENARIOS !== "undefined") {
+    const nextScenario = SCENARIOS.find((sc) => !gameState.completedScenarios[sc.id]) || SCENARIOS[0];
+    if (nextScenario) {
+      quickPlayTitle.textContent = `${nextScenario.titleTh} (${nextScenario.title}) • CEFR ${nextScenario.cefrLevel || "A2"}`;
+      if (quickPlayDesc) {
+        quickPlayDesc.textContent = nextScenario.canDoSummary
+          ? `Can-Do: ${nextScenario.canDoSummary} • รับทันที +${nextScenario.rewardExp} EXP & +${nextScenario.rewardCoins} PawCoins`
+          : `ฝึกสนทนาบทนี้เพื่อรักษาไฟความขยัน • รับทันที +${nextScenario.rewardExp} EXP & +${nextScenario.rewardCoins} PawCoins!`;
+      }
+    }
+  }
+
+  // Update 7-Day Habit Streak Visual Dots
+  const streakDotsContainer = document.getElementById("habit-streak-dots");
+  if (streakDotsContainer) {
+    const currentStreak = gameState.streak || 1;
+    let dotsHtml = "";
+    for (let day = 1; day <= 7; day++) {
+      const isPastOrToday = day <= currentStreak;
+      const isRewardDay = day === 7;
+      if (isRewardDay) {
+        dotsHtml += `<span class="streak-dot reward ${isPastOrToday ? "active" : ""}" title="วันที่ 7: กล่องสุ่มรางวัลใหญ่!">🎁 Day 7</span>`;
+      } else {
+        dotsHtml += `<span class="streak-dot ${isPastOrToday ? "active" : ""}" title="วันที่ ${day}: ${isPastOrToday ? "สำเร็จแล้ว ✓" : "รอการฝึก"}">🔥 Day ${day}</span>`;
+      }
+    }
+    streakDotsContainer.innerHTML = dotsHtml;
   }
 
   // Render Adopted Breeds List & Squad Living Lounge
@@ -3160,6 +3196,21 @@ window.addEventListener("DOMContentLoaded", () => {
       sfx.meow();
       switchView("view-adventure");
       renderAdventureGrid();
+    };
+  }
+
+  // Button: Quick Play Stage (Instant Daily Learning Launcher)
+  const btnQuickPlay = document.getElementById("btn-quick-play-stage");
+  if (btnQuickPlay) {
+    btnQuickPlay.onclick = () => {
+      sfx.click();
+      triggerHaptic(25);
+      if (typeof SCENARIOS !== "undefined" && SCENARIOS.length > 0) {
+        const nextScenario = SCENARIOS.find((sc) => !gameState.completedScenarios[sc.id]) || SCENARIOS[0];
+        if (nextScenario) {
+          startScenario(nextScenario.id);
+        }
+      }
     };
   }
 

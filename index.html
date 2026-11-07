@@ -123,21 +123,6 @@
     <button class="nav-tab" data-view="view-settings">⚙️ ตั้งค่า &amp; เซฟเกม</button>
   </nav>
 
-  <!-- Mode Bar: Silent Mode vs Voice Mode -->
-  <div class="mode-bar">
-    <div class="mode-toggle-group">
-      <button id="btn-mode-silent" class="mode-btn active" title="เลือกคำตอบ/พิมพ์ เหมาะสำหรับสถานที่เงียบ">
-        <span>🤫</span> โหมดเงียบ (ค่าเริ่มต้น)
-      </button>
-      <button id="btn-mode-voice" class="mode-btn" title="พูดออกเสียงผ่านไมโครโฟนเพื่อรับโบนัส EXP">
-        <span>🎙️</span> โหมดเสียงพูด (Optional + โบนัส EXP)
-      </button>
-    </div>
-    <div class="mode-status-info">
-      <span>💡 ในโหมดเงียบคุณยังคงฝึกคิดประโยคได้เต็มที่ และสลับไปใช้ไมค์ได้ทุกเมื่อที่พร้อม</span>
-    </div>
-  </div>
-
   <!-- Main Content Area -->
   <main class="main-content">
 
@@ -147,111 +132,90 @@
     <section id="view-adventure" class="view-section active">
 
       <!-- ==============================================
-           HERO: CAT COMPANION SANCTUARY & WORKPLACE PROGRESSION
-           ศูนย์ดูแลคู่หูแมวเหมียว & ฉายาคนทำงาน (เด่นตระหง่านหน้าแรก)
+           UNIFIED CAT SANCTUARY & COMPANION VILLA
+           วิลล่าแก๊งแมวเหมียว & ศูนย์ดูแลคู่หูภาษาอังกฤษ (รวมคู่หู & แก๊งแมวเป็นหนึ่งเดียว สวยงาม ไม่ซ้ำซ้อน)
            ============================================== -->
-      <div class="cat-companion-hero-card">
-        <!-- Left Side: Interactive Habitat with Decor & Avatar -->
-        <div class="cat-hero-left" id="hero-cat-living-space" title="แตะหรือคลิกเพื่อลูบหัว/เกาคางน้องแมว!">
-          <div class="cat-pet-hint-pill">🐾 แตะลูบหัวน้องแมวได้นะ!</div>
-          <div id="hero-cat-speech-bubble" class="cat-hero-speech-bubble">
-            "สวัสดีฮะน้านุด! วันนี้ Mimi เป็นเด็กฝึกงานตาดำๆ สู้ชีวิตไปด้วยกันนะเหมียว~ 🍼"
-          </div>
-          <div id="hero-house-decor-icon" class="hero-house-bg-decor">⛺</div>
-          <div id="hero-cat-avatar-render" class="hero-cat-avatar cat-avatar-interactive">
-            <!-- Dynamic Cat SVG -->
-          </div>
-        </div>
+      <div class="cat-sanctuary-unified-card" id="cat-squad-lounge">
+        <!-- Top Section: Active Hero Cat & Workplace Rank & Quick Care -->
+        <div class="sanctuary-hero-header" id="hero-cat-living-space" title="แตะหรือคลิกเพื่อลูบหัว/เกาคางน้องแมว!">
+          <!-- Left: Hero Cat Identity & Avatar Badge -->
+          <div class="sanctuary-hero-left">
+            <div class="sanctuary-avatar-badge-wrap">
+              <div id="hero-cat-avatar-render" class="sanctuary-hero-avatar cat-avatar-interactive" title="แตะเพื่อลูบหัวคู่หู!">
+                <!-- Dynamic Cat SVG -->
+              </div>
+              <span class="sanctuary-avatar-star" title="คู่หูหลักประจำทีม">⭐</span>
+              <div id="hero-house-decor-icon" class="hero-house-bg-decor" style="display:none;">⛺</div>
+            </div>
 
-        <!-- Right Side: Profile, Workplace Rank & Tamagotchi Care -->
-        <div class="cat-hero-right">
-          <div class="cat-hero-header-row">
-            <div class="cat-hero-name-block">
-              <span class="cat-hero-tag">🐱 คู่หูภาษาอังกฤษของคุณ</span>
-              <h2 class="cat-hero-name">
+            <div class="sanctuary-hero-identity">
+              <div class="sanctuary-tag-row">
+                <span class="cat-hero-tag">🐱 คู่หูหลัก</span>
+                <span class="cat-species-pill" id="hero-cat-breed-badge">ส้มจอมซน 🍊</span>
+                <span id="hero-cat-streak-badge" class="hero-streak-pill">🔥 1 วัน</span>
+              </div>
+              <h2 class="sanctuary-hero-name">
                 <span id="hero-cat-name-display">Mimi</span>
                 <button id="btn-hero-edit-name" class="btn-hero-rename" title="คลิกเพื่อเปลี่ยนชื่อน้องแมว">✏️</button>
-                <span class="cat-species-pill" id="hero-cat-breed-badge">ส้มจอมซน 🍊</span>
               </h2>
-            </div>
-            <!-- Big Office Title Pill with glowing gradient -->
-            <div class="cat-office-rank-box">
-              <span class="office-rank-label">ฉายาคนทำงานปัจจุบัน (สะสม EXP):</span>
               <div id="hero-cat-title-badge" class="hero-cat-title-badge">
                 เด็กฝึกงานตาดำๆ 🍼 (Intern Kitten)
               </div>
             </div>
           </div>
 
-          <!-- Career Ladder Progress to Next Title -->
-          <div class="career-milestone-bar">
-            <div class="career-milestone-info">
-              <span class="career-step-current">📍 ตำแหน่งปัจจุบัน: <strong>Lv. <span id="hero-cat-current-lvl">1</span></strong></span>
-              <span class="career-step-next">🎯 เลเวลถัดไป: <strong id="hero-cat-next-title">พนักงานทดลองงานสายลุ้น 🐣 (Lv. 2)</strong></span>
+          <!-- Right: Career Progression & Tamagotchi Care -->
+          <div class="sanctuary-hero-right">
+            <!-- Career Level & Next Title Bar -->
+            <div class="career-milestone-bar">
+              <div class="career-milestone-info">
+                <span class="career-step-current">📍 ปัจจุบัน: <strong>Lv. <span id="hero-cat-current-lvl">1</span></strong></span>
+                <span class="career-step-next">🎯 ถัดไป: <strong id="hero-cat-next-title">พนักงานทดลองงานสายลุ้น 🐣 (Lv. 2)</strong></span>
+              </div>
+              <div class="career-progress-track">
+                <div id="hero-career-progress-fill" class="career-progress-fill" style="width: 20%;"></div>
+              </div>
+              <div class="career-progress-subtext">
+                <span>สะสมอีก <strong id="hero-career-exp-needed" style="color:var(--primary);">100 EXP</strong> เพื่อเลื่อนขั้น!</span>
+              </div>
             </div>
-            <div class="career-progress-track">
-              <div id="hero-career-progress-fill" class="career-progress-fill" style="width: 20%;"></div>
-            </div>
-            <div class="career-progress-subtext">
-              <span>สะสมอีก <strong id="hero-career-exp-needed" style="color:var(--primary);">100 EXP</strong> เพื่อเลื่อนขั้นตำแหน่งใหม่!</span>
-              <span id="hero-cat-streak-badge">🔥 ไฟขยัน 1 วัน</span>
-            </div>
-          </div>
 
-          <!-- Tamagotchi Pet Care Stats -->
-          <div class="pet-care-stats-row">
-            <div class="pet-care-stat">
-              <div class="pet-care-label">
-                <span>💖 ความสุขของน้องแมว</span>
-                <span id="hero-cat-happiness-val">100%</span>
+            <!-- Pet Care Status & Action Buttons -->
+            <div class="sanctuary-care-row">
+              <div class="pet-care-stat-mini" title="ระดับความสุข">
+                <span class="stat-mini-label">💖 สุข</span>
+                <span id="hero-cat-happiness-val" class="stat-mini-val">100%</span>
+                <div class="pet-care-bar-bg mini"><div id="hero-cat-happiness-fill" class="pet-care-bar-fill happiness" style="width: 100%;"></div></div>
               </div>
-              <div class="pet-care-bar-bg">
-                <div id="hero-cat-happiness-fill" class="pet-care-bar-fill happiness" style="width: 100%;"></div>
+              <div class="pet-care-stat-mini" title="ระดับความอิ่ม">
+                <span class="stat-mini-label">🐟 อิ่ม</span>
+                <span id="hero-cat-hunger-val" class="stat-mini-val">90%</span>
+                <div class="pet-care-bar-bg mini"><div id="hero-cat-hunger-fill" class="pet-care-bar-fill hunger" style="width: 90%;"></div></div>
               </div>
-            </div>
-            <div class="pet-care-stat">
-              <div class="pet-care-label">
-                <span>🐟 ความอิ่มท้อง</span>
-                <span id="hero-cat-hunger-val">90%</span>
-              </div>
-              <div class="pet-care-bar-bg">
-                <div id="hero-cat-hunger-fill" class="pet-care-bar-fill hunger" style="width: 90%;"></div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Quick Action Care Buttons -->
-          <div class="pet-care-actions-row">
-            <button id="btn-hero-pet-cat" class="btn-pet-action btn-pet-love" title="ลูบหัวหรือเกาคางน้องแมว (+สุข)">
-              <span>🐾</span> ลูบหัวน้องแมว
-            </button>
-            <button id="btn-hero-feed-cat" class="btn-pet-action btn-pet-feed" title="ป้อนปลาทู/ขนมแมวเลีย (ฟรีวันละ 1 ครั้ง หรือใช้ 5 PawCoins ได้บัฟ +15 EXP)">
-              <span>🐟</span> ป้อนขนม (+15 EXP)
-            </button>
-            <button id="btn-hero-goto-wardrobe" class="btn-pet-action btn-pet-dress" title="ไปห้องแต่งตัว & ตกแต่งบ้าน">
-              <span>👗</span> แต่งตัว &amp; ห้องนอน
-            </button>
-            <button id="btn-hero-goto-vocab" class="btn-pet-action btn-pet-vocab" title="พาน้องแมวไปติวการ์ดศัพท์โทอิค/โทเฟล">
-              <span>📚</span> ติวการ์ดศัพท์
-            </button>
-            <button id="btn-hero-open-cefr" class="btn-pet-action btn-pet-cefr" title="ดูผลประเมินสมรรถนะ CEFR และออกใบประกาศนียบัตร">
-              <span>🏅</span> ประเมิน CEFR &amp; ใบประกาศ
-            </button>
+              <div class="sanctuary-care-btns">
+                <button id="btn-hero-pet-cat" class="btn-pet-action btn-pet-love" title="ลูบหัวหรือเกาคางน้องแมว (+สุข)">
+                  <span>🐾</span> ลูบหัว
+                </button>
+                <button id="btn-hero-feed-cat" class="btn-pet-action btn-pet-feed" title="ป้อนปลาทู/ขนมแมวเลีย (รับฟรีวันละ 1 ครั้ง หรือ 5 PawCoins ได้บัฟ +15 EXP)">
+                  <span>🐟</span> ป้อนขนม (+15 EXP)
+                </button>
+                <!-- Retained hidden references to preserve all JS bindings -->
+                <button id="btn-hero-goto-wardrobe" style="display:none;"></button>
+                <button id="btn-hero-goto-vocab" style="display:none;"></button>
+                <button id="btn-hero-open-cefr" style="display:none;"></button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- ==============================================
-           CAT SQUAD PLAYGROUND & LIVING LOUNGE
-           ห้องนั่งเล่น & สวนสนุกรวมแก๊งแมวเหมียว (แสดงแมวทุกตัวที่รับเลี้ยงไว้ เล่นด้วยกันแบบแมวจริง)
-           ============================================== -->
-      <div class="cat-squad-lounge-card" id="cat-squad-lounge">
-        <div class="squad-lounge-header">
+        <!-- Middle Section: Squad Lounge Header & Interactive Toy Toolbar -->
+        <div class="squad-lounge-header-unified">
           <div class="squad-title-group">
             <span class="squad-icon-badge">🐾</span>
             <div>
               <h3>ห้องนั่งเล่นรวมแก๊งแมวเหมียว (Cat Squad Living Lounge)</h3>
-              <p>แมวทุกตัวที่คุณรับเลี้ยงจะมารวมตัวและใช้ชีวิตอยู่ที่นี่! วิ่งซูมมี่ นวดขนมปัง ยัดตัวลงกล่อง และทำวีรกรรมกวนๆ สไตล์แมวจริง</p>
+              <p>แมวทุกตัวที่คุณรับเลี้ยงจะรวมตัวกันอยู่ที่นี่ วิ่งเล่น ยัดตัวลงกล่อง และโต้ตอบสไตล์แมวจริง!</p>
             </div>
           </div>
           <div class="squad-counter-badge" id="squad-cat-count-badge">
@@ -263,19 +227,19 @@
         <div class="squad-toy-toolbar">
           <span class="toy-toolbar-label">🎮 ของเล่นแก๊งแมว:</span>
           <button id="btn-toy-laser" class="btn-squad-toy" title="จุดเลเซอร์แดง - แมวทุกตัวจะหันขวับตามและวิ่งไล่ตะครุบ!">
-            🔴 จุดเลเซอร์แดง
+            🔴 เลเซอร์แดง
           </button>
           <button id="btn-toy-catnip" class="btn-squad-toy" title="แคทนิปปาร์ตี้ - โปรยสมุนไพรฟิน น้องๆ ทุกตัวจะกลิ้งหงายพุงเคลิ้ม!">
             🌿 แคทนิปปาร์ตี้
           </button>
           <button id="btn-toy-feather" class="btn-squad-toy" title="สะบัดไม้ขนนก - ล่อให้น้องแมวกระโดดตะปบ!">
-            🪶 ไม้ตกแมวขนนก
+            🪶 ไม้ตกแมว
           </button>
           <button id="btn-toy-box" class="btn-squad-toy" title="โยนกล่องพัสดุใบใหม่ - แย่งกันยัดตัวลงกล่องแคบๆ!">
-            📦 โยนกล่องพัสดุ
+            📦 กล่องพัสดุ
           </button>
           <button id="btn-squad-toggle-guests" class="btn-squad-toy" title="ชวนเพื่อนแมวทุกสายพันธุ์มาวิ่งเล่นด้วยกันในห้อง!">
-            👥 รวมพลแก๊งแมว (ทุกพันธุ์)
+            👥 รวมพลแก๊งแมว
           </button>
         </div>
 
@@ -312,17 +276,41 @@
             <!-- Rendered dynamically by app.js -->
           </div>
 
-          <!-- Global Interactive Squad Speech Bubble -->
+          <!-- Interactive Speech Bubble -->
           <div id="squad-speech-bubble" class="squad-speech-bubble">
             <span id="squad-bubble-text">"เหมียววว... ยินดีต้อนรับสู่ห้องนั่งเล่นรวมแก๊งแมวฮะมนุษย์! 🐾"</span>
             <button id="btn-squad-bubble-equip" class="btn-squad-bubble-equip" style="display:none;">⭐ ตั้งเป็นคู่หูหลัก</button>
           </div>
+          <!-- Hero speech bubble (kept for compatibility) -->
+          <div id="hero-cat-speech-bubble" style="display:none;"></div>
         </div>
 
         <div class="squad-lounge-footer">
-          <span class="squad-tip-text">💡 <strong>เคล็ดลับทาสแมว:</strong> แตะที่น้องแมวแต่ละตัวในห้องเพื่อฟังเสียง ดูท่าทางกวนๆ หรือกดสลับเป็นคู่หูหลักได้ทันที!</span>
+          <span class="squad-tip-text">💡 <strong>เคล็ดลับทาสแมว:</strong> แตะที่น้องแมวแต่ละตัวในห้องเพื่อฟังเสียง หรือกดสลับเป็นคู่หูหลักได้ทันที!</span>
           <button id="btn-squad-adopt-more" class="btn-squad-adopt" title="ไปรับเลี้ยงสายพันธุ์อื่นเพิ่มที่ร้านค้า">
             🛍️ รับเลี้ยงสายพันธุ์แท้เพิ่มเข้าแก๊ง
+          </button>
+        </div>
+      </div>
+
+      <!-- ==============================================
+           DAILY HABIT LOOP & QUICK ADVENTURE LAUNCHER
+           แผงภารกิจด่วนประจำวัน (สร้างแรงบันดาลใจ • เล่นแล้วติด อยากเล่นทุกวัน)
+           ============================================== -->
+      <div class="daily-habit-quick-card">
+        <div class="habit-quick-left">
+          <div class="habit-quick-badge">🔥 ภารกิจประจำวันนี้</div>
+          <h3 class="habit-quick-title" id="daily-quick-play-title">สั่งกาแฟยามเช้า (Ordering Coffee) • CEFR A1</h3>
+          <p class="habit-quick-desc" id="daily-quick-play-desc">
+            รักษา Streak ขยันต่อเนื่อง • ฝึกวันละ 3 นาที พัฒนาทักษะการพูดภาษาอังกฤษสู่ระดับสากล!
+          </p>
+          <div class="habit-streak-visual" id="habit-streak-dots">
+            <!-- 7-Day streak dots rendered dynamically by app.js -->
+          </div>
+        </div>
+        <div class="habit-quick-right">
+          <button id="btn-quick-play-stage" class="btn-quick-play-pulse" title="กดเพื่อเริ่มด่านถัดไปทันที">
+            <span>🚀 ลุยบทสนทนาทันที</span>
           </button>
         </div>
       </div>
@@ -473,6 +461,21 @@
       <!-- Turn Progress Bar -->
       <div class="stage-turn-progress-wrap">
         <div id="stage-turn-progress-fill" class="stage-turn-progress-fill" style="width: 25%;"></div>
+      </div>
+
+      <!-- Mode Bar: Silent Mode vs Voice Mode (Contextual during Dialogue) -->
+      <div class="mode-bar stage-mode-bar">
+        <div class="mode-toggle-group">
+          <button id="btn-mode-silent" class="mode-btn active" title="เลือกคำตอบ/พิมพ์ เหมาะสำหรับสถานที่เงียบ">
+            <span>🤫</span> โหมดเงียบ
+          </button>
+          <button id="btn-mode-voice" class="mode-btn" title="พูดออกเสียงผ่านไมโครโฟนเพื่อรับโบนัส EXP">
+            <span>🎙️</span> โหมดเสียงพูด (+EXP โบนัส)
+          </button>
+        </div>
+        <div class="mode-status-info">
+          <span>💡 สลับโหมดเงียบ / พูดผ่านไมค์ได้ตลอดเวลา</span>
+        </div>
       </div>
 
       <!-- Visual Stage Background -->
