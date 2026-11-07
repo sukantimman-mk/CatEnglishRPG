@@ -531,6 +531,7 @@ function triggerHaptic(pattern = 20) {
 // 4. DYNAMIC SVG CAT AVATAR GENERATOR (ENHANCED FOR CAT LOVERS)
 // ==========================================
 function renderCatSvg(equipped = gameState.equipped, fur = gameState.furColor || "calico", isHappy = isCatHappyTemp) {
+  if (!equipped) equipped = {};
   // Fur palette definitions
   let bodyFill = "#ffffff";
   let bodyStroke = "#d7ccc8";
@@ -2149,22 +2150,47 @@ const SQUAD_CAT_BEHAVIORS = {
   }
 };
 
+let squadGuestMode = false;
+
+function toggleSquadGuestMode() {
+  squadGuestMode = !squadGuestMode;
+  sfx.click();
+  triggerHaptic(25);
+  renderCatSquadLounge();
+  const btn = document.getElementById("btn-squad-toggle-guests");
+  if (btn) {
+    btn.innerHTML = squadGuestMode 
+      ? "🏠 แสดงเฉพาะแมวที่รับเลี้ยง" 
+      : "👥 รวมพลแก๊งแมว (ทุกพันธุ์)";
+  }
+  if (squadGuestMode) {
+    showToast("ชวนเพื่อนแมวทุกสายพันธุ์มาวิ่งเล่นด้วยกันในห้องแล้ว! 🐱🐾", "✨");
+  } else {
+    showToast("กลับมาแสดงเฉพาะแมวที่รับเลี้ยงในครอบครัว 🏠🐾", "🐱");
+  }
+}
+
 function renderCatSquadLounge() {
   const container = document.getElementById("squad-cats-container");
   if (!container) return;
   container.innerHTML = "";
 
-  const ownedBreedIds = gameState.inventory.breeds || ["calico"];
   const allBreeds = SHOP_CATALOG.breeds || [];
+  const ownedBreedIds = gameState.inventory.breeds || ["calico"];
+  const displayBreedIds = squadGuestMode ? allBreeds.map((b) => b.id) : ownedBreedIds;
   const currentEquippedBreed = gameState.equipped.breed || gameState.furColor || "calico";
 
   // Update squad count badge
   const countBadge = document.getElementById("squad-cat-count-badge");
   if (countBadge) {
-    countBadge.innerHTML = `🐱 สมาชิกแก๊ง: <strong>${ownedBreedIds.length} / ${allBreeds.length}</strong> ตัว`;
+    if (squadGuestMode) {
+      countBadge.innerHTML = `🐱 สมาชิกแก๊ง: <strong>${allBreeds.length} / ${allBreeds.length}</strong> ตัว (รวมพลครบทุกสายพันธุ์!)`;
+    } else {
+      countBadge.innerHTML = `🐱 สมาชิกแก๊ง: <strong>${ownedBreedIds.length} / ${allBreeds.length}</strong> ตัว`;
+    }
   }
 
-  ownedBreedIds.forEach((breedId, idx) => {
+  displayBreedIds.forEach((breedId, idx) => {
     const breedInfo = allBreeds.find((b) => b.id === breedId) || { id: breedId, nameTh: breedId, icon: "🐱" };
     const behavior = SQUAD_CAT_BEHAVIORS[breedId] || SQUAD_CAT_BEHAVIORS.calico;
     const isMain = breedId === currentEquippedBreed;
@@ -2177,8 +2203,8 @@ function renderCatSquadLounge() {
     Object.assign(catItem.style, behavior.spot);
     catItem.style.zIndex = 10 + idx;
 
-    // Render SVG for that breed (passing null for equipment so natural breed coats shine!)
-    const catSvg = renderCatSvg(null, breedId, false);
+    // Render SVG for that breed (passing empty object for equipment so natural breed coats shine!)
+    const catSvg = renderCatSvg({}, breedId, false);
 
     catItem.innerHTML = `
       <div class="squad-cat-svg-wrap">
@@ -2353,6 +2379,178 @@ function triggerToyBox() {
     bubbleText.textContent = `"กล่องพัสดุใบใหม่มาส่งแล้ว! ใครเร็วใครได้ ก้นอ้วนแค่ไหนก็ยัดลงได้แน่นอน 📦😹"`;
   }
   showToast("โยนกล่องพัสดุลงกลางห้อง! น้องๆ รีบวิ่งกรูเข้ามายัดตัวลงกล่องทันที 📦🐾", "😹");
+}
+
+// ==============================================
+// SQUAD AUTONOMOUS PLAY & REAL CAT BEHAVIORS
+// ระบบวิ่งเล่นอิสระ & ปฏิสัมพันธ์ของแก๊งแมวเหมียว
+// ==============================================
+let squadAutonomousTimer = null;
+
+function startSquadAutonomousPlay() {
+  if (squadAutonomousTimer) clearInterval(squadAutonomousTimer);
+
+  squadAutonomousTimer = setInterval(() => {
+    triggerSpontaneousCatPlay();
+  }, 6500);
+}
+
+function triggerSpontaneousCatPlay() {
+  const container = document.getElementById("squad-cats-container");
+  if (!container) return;
+  const cats = Array.from(container.querySelectorAll(".squad-cat-item"));
+  if (cats.length === 0) return;
+
+  // Pick a random cat
+  const cat = cats[Math.floor(Math.random() * cats.length)];
+  const breedId = cat.dataset.breed;
+  const allBreeds = SHOP_CATALOG.breeds || [];
+  const breedInfo = allBreeds.find((b) => b.id === breedId) || { nameTh: "น้องแมว" };
+  const bubbleText = document.getElementById("squad-bubble-text");
+
+  const randAction = Math.random();
+
+  if (randAction < 0.35) {
+    // 1. Trot / Roam to a new spot in the living room
+    const targetLeft = Math.floor(Math.random() * 65 + 12) + "%";
+    const targetBottom = Math.floor(Math.random() * 55 + 45) + "px";
+
+    cat.classList.add("cat-trotting");
+    cat.style.left = targetLeft;
+    cat.style.bottom = targetBottom;
+
+    setTimeout(() => {
+      cat.classList.remove("cat-trotting");
+    }, 1300);
+
+    if (bubbleText && Math.random() < 0.3) {
+      bubbleText.textContent = `[${breedInfo.nameTh}] "เดินสำรวจพรมมุมใหม่... ปลอดภัยหายห่วง นั่งชิลต่อได้เหมียว! 🐾"`;
+    }
+  } else if (randAction < 0.55) {
+    // 2. Zoomies! Fast sprint across the room
+    cat.classList.add("action-zoomies");
+    if (bubbleText) {
+      bubbleText.textContent = `[${breedInfo.nameTh}] "ซูมมี่เข้าสิง! วิ่ง 4x100 สปีดเสือดาว ดริฟต์เลี้ยวโค้งพรมห้องนั่งเล่น! ⚡😹"`;
+    }
+    setTimeout(() => {
+      cat.classList.remove("action-zoomies");
+    }, 3200);
+  } else if (randAction < 0.70) {
+    // 3. Cat Stretch (บิดขี้เกียจ โก่งตัว)
+    cat.classList.add("cat-stretching");
+    if (bubbleText && Math.random() < 0.4) {
+      bubbleText.textContent = `[${breedInfo.nameTh}] "บิดขี้เกียจ โก่งหลังยืดเส้นยืดสาย... สบายตัวจังเลยนุด~ 🧘🐾"`;
+    }
+    setTimeout(() => {
+      cat.classList.remove("cat-stretching");
+    }, 1600);
+  } else if (randAction < 0.85) {
+    // 4. Butt Wiggle Pounce (หมอบส่ายก้น ตะครุบ)
+    cat.classList.add("cat-pouncing");
+    if (bubbleText) {
+      bubbleText.textContent = `[${breedInfo.nameTh}] "ล็อกเป้าหมายฝุ่นลอยในอากาศ... หมอบต่ำส่ายก้น 3 2 1 ตะครุบ! 🎯🐾"`;
+    }
+    setTimeout(() => {
+      cat.classList.remove("cat-pouncing");
+    }, 600);
+  } else {
+    // 5. Trot to food dish for a snack
+    cat.classList.add("cat-trotting");
+    cat.style.left = "72%";
+    cat.style.bottom = "52px";
+
+    setTimeout(() => {
+      cat.classList.remove("cat-trotting");
+      cat.classList.add("cat-eating");
+      if (bubbleText) {
+        bubbleText.textContent = `[${breedInfo.nameTh}] "แวะมาดมชามอาหาร เลียเศษปลาทูรองท้องสักหน่อย งั่มๆ 🥣🐟"`;
+      }
+      setTimeout(() => {
+        cat.classList.remove("cat-eating");
+      }, 2500);
+    }, 1200);
+  }
+}
+
+function triggerSquadYarnBall() {
+  const yarn = document.getElementById("squad-yarn-ball");
+  if (!yarn) return;
+
+  sfx.click();
+  triggerHaptic([25, 35]);
+  yarn.classList.add("rolling");
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `"ลูกบอลไหมพรมกลิ้งหมุนติ้วๆ! น้องแมววิ่งกรูเข้ามาแย่งตะปบกันใหญ่ 🧶🐾"`;
+  }
+  showToast("เล่นลูกบอลไหมพรมกับแก๊งเหมียว! 🧶😸", "✨");
+
+  // Pick nearest or random cat to pounce the yarn
+  const container = document.getElementById("squad-cats-container");
+  if (container) {
+    const cats = Array.from(container.querySelectorAll(".squad-cat-item"));
+    if (cats.length > 0) {
+      const luckyCat = cats[Math.floor(Math.random() * cats.length)];
+      luckyCat.classList.add("cat-trotting");
+      luckyCat.style.left = "56%";
+      luckyCat.style.bottom = "50px";
+
+      setTimeout(() => {
+        luckyCat.classList.remove("cat-trotting");
+        luckyCat.classList.add("cat-pouncing");
+        sfx.meow();
+        setTimeout(() => luckyCat.classList.remove("cat-pouncing"), 600);
+      }, 800);
+    }
+  }
+
+  setTimeout(() => {
+    yarn.classList.remove("rolling");
+  }, 1300);
+}
+
+function triggerSquadFoodDish() {
+  const dish = document.getElementById("squad-food-dish");
+  if (!dish) return;
+
+  sfx.purr();
+  triggerHaptic([30, 45, 30]);
+
+  // Dish animation
+  dish.style.transform = "scale(1.3) rotate(-12deg)";
+  setTimeout(() => dish.style.transform = "", 400);
+
+  // Boost happiness +5 & hunger +10
+  gameState.happiness = Math.min(100, (gameState.happiness || 100) + 5);
+  gameState.hunger = Math.min(100, (gameState.hunger || 90) + 10);
+  saveGameState();
+
+  const bubbleText = document.getElementById("squad-bubble-text");
+  if (bubbleText) {
+    bubbleText.textContent = `"เติมนมสดและปลาทูแสนอร่อยลงชาม! น้องๆ รี่เข้ามารุมกินด้วยความฟิน 🐟🥣 Purrrr~"`;
+  }
+  showToast("เสิร์ฟปลาทูและนมสดให้แก๊งแมว! (+5 ความสุข, +10 ความอิ่ม) 🐟❤️", "🥣");
+
+  // Cats trot near the dish and eat
+  const container = document.getElementById("squad-cats-container");
+  if (container) {
+    const cats = Array.from(container.querySelectorAll(".squad-cat-item"));
+    cats.forEach((cat, idx) => {
+      setTimeout(() => {
+        cat.classList.add("cat-trotting");
+        const targetLeft = (66 + (idx % 3) * 6) + "%";
+        cat.style.left = targetLeft;
+        cat.style.bottom = (46 + (idx % 2) * 12) + "px";
+
+        setTimeout(() => {
+          cat.classList.remove("cat-trotting");
+          cat.classList.add("cat-eating");
+          setTimeout(() => cat.classList.remove("cat-eating"), 2800);
+        }, 800);
+      }, idx * 150);
+    });
+  }
 }
 
 function renderWardrobeInventory(category = currentInvCategory) {
@@ -3263,6 +3461,42 @@ window.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  // Squad Lounge Interactive Props (Yarn Ball, Food Dish, Guests Toggle)
+  const squadYarn = document.getElementById("squad-yarn-ball");
+  if (squadYarn) squadYarn.onclick = triggerSquadYarnBall;
+
+  const squadFood = document.getElementById("squad-food-dish");
+  if (squadFood) squadFood.onclick = triggerSquadFoodDish;
+
+  const btnSquadGuests = document.getElementById("btn-squad-toggle-guests");
+  if (btnSquadGuests) btnSquadGuests.onclick = toggleSquadGuestMode;
+
+  // PWA Modal & Install Action Listeners
+  const btnHudInstall = document.getElementById("btn-hud-install-pwa");
+  if (btnHudInstall) btnHudInstall.onclick = openPwaInstallModal;
+
+  const btnSettingsInstall = document.getElementById("btn-install-pwa-settings");
+  if (btnSettingsInstall) btnSettingsInstall.onclick = openPwaInstallModal;
+
+  const btnClosePwa = document.getElementById("btn-close-pwa-modal");
+  if (btnClosePwa) btnClosePwa.onclick = closePwaInstallModal;
+
+  const btnDoInstall = document.getElementById("btn-pwa-do-install");
+  if (btnDoInstall) btnDoInstall.onclick = triggerPwaInstall;
+
+  const pwaOverlay = document.getElementById("pwa-install-modal-overlay");
+  if (pwaOverlay) {
+    pwaOverlay.onclick = (e) => {
+      if (e.target === pwaOverlay) closePwaInstallModal();
+    };
+  }
+
+  // Register PWA Service Worker
+  registerServiceWorker();
+
+  // Start Autonomous Real Cat Playground Loop
+  startSquadAutonomousPlay();
+
   // Initial renders
   updateHUD();
   refreshCatAvatars();
@@ -3272,3 +3506,95 @@ window.addEventListener("DOMContentLoaded", () => {
   renderDailyQuests();
   initVocabDeck("toeic");
 });
+
+// ==============================================
+// 13. PWA (PROGRESSIVE WEB APP) & SERVICE WORKER ENGINE
+// ==============================================
+let deferredInstallPrompt = null;
+
+function registerServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then((reg) => {
+          console.log("MeowQuest ServiceWorker registered successfully:", reg.scope);
+        })
+        .catch((err) => {
+          console.warn("MeowQuest ServiceWorker registration failed:", err);
+        });
+    });
+  }
+}
+
+// Intercept browser install prompt
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+
+  const hudBtn = document.getElementById("btn-hud-install-pwa");
+  if (hudBtn && !isAppStandalone()) {
+    hudBtn.style.display = "inline-flex";
+  }
+});
+
+// App installed successfully
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  const hudBtn = document.getElementById("btn-hud-install-pwa");
+  if (hudBtn) hudBtn.style.display = "none";
+  showToast("ติดตั้ง MeowQuest บนหน้าจอมือถือสำเร็จแล้ว! 📱🎉", "✨");
+});
+
+function isIosDevice() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+function isAppStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function openPwaInstallModal() {
+  const modal = document.getElementById("pwa-install-modal-overlay");
+  if (!modal) return;
+  sfx.click();
+  triggerHaptic(20);
+
+  const nativeSec = document.getElementById("pwa-native-install-section");
+  const iosSec = document.getElementById("pwa-ios-install-section");
+
+  if (isIosDevice()) {
+    if (nativeSec) nativeSec.style.display = "none";
+    if (iosSec) iosSec.style.display = "block";
+  } else {
+    if (nativeSec) nativeSec.style.display = "block";
+    if (iosSec) iosSec.style.display = "none";
+  }
+
+  modal.classList.add("show");
+}
+
+function closePwaInstallModal() {
+  const modal = document.getElementById("pwa-install-modal-overlay");
+  if (modal) modal.classList.remove("show");
+}
+
+async function triggerPwaInstall() {
+  if (!deferredInstallPrompt) {
+    if (isIosDevice()) {
+      showToast("โปรดทำตาม 3 ขั้นตอนบน Safari เพื่อเพิ่มไปยังหน้าจอโฮม 📲", "💡");
+    } else {
+      showToast('สามารถกดที่จุดสามจุด (⋮) ของเบราว์เซอร์ แล้วเลือก "ติดตั้งแอป" หรือ "เพิ่มลงหน้าจอหลัก" 📲', "💡");
+    }
+    return;
+  }
+
+  sfx.click();
+  triggerHaptic(30);
+  deferredInstallPrompt.prompt();
+  const choiceResult = await deferredInstallPrompt.userChoice;
+  if (choiceResult.outcome === "accepted") {
+    showToast("กำลังติดตั้ง MeowQuest ลงหน้าจอมือถือ... 🚀", "🎉");
+  }
+  deferredInstallPrompt = null;
+  closePwaInstallModal();
+}

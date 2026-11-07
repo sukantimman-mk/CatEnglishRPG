@@ -8,6 +8,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="MeowQuest">
   
+  <!-- PWA Web App Manifest & App Icons -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  
   <!-- Primary Meta Tags & Social Share Previews (OpenGraph / Twitter) -->
   <title>MeowQuest: Daily English RPG (เหมียวเควสต์)</title>
   <meta name="title" content="MeowQuest: Daily English RPG (เหมียวเควสต์)">
@@ -91,6 +96,12 @@
         <button id="btn-hud-podcast" class="hud-item hud-podcast-pill" title="วิทยุแมวเล่าเรื่องสั้น 1 นาที (ฝึกการฟัง + EXP)">
           <span>🎧</span>
           <span class="hud-podcast-text">วิทยุ 1 นาที</span>
+        </button>
+
+        <!-- Install PWA Button (Header) -->
+        <button id="btn-hud-install-pwa" class="hud-item hud-install-pill" title="ติดตั้งเป็นแอปมือถือเต็มจอ (Add to Home Screen)">
+          <span>📲</span>
+          <span class="hud-install-text">ติดตั้งแอป</span>
         </button>
       </div>
     </div>
@@ -254,6 +265,9 @@
           <button id="btn-toy-box" class="btn-squad-toy" title="โยนกล่องพัสดุใบใหม่ - แย่งกันยัดตัวลงกล่องแคบๆ!">
             📦 โยนกล่องพัสดุ
           </button>
+          <button id="btn-squad-toggle-guests" class="btn-squad-toy" title="ชวนเพื่อนแมวทุกสายพันธุ์มาวิ่งเล่นด้วยกันในห้อง!">
+            👥 รวมพลแก๊งแมว (ทุกพันธุ์)
+          </button>
         </div>
 
         <!-- Squad Living Room Habitat Scene -->
@@ -272,6 +286,8 @@
             <span id="squad-coffee-cup" class="coffee-cup-icon" title="แก้วกาแฟที่แมวชอบเขี่ย">☕</span>
           </div>
           <div class="room-decor-rug"></div>
+          <div id="squad-yarn-ball" class="squad-yarn-ball" title="แตะเพื่อให้ลูกบอลไหมพรมกลิ้งเล่น!">🧶</div>
+          <div id="squad-food-dish" class="squad-food-dish" title="ชามอาหารปลาทู">🥣</div>
 
           <!-- Red Laser Dot element for interactive chase -->
           <div id="squad-laser-dot" class="squad-laser-dot"></div>
@@ -734,6 +750,17 @@
           </p>
         </div>
 
+        <!-- PWA Mobile App Card -->
+        <div class="settings-card pwa-settings-card">
+          <h3><span>📲</span> ติดตั้งเป็นแอปมือถือเต็มจอ (PWA)</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+            ติดตั้งไอคอน MeowQuest ลงบนหน้าจอโฮมของมือถือ (iOS / Android) เพื่อเล่นแบบเต็มหน้าจอ ไม่มีแถบ URL bar โหลดเร็ว และเล่นออฟไลน์ได้ 100%
+          </p>
+          <button id="btn-install-pwa-settings" class="btn-primary-action" style="background: linear-gradient(135deg, #0d9488, #14b8a6);">
+            📲 ติดตั้งแอปลงหน้าจอโฮม (Install App)
+          </button>
+        </div>
+
         <!-- Data Backup & Persistence -->
         <div class="settings-card">
           <h3><span>💾</span> บันทึกและสำรองข้อมูลเซฟ</h3>
@@ -873,6 +900,50 @@
         <button id="btn-claim-podcast-reward" class="btn-claim-podcast-reward" style="display:none;">
           🎉 รับรางวัลฟังจบ (+20 EXP &amp; +10 🪙)
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA INSTALL GUIDE MODAL -->
+  <div id="pwa-install-modal-overlay" class="modal-overlay">
+    <div class="modal-card pwa-install-card">
+      <div class="modal-header-row">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">📲</span>
+          <div>
+            <h3>ติดตั้ง MeowQuest ลงหน้าจอมือถือ</h3>
+            <p>เล่นแบบเต็มหน้าจอ (Full-Screen) โหลดเร็วขึ้น 3 เท่า และเล่นออฟไลน์ได้ทุกที่!</p>
+          </div>
+        </div>
+        <button id="btn-close-pwa-modal" class="btn-modal-close" title="ปิด">✕</button>
+      </div>
+
+      <!-- Android / PC Native Install Section -->
+      <div id="pwa-native-install-section" style="text-align: center; padding: 14px 0;">
+        <div style="font-size: 3.5rem; margin-bottom: 8px;">🐱✨</div>
+        <p style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 14px;">
+          กดปุ่มด้านล่างเพื่อเพิ่มไอคอนน้องแมวลงบนหน้าจอโฮมของคุณได้ทันที!
+        </p>
+        <button id="btn-pwa-do-install" class="btn-pwa-install-action">
+          🚀 ติดตั้งแอปลงเครื่องเดี๋ยวนี้
+        </button>
+      </div>
+
+      <!-- iOS Safari Instructions (Visual 3-step Guide) -->
+      <div id="pwa-ios-install-section" class="pwa-ios-guide-box" style="display:none;">
+        <h4 style="font-size: 0.95rem; color: #0f766e; margin-bottom: 10px;">วิธีติดตั้งบน iPhone / iPad (Safari):</h4>
+        <div class="ios-step-item">
+          <span class="ios-step-num">1</span>
+          <div>แตะปุ่ม <strong>แชร์ (Share)</strong> ไอคอนรูปสี่เหลี่ยมมีลูกศรชี้ขึ้น <code>[ ↑ ]</code> ที่แถบด้านล่างของ Safari</div>
+        </div>
+        <div class="ios-step-item">
+          <span class="ios-step-num">2</span>
+          <div>เลื่อนลงมาแล้วเลือก <strong>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen ➕)</strong></div>
+        </div>
+        <div class="ios-step-item">
+          <span class="ios-step-num">3</span>
+          <div>แตะปุ่ม <strong>"เพิ่ม" (Add)</strong> มุมขวาบน จะได้ไอคอนน้องแมวบนหน้าจอโฮมทันที!</div>
+        </div>
       </div>
     </div>
   </div>

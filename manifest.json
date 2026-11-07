@@ -1,0 +1,33 @@
+{
+  "name": "MeowQuest: Daily English RPG",
+  "short_name": "MeowQuest",
+  "description": "เว็บแอปเกม RPG ฝึกพูดภาษาอังกฤษในชีวิตประจำวัน เลี้ยงแมวสามสีนำโชค และท่องศัพท์ TOEIC/TOEFL",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff8f0",
+  "theme_color": "#ff7b54",
+  "orientation": "portrait-primary",
+  "lang": "th",
+  "categories": ["education", "games"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

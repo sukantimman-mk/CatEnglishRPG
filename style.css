@@ -3243,7 +3243,7 @@ footer.app-footer {
   width: 86px;
   height: 98px;
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), left 1.2s cubic-bezier(0.25, 1, 0.5, 1), top 1.2s cubic-bezier(0.25, 1, 0.5, 1), bottom 1.2s cubic-bezier(0.25, 1, 0.5, 1), right 1.2s cubic-bezier(0.25, 1, 0.5, 1), filter 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3389,6 +3389,42 @@ footer.app-footer {
   0% { transform: scale(1) translateY(0); }
   50% { transform: scale(1.2) translateY(-28px); }
   100% { transform: scale(1) translateY(0); }
+}
+
+/* Autonomous & Interactive Real Cat Behaviors */
+.cat-trotting .squad-cat-svg-wrap {
+  animation: catTrot 0.35s ease-in-out infinite alternate !important;
+}
+@keyframes catTrot {
+  0% { transform: translateY(0) rotate(-4deg); }
+  100% { transform: translateY(-8px) rotate(4deg); }
+}
+
+.cat-pouncing {
+  animation: catPounce 0.55s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards !important;
+}
+@keyframes catPounce {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.28) translateY(-26px) rotate(10deg); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+.cat-eating .squad-cat-svg-wrap {
+  animation: catEating 0.45s ease-in-out infinite alternate !important;
+}
+@keyframes catEating {
+  0% { transform: translateY(0) rotate(6deg) scale(0.96); }
+  100% { transform: translateY(5px) rotate(-6deg) scale(1.02); }
+}
+
+.cat-stretching .squad-cat-svg-wrap {
+  animation: catStretch 1.6s ease-in-out forwards !important;
+}
+@keyframes catStretch {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18, 0.82) skewX(-12deg) translateY(5px); }
+  80% { transform: scale(0.92, 1.15) translateY(-6px); }
+  100% { transform: scale(1); }
 }
 
 /* Catnip Bliss Reaction */
@@ -4115,4 +4151,124 @@ footer.app-footer {
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
   animation: popIn 0.3s ease;
+}
+
+/* ==============================================
+   PWA INSTALL STYLES & INTERACTIVE SQUAD PROPS
+   ============================================== */
+.hud-install-pill {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #10b981 !important;
+  color: #047857 !important;
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: bounceMini 2.5s infinite;
+}
+.hud-install-pill:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+@keyframes bounceMini {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+.pwa-settings-card {
+  border-color: #5eead4 !important;
+  background: #f0fdfa !important;
+}
+
+.btn-pwa-install-action {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+  transition: transform 0.15s ease;
+}
+.btn-pwa-install-action:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+.pwa-ios-guide-box {
+  background: #f0fdfa;
+  border: 1.5px solid #99f6e4;
+  border-radius: 16px;
+  padding: 14px;
+  text-align: left;
+}
+
+.ios-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.88rem;
+  color: #134e4a;
+}
+
+.ios-step-num {
+  background: #0d9488;
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Squad Props: Yarn Ball & Food Dish */
+.squad-yarn-ball {
+  position: absolute;
+  bottom: 50px;
+  left: 60%;
+  font-size: 2.2rem;
+  cursor: pointer;
+  z-index: 12;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), left 0.8s ease;
+  user-select: none;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+}
+
+.squad-yarn-ball.rolling {
+  animation: rollYarn 1.2s ease-in-out;
+}
+
+@keyframes rollYarn {
+  0% { transform: rotate(0) translateX(0); }
+  50% { transform: rotate(360deg) translateX(-60px); }
+  100% { transform: rotate(720deg) translateX(0); }
+}
+
+.squad-food-dish {
+  position: absolute;
+  bottom: 45px;
+  left: 78%;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 12;
+  user-select: none;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.12));
+  transition: transform 0.2s ease;
+}
+
+.squad-food-dish:hover {
+  transform: scale(1.15) rotate(10deg);
 }
