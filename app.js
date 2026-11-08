@@ -3584,11 +3584,18 @@ function switchView(targetViewId) {
   if (speech.synth) speech.synth.cancel();
   speech.stopListening();
 
+  // Defensive fallback: prevent blank screen if targetViewId is missing or falsy
+  if (!targetViewId) {
+    targetViewId = "view-adventure";
+  }
+
   document.querySelectorAll(".view-section").forEach((sec) => {
     sec.classList.remove("active");
   });
-  const target = document.getElementById(targetViewId);
-  if (target) target.classList.add("active");
+  const target = document.getElementById(targetViewId) || document.getElementById("view-adventure");
+  if (target) {
+    target.classList.add("active");
+  }
 
   // Dynamic View Render Dispatcher (Always initializes view contents safely)
   try {
@@ -3684,7 +3691,15 @@ window.addEventListener("DOMContentLoaded", () => {
     btn.onclick = () => {
       sfx.click();
       triggerHaptic(15);
-      const viewId = btn.dataset.view;
+      if (btn.dataset.action === "goto-stages") {
+        scrollToAdventureGrid();
+        return;
+      }
+      if (btn.dataset.action === "goto-hub") {
+        scrollToCentralHub();
+        return;
+      }
+      const viewId = btn.dataset.view || "view-adventure";
       switchView(viewId);
       if (viewId === "view-adventure") renderAdventureGrid();
       if (viewId === "view-ai-freetalk") renderFreeTalkView();
@@ -3701,7 +3716,15 @@ window.addEventListener("DOMContentLoaded", () => {
     btn.onclick = () => {
       sfx.click();
       triggerHaptic(20);
-      const viewId = btn.dataset.view;
+      if (btn.dataset.action === "goto-hub") {
+        scrollToCentralHub();
+        return;
+      }
+      if (btn.dataset.action === "goto-stages") {
+        scrollToAdventureGrid();
+        return;
+      }
+      const viewId = btn.dataset.view || "view-adventure";
       switchView(viewId);
       if (viewId === "view-adventure") renderAdventureGrid();
       if (viewId === "view-ai-freetalk") renderFreeTalkView();
@@ -6230,24 +6253,30 @@ function navigateShadowing(direction) {
 // ==============================================
 function scrollToAdventureGrid() {
   switchView("view-adventure");
-  const gridEl = document.getElementById("stage-pack-tabs") || document.getElementById("scenario-grid");
-  if (gridEl) {
-    gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  setTimeout(() => {
+    const gridEl = document.getElementById("stage-pack-tabs") || document.getElementById("scenario-grid");
+    if (gridEl) {
+      gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, 50);
 }
 
 function scrollToCentralHub() {
   switchView("view-adventure");
-  const hubEl = document.getElementById("meow-central-hub-card");
-  if (hubEl) {
-    hubEl.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  setTimeout(() => {
+    const hubEl = document.getElementById("meow-central-hub-card");
+    if (hubEl) {
+      hubEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, 50);
 }
 
 
 
-// Global Window Bindings for AI Cat Free-Talk
+// Global Window Bindings
 window.switchView = switchView;
+window.scrollToAdventureGrid = scrollToAdventureGrid;
+window.scrollToCentralHub = scrollToCentralHub;
 window.renderFreeTalkView = renderFreeTalkView;
 window.sendUserFreeTalkMessage = sendUserFreeTalkMessage;
 window.setupFreeTalkSpeech = setupFreeTalkSpeech;

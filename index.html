@@ -52,7 +52,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3.9">
+  <link rel="stylesheet" href="style.css?v=4.0">
 </head>
 <body>
   <!-- Emergency Healing Floating Bar (Hidden unless error occurs) -->
@@ -148,7 +148,6 @@
     <button id="nav-arrow-left" class="nav-scroll-arrow" title="เลื่อนแท็บไปทางซ้าย">◀</button>
     <nav class="app-nav" id="main-desktop-nav">
       <button class="nav-tab active" data-view="view-adventure" title="หน้าหลักศูนย์รวม">🏠 หน้าหลัก</button>
-      <button class="nav-tab" data-action="goto-stages" onclick="scrollToAdventureGrid()" title="การผจญภัย 40 ด่าน">🗺️ 40 ด่าน</button>
       <button class="nav-tab" data-view="view-shadowing" title="ฝึกพูดตามและเลียนเสียง">🎙️ Shadowing</button>
       <button class="nav-tab" data-view="view-ai-freetalk" title="คุยเล่นกับแมวและตรวจแกรมม่า">💬 คุยกับแมว</button>
       <button class="nav-tab" data-view="view-vocab" title="คลังคำศัพท์ TOEIC / TOEFL">📚 คลังศัพท์</button>
@@ -1381,9 +1380,9 @@
       <span class="mob-nav-icon">🏠</span>
       <span class="mob-nav-label">หน้าหลัก</span>
     </button>
-    <button class="mob-nav-btn" data-action="goto-stages" onclick="scrollToAdventureGrid()" title="ผจญภัย 40 ด่าน">
-      <span class="mob-nav-icon">🗺️</span>
-      <span class="mob-nav-label">40 ด่าน</span>
+    <button class="mob-nav-btn" data-view="view-vocab" title="คลังคำศัพท์ TOEIC / TOEFL">
+      <span class="mob-nav-icon">📚</span>
+      <span class="mob-nav-label">คลังศัพท์</span>
     </button>
     <button class="mob-nav-btn" data-view="view-shadowing" title="ฝึกพูดตาม (Shadowing)">
       <span class="mob-nav-icon">🎙️</span>
@@ -1393,7 +1392,7 @@
       <span class="mob-nav-icon">💬</span>
       <span class="mob-nav-label">คุยกับแมว</span>
     </button>
-    <button class="mob-nav-btn" data-action="goto-hub" onclick="scrollToCentralHub()" title="เมนูทั้งหมดในหน้าเดียว">
+    <button class="mob-nav-btn" data-view="view-adventure" data-action="goto-hub" onclick="scrollToCentralHub()" title="เมนูทั้งหมดในหน้าเดียว">
       <span class="mob-nav-icon">🗂️</span>
       <span class="mob-nav-label">เมนูทั้งหมด</span>
     </button>
@@ -1752,10 +1751,10 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="scenarios.js?v=3.9"></script>
-  <script src="vocab_decks.js?v=3.9"></script>
-  <script src="shadowing_dataset.js?v=3.9"></script>
-  <script src="freetalk_brain.js?v=3.9"></script>
-  <script src="app.js?v=3.9"></script>
+  <script src="scenarios.js?v=4.0"></script>
+  <script src="vocab_decks.js?v=4.0"></script>
+  <script src="shadowing_dataset.js?v=4.0"></script>
+  <script src="freetalk_brain.js?v=4.0"></script>
+  <script src="app.js?v=4.0"></script>
 </body>
 </html>
