@@ -1342,6 +1342,35 @@ function updateHUD() {
   const hudCatTitle = document.getElementById("hud-cat-title");
   if (hudCatTitle) hudCatTitle.textContent = gameState.title;
 
+    // Central Hub Dynamic Stats
+  const hubScenStat = document.getElementById("hub-stat-adventure");
+  if (hubScenStat) {
+    const completedScens = Object.keys(gameState.completedScenarios || {}).filter(k => gameState.completedScenarios[k]).length;
+    hubScenStat.textContent = `${completedScens} / 40 ด่าน`;
+  }
+
+  const hubShadowStat = document.getElementById("hub-stat-shadowing");
+  if (hubShadowStat) {
+    const shadowMap = gameState.shadowingProgress || {};
+    const shadowDone = Object.keys(shadowMap).filter(k => shadowMap[k] && shadowMap[k].bestScore >= 60).length;
+    hubShadowStat.textContent = `${shadowDone} / 70 ข้อ`;
+  }
+
+  const hubShopStat = document.getElementById("hub-stat-shop");
+  if (hubShopStat) {
+    hubShopStat.textContent = `${gameState.coins} 🪙`;
+  }
+
+  const hubDailyStat = document.getElementById("hub-stat-daily");
+  if (hubDailyStat) {
+    hubDailyStat.textContent = `Streak ${gameState.streak} วัน`;
+  }
+
+  const hubCertStat = document.getElementById("hub-stat-cert");
+  if (hubCertStat) {
+    hubCertStat.textContent = `CEFR ${gameState.title ? gameState.title.split(' ')[0] : 'B1'}`;
+  }
+
   // Hero Sanctuary Card Updates (Home screen)
   const heroName = document.getElementById("hero-cat-name-display");
   if (heroName) heroName.textContent = gameState.name;

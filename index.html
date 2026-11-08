@@ -52,7 +52,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3.5">
+  <link rel="stylesheet" href="style.css?v=3.6">
 </head>
 <body>
   <!-- Emergency Healing Floating Bar (Hidden unless error occurs) -->
@@ -147,14 +147,15 @@
   <div class="app-nav-wrapper">
     <button id="nav-arrow-left" class="nav-scroll-arrow" title="เลื่อนแท็บไปทางซ้าย">◀</button>
     <nav class="app-nav" id="main-desktop-nav">
-    <button class="nav-tab active" data-view="view-adventure">🗺️ การผจญภัย (40 ด่าน)</button>
-    <button class="nav-tab" data-view="view-ai-freetalk">💬 คุยเล่นกับน้องแมว AI</button>
-    <button class="nav-tab" data-view="view-shadowing">🎙️ ฝึกพูดตาม (Shadowing)</button>
-    <button class="nav-tab" data-view="view-vocab">📚 การ์ดศัพท์โทอิค &amp; โทเฟล</button>
-    <button class="nav-tab" data-view="view-wardrobe">🐱 ห้องน้องแมว &amp; แต่งตัว</button>
-    <button class="nav-tab" data-view="view-shop">🛍️ ร้านค้าเหมียวช็อป</button>
-    <button class="nav-tab" data-view="view-daily">📅 ภารกิจรายวัน (Daily Loop)</button>
-    <button class="nav-tab" data-view="view-settings">⚙️ ตั้งค่า &amp; เซฟเกม</button>
+      <button class="nav-tab active" data-view="view-adventure" title="หน้าหลักศูนย์รวม">🏠 หน้าหลัก</button>
+      <button class="nav-tab" data-action="goto-stages" onclick="scrollToAdventureGrid()" title="การผจญภัย 40 ด่าน">🗺️ 40 ด่าน</button>
+      <button class="nav-tab" data-view="view-shadowing" title="ฝึกพูดตามและเลียนเสียง">🎙️ Shadowing</button>
+      <button class="nav-tab" data-view="view-ai-freetalk" title="คุยเล่นกับแมวและตรวจแกรมม่า">💬 คุยกับแมว</button>
+      <button class="nav-tab" data-view="view-vocab" title="คลังคำศัพท์ TOEIC / TOEFL">📚 คลังศัพท์</button>
+      <button class="nav-tab" data-view="view-wardrobe" title="ห้องน้องแมว & แต่งตัว">🐱 ห้องแมว</button>
+      <button class="nav-tab" data-view="view-shop" title="ร้านค้าไอเทมเหมียวช็อป">🛍️ ร้านค้า</button>
+      <button class="nav-tab" data-view="view-daily" title="ภารกิจประจำวัน">📅 ภารกิจ</button>
+      <button class="nav-tab" data-view="view-settings" title="ตั้งค่าและเซฟเกม">⚙️ ตั้งค่า</button>
     </nav>
     <button id="nav-arrow-right" class="nav-scroll-arrow" title="เลื่อนแท็บไปทางขวา">▶</button>
   </div>
@@ -362,7 +363,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>การผจญภัย 40 ด่าน</h4>
-                <span class="tile-tag tag-blue">A1 - C1</span>
+                <span class="tile-tag tag-blue" id="hub-stat-adventure">0 / 40 ด่าน</span>
               </div>
               <p>บทสนทนาสถานการณ์จริง สั่งกาแฟ ประชุม สัมภาษณ์งาน</p>
             </div>
@@ -375,7 +376,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>ฝึกพูดตาม (Shadowing)</h4>
-                <span class="tile-tag tag-purple">70 ประโยค</span>
+                <span class="tile-tag tag-purple" id="hub-stat-shadowing">0 / 70 ข้อ</span>
               </div>
               <p>เลียนเสียงสำเนียงเนทีฟ ให้คะแนนคำต่อคำ เทียบเสียงสด</p>
             </div>
@@ -388,7 +389,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>คุยกับแมว AI</h4>
-                <span class="tile-tag tag-green">ตรวจแกรมม่า</span>
+                <span class="tile-tag tag-green" id="hub-stat-freetalk">หมอตรวจแกรมม่า</span>
               </div>
               <p>แชทภาษาอังกฤษอิสระพร้อมคุณหมอแมวตรวจไวยากรณ์สด</p>
             </div>
@@ -401,7 +402,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>คลังการ์ดคำศัพท์</h4>
-                <span class="tile-tag tag-amber">TOEIC/TOEFL</span>
+                <span class="tile-tag tag-amber" id="hub-stat-vocab">TOEIC / TOEFL</span>
               </div>
               <p>การ์ดคำศัพท์จำแม่นด้วยระบบทบทวน Spaced Repetition</p>
             </div>
@@ -414,7 +415,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>ห้องแต่งตัว & คาเฟ่แมว</h4>
-                <span class="tile-tag tag-pink">6 สายพันธุ์</span>
+                <span class="tile-tag tag-pink" id="hub-stat-wardrobe">แต่งตัว & เล่น</span>
               </div>
               <p>เปลี่ยนหมวก ชุดเกราะ อาวุธ รถซิ่ง และเล่นกับน้องแมว</p>
             </div>
@@ -427,7 +428,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>ร้านค้าเหมียวช็อป</h4>
-                <span class="tile-tag tag-orange">PawCoins</span>
+                <span class="tile-tag tag-orange" id="hub-stat-shop">0 🪙</span>
               </div>
               <p>ใช้เหรียญปลดล็อกของเล่น ขนมแมว และรับเลี้ยงเพื่อนแมว</p>
             </div>
@@ -440,7 +441,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>ภารกิจประจำวัน</h4>
-                <span class="tile-tag tag-teal">Daily Streak</span>
+                <span class="tile-tag tag-teal" id="hub-stat-daily">Daily Streak</span>
               </div>
               <p>ทำภารกิจสะสมเหรียญ EXP และรักษาไฟความขยันต่อเนื่อง</p>
             </div>
@@ -453,7 +454,7 @@
             <div class="tile-info">
               <div class="tile-title-row">
                 <h4>ใบประกาศ CEFR & สถิติ</h4>
-                <span class="tile-tag tag-indigo">มาตรฐานสากล</span>
+                <span class="tile-tag tag-indigo" id="hub-stat-cert">มาตรฐานสากล</span>
               </div>
               <p>กราฟเรดาร์ทักษะ 6 ด้าน และพิมพ์ใบประกาศนียบัตร</p>
             </div>
@@ -1108,6 +1109,13 @@
          VIEW 3: WARDROBE & CAT ROOM
          ============================================== -->
     <section id="view-wardrobe" class="view-section">
+      <!-- Persistent Back to Central Hub Banner -->
+      <div class="hub-return-banner">
+        <button class="btn-return-hub" onclick="switchView('view-adventure')">
+          <span>🏠</span> กลับหน้าหลักศูนย์รวม (Home Hub)
+        </button>
+        <span class="current-section-indicator">📍 เมนูปัจจุบัน: <strong>🐱 ห้องน้องแมว & แต่งตัว</strong></span>
+      </div>
       <div class="wardrobe-container">
         <!-- Left: Cat Avatar Preview & Living Space -->
         <div class="cat-stage-preview">
@@ -1239,6 +1247,13 @@
          VIEW 5: DAILY QUESTS & ENDLESS LOOP
          ============================================== -->
     <section id="view-daily" class="view-section">
+      <!-- Persistent Back to Central Hub Banner -->
+      <div class="hub-return-banner">
+        <button class="btn-return-hub" onclick="switchView('view-adventure')">
+          <span>🏠</span> กลับหน้าหลักศูนย์รวม (Home Hub)
+        </button>
+        <span class="current-section-indicator">📍 เมนูปัจจุบัน: <strong>📅 ภารกิจรายวัน & Daily Streak</strong></span>
+      </div>
       <div class="daily-streak-banner">
         <div>
           <h2 style="font-size: 1.45rem; margin-bottom: 4px;">ระบบฝึกฝนรายวัน (Daily Streak & Endless Loop)</h2>
@@ -1269,6 +1284,13 @@
          VIEW 6: SETTINGS & DATABASE SYSTEM
          ============================================== -->
     <section id="view-settings" class="view-section">
+      <!-- Persistent Back to Central Hub Banner -->
+      <div class="hub-return-banner">
+        <button class="btn-return-hub" onclick="switchView('view-adventure')">
+          <span>🏠</span> กลับหน้าหลักศูนย์รวม (Home Hub)
+        </button>
+        <span class="current-section-indicator">📍 เมนูปัจจุบัน: <strong>⚙️ ตั้งค่า & เซฟเกม</strong></span>
+      </div>
       <div class="settings-grid">
         <!-- Audio & Speech Settings -->
         <div class="settings-card">
@@ -1713,9 +1735,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="scenarios.js?v=3.5"></script>
-  <script src="vocab_decks.js?v=3.5"></script>
-  <script src="shadowing_dataset.js?v=3.5"></script>
-  <script src="app.js?v=3.5"></script>
+  <script src="scenarios.js?v=3.6"></script>
+  <script src="vocab_decks.js?v=3.6"></script>
+  <script src="shadowing_dataset.js?v=3.6"></script>
+  <script src="app.js?v=3.6"></script>
 </body>
 </html>
