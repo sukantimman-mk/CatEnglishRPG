@@ -52,7 +52,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3.6">
+  <link rel="stylesheet" href="style.css?v=3.7">
 </head>
 <body>
   <!-- Emergency Healing Floating Bar (Hidden unless error occurs) -->
@@ -232,18 +232,19 @@
 
               <div class="sanctuary-care-btns">
                 <button id="btn-hero-shadowing" class="btn-pet-action btn-shadow" title="ฝึกพูดตามและเลียนเสียงสำเนียง (Shadowing Practice)">
-            <span>🎙️</span> ฝึกพูดตาม Shadowing
-          </button>
-          <button id="btn-hero-talk-cat" class="btn-pet-action btn-talk" title="คุยภาษาอังกฤษอิสระกับน้องแมว (AI Free-Talk)">
-                  <span>💬</span> ชวนคุย Free Talk
+                  <span>🎙️</span> ฝึก Shadowing
+                </button>
+                <button id="btn-hero-talk-cat" class="btn-pet-action btn-talk" title="คุยภาษาอังกฤษอิสระกับน้องแมว (AI Free-Talk)">
+                  <span>💬</span> คุยกับแมว AI
                 </button>
                 <button id="btn-hero-pet-cat" class="btn-pet-action btn-pet-love" title="ลูบหัวหรือเกาคางน้องแมว (+สุข)">
-                  <span>🐾</span> ลูบหัว
+                  <span>🐾</span> ลูบหัว (+สุข)
                 </button>
                 <button id="btn-hero-feed-cat" class="btn-pet-action btn-pet-feed" title="ป้อนปลาทู/ขนมแมวเลีย (รับฟรีวันละ 1 ครั้ง หรือ 5 PawCoins ได้บัฟ +15 EXP)">
-                  <span>🐟</span> ป้อนขนม (+15 EXP)
+                  <span>🐟</span> ป้อนขนม (+EXP)
                 </button>
-                <!-- Retained hidden references to preserve all JS bindings -->
+              </div>
+              <!-- Retained hidden references to preserve all JS bindings -->
                 <button id="btn-hero-goto-wardrobe" style="display:none;"></button>
                 <button id="btn-hero-goto-vocab" style="display:none;"></button>
                 <button id="btn-hero-open-cefr" style="display:none;"></button>
@@ -359,106 +360,122 @@
         <div class="hub-grid-tiles">
           <!-- Tile 1: 40 CEFR Adventure -->
           <div class="hub-tile-item tile-adventure" onclick="scrollToAdventureGrid()">
-            <div class="tile-icon-bubble">🗺️</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>การผจญภัย 40 ด่าน</h4>
-                <span class="tile-tag tag-blue" id="hub-stat-adventure">0 / 40 ด่าน</span>
-              </div>
-              <p>บทสนทนาสถานการณ์จริง สั่งกาแฟ ประชุม สัมภาษณ์งาน</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">🗺️</div>
+              <span class="tile-tag tag-blue" id="hub-stat-adventure">0 / 40 ด่าน</span>
             </div>
-            <span class="tile-action-arrow">ลุยเลย ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">การผจญภัย 40 ด่าน</h4>
+              <p class="tile-desc">บทสนทนาสถานการณ์จริง สั่งกาแฟ ประชุม สัมภาษณ์งาน</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">ลุยเลย ➔</span>
+            </div>
           </div>
 
           <!-- Tile 2: Shadowing Studio -->
           <div class="hub-tile-item tile-shadowing" onclick="switchView('view-shadowing')">
-            <div class="tile-icon-bubble">🎙️</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>ฝึกพูดตาม (Shadowing)</h4>
-                <span class="tile-tag tag-purple" id="hub-stat-shadowing">0 / 70 ข้อ</span>
-              </div>
-              <p>เลียนเสียงสำเนียงเนทีฟ ให้คะแนนคำต่อคำ เทียบเสียงสด</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">🎙️</div>
+              <span class="tile-tag tag-purple" id="hub-stat-shadowing">0 / 70 ข้อ</span>
             </div>
-            <span class="tile-action-arrow">ฝึกพูด ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">ฝึกพูดตาม (Shadowing)</h4>
+              <p class="tile-desc">เลียนเสียงสำเนียงเนทีฟ ให้คะแนนคำต่อคำ เทียบเสียงสด</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">ฝึกพูด ➔</span>
+            </div>
           </div>
 
           <!-- Tile 3: AI Cat Free-Talk -->
           <div class="hub-tile-item tile-freetalk" onclick="switchView('view-ai-freetalk')">
-            <div class="tile-icon-bubble">💬</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>คุยกับแมว AI</h4>
-                <span class="tile-tag tag-green" id="hub-stat-freetalk">หมอตรวจแกรมม่า</span>
-              </div>
-              <p>แชทภาษาอังกฤษอิสระพร้อมคุณหมอแมวตรวจไวยากรณ์สด</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">💬</div>
+              <span class="tile-tag tag-green" id="hub-stat-freetalk">หมอตรวจแกรมม่า</span>
             </div>
-            <span class="tile-action-arrow">ชวนคุย ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">คุยกับแมว AI</h4>
+              <p class="tile-desc">แชทภาษาอังกฤษอิสระพร้อมคุณหมอแมวตรวจไวยากรณ์สด</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">ชวนคุย ➔</span>
+            </div>
           </div>
 
           <!-- Tile 4: Vocab Decks -->
           <div class="hub-tile-item tile-vocab" onclick="switchView('view-vocab')">
-            <div class="tile-icon-bubble">📚</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>คลังการ์ดคำศัพท์</h4>
-                <span class="tile-tag tag-amber" id="hub-stat-vocab">TOEIC / TOEFL</span>
-              </div>
-              <p>การ์ดคำศัพท์จำแม่นด้วยระบบทบทวน Spaced Repetition</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">📚</div>
+              <span class="tile-tag tag-amber" id="hub-stat-vocab">TOEIC / TOEFL</span>
             </div>
-            <span class="tile-action-arrow">ท่องศัพท์ ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">คลังการ์ดคำศัพท์</h4>
+              <p class="tile-desc">การ์ดคำศัพท์จำแม่นด้วยระบบทบทวน Spaced Repetition</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">ท่องศัพท์ ➔</span>
+            </div>
           </div>
 
           <!-- Tile 5: Wardrobe & Cat Room -->
           <div class="hub-tile-item tile-wardrobe" onclick="switchView('view-wardrobe')">
-            <div class="tile-icon-bubble">👗</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>ห้องแต่งตัว & คาเฟ่แมว</h4>
-                <span class="tile-tag tag-pink" id="hub-stat-wardrobe">แต่งตัว & เล่น</span>
-              </div>
-              <p>เปลี่ยนหมวก ชุดเกราะ อาวุธ รถซิ่ง และเล่นกับน้องแมว</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">👗</div>
+              <span class="tile-tag tag-pink" id="hub-stat-wardrobe">แต่งตัว & เล่น</span>
             </div>
-            <span class="tile-action-arrow">แต่งตัว ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">ห้องแต่งตัว & คาเฟ่แมว</h4>
+              <p class="tile-desc">เปลี่ยนหมวก ชุดเกราะ อาวุธ รถซิ่ง และเล่นกับน้องแมว</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">แต่งตัว ➔</span>
+            </div>
           </div>
 
           <!-- Tile 6: Shop & Adoptions -->
           <div class="hub-tile-item tile-shop" onclick="switchView('view-shop')">
-            <div class="tile-icon-bubble">🛍️</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>ร้านค้าเหมียวช็อป</h4>
-                <span class="tile-tag tag-orange" id="hub-stat-shop">0 🪙</span>
-              </div>
-              <p>ใช้เหรียญปลดล็อกของเล่น ขนมแมว และรับเลี้ยงเพื่อนแมว</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">🛍️</div>
+              <span class="tile-tag tag-orange" id="hub-stat-shop">0 🪙</span>
             </div>
-            <span class="tile-action-arrow">ช็อปเลย ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">ร้านค้าเหมียวช็อป</h4>
+              <p class="tile-desc">ใช้เหรียญปลดล็อกของเล่น ขนมแมว และรับเลี้ยงเพื่อนแมว</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">ช็อปเลย ➔</span>
+            </div>
           </div>
 
           <!-- Tile 7: Daily Quests -->
           <div class="hub-tile-item tile-daily" onclick="switchView('view-daily')">
-            <div class="tile-icon-bubble">📅</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>ภารกิจประจำวัน</h4>
-                <span class="tile-tag tag-teal" id="hub-stat-daily">Daily Streak</span>
-              </div>
-              <p>ทำภารกิจสะสมเหรียญ EXP และรักษาไฟความขยันต่อเนื่อง</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">📅</div>
+              <span class="tile-tag tag-teal" id="hub-stat-daily">Daily Streak</span>
             </div>
-            <span class="tile-action-arrow">ดูภารกิจ ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">ภารกิจประจำวัน</h4>
+              <p class="tile-desc">ทำภารกิจสะสมเหรียญ EXP และรักษาไฟความขยันต่อเนื่อง</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">ดูภารกิจ ➔</span>
+            </div>
           </div>
 
           <!-- Tile 8: CEFR Certificate & Radar -->
           <div class="hub-tile-item tile-cert" onclick="openCefrModal('radar')">
-            <div class="tile-icon-bubble">🎓</div>
-            <div class="tile-info">
-              <div class="tile-title-row">
-                <h4>ใบประกาศ CEFR & สถิติ</h4>
-                <span class="tile-tag tag-indigo" id="hub-stat-cert">มาตรฐานสากล</span>
-              </div>
-              <p>กราฟเรดาร์ทักษะ 6 ด้าน และพิมพ์ใบประกาศนียบัตร</p>
+            <div class="tile-top-row">
+              <div class="tile-icon-bubble">🎓</div>
+              <span class="tile-tag tag-indigo" id="hub-stat-cert">มาตรฐานสากล</span>
             </div>
-            <span class="tile-action-arrow">เปิดดู ➔</span>
+            <div class="tile-body">
+              <h4 class="tile-title">ใบประกาศ CEFR & สถิติ</h4>
+              <p class="tile-desc">กราฟเรดาร์ทักษะ 6 ด้าน และพิมพ์ใบประกาศนียบัตร</p>
+            </div>
+            <div class="tile-footer-row">
+              <span class="tile-action-arrow">เปิดดู ➔</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1735,9 +1752,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="scenarios.js?v=3.6"></script>
-  <script src="vocab_decks.js?v=3.6"></script>
-  <script src="shadowing_dataset.js?v=3.6"></script>
-  <script src="app.js?v=3.6"></script>
+  <script src="scenarios.js?v=3.7"></script>
+  <script src="vocab_decks.js?v=3.7"></script>
+  <script src="shadowing_dataset.js?v=3.7"></script>
+  <script src="app.js?v=3.7"></script>
 </body>
 </html>
