@@ -3553,6 +3553,9 @@ function switchView(targetViewId) {
   // Keep both desktop and mobile nav in sync
   document.querySelectorAll(".nav-tab").forEach((tab) => {
     tab.classList.toggle("active", tab.dataset.view === targetViewId);
+    if (tab.dataset.view === targetViewId) {
+      try { tab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" }); } catch(e){}
+    }
   });
   document.querySelectorAll(".mob-nav-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.view === targetViewId);
@@ -3656,6 +3659,18 @@ window.addEventListener("DOMContentLoaded", () => {
       if (viewId === "view-daily") renderDailyQuests();
     };
   });
+
+  
+  // Wire Desktop Nav Left/Right Arrows
+  const navContainer = document.getElementById("main-desktop-nav");
+  const btnNavLeft = document.getElementById("nav-arrow-left");
+  const btnNavRight = document.getElementById("nav-arrow-right");
+  if (btnNavLeft && navContainer) {
+    btnNavLeft.onclick = () => navContainer.scrollBy({ left: -220, behavior: "smooth" });
+  }
+  if (btnNavRight && navContainer) {
+    btnNavRight.onclick = () => navContainer.scrollBy({ left: 220, behavior: "smooth" });
+  }
 
   const brandBtn = document.getElementById("brand-logo-btn");
   if (brandBtn) {
@@ -6107,3 +6122,26 @@ function navigateShadowing(direction) {
 
   renderCurrentShadowingCard();
 }
+
+
+
+// ==============================================
+// 16. UNIFIED CENTRAL HUB & NAVIGATION HELPERS
+// ฟังก์ชันเลื่อนหน้าจอและสลับเมนูอย่างราบรื่น
+// ==============================================
+function scrollToAdventureGrid() {
+  switchView("view-adventure");
+  const gridEl = document.getElementById("stage-pack-tabs") || document.getElementById("scenario-grid");
+  if (gridEl) {
+    gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function scrollToCentralHub() {
+  switchView("view-adventure");
+  const hubEl = document.getElementById("meow-central-hub-card");
+  if (hubEl) {
+    hubEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+

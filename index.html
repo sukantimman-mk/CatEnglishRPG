@@ -52,7 +52,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3.4">
+  <link rel="stylesheet" href="style.css?v=3.5">
 </head>
 <body>
   <!-- Emergency Healing Floating Bar (Hidden unless error occurs) -->
@@ -143,8 +143,10 @@
     </div>
   </header>
 
-  <!-- Desktop Navigation Tabs (Hidden on mobile) -->
-  <nav class="app-nav">
+  <!-- Desktop Navigation Bar with Smooth Scroll Arrows -->
+  <div class="app-nav-wrapper">
+    <button id="nav-arrow-left" class="nav-scroll-arrow" title="เลื่อนแท็บไปทางซ้าย">◀</button>
+    <nav class="app-nav" id="main-desktop-nav">
     <button class="nav-tab active" data-view="view-adventure">🗺️ การผจญภัย (40 ด่าน)</button>
     <button class="nav-tab" data-view="view-ai-freetalk">💬 คุยเล่นกับน้องแมว AI</button>
     <button class="nav-tab" data-view="view-shadowing">🎙️ ฝึกพูดตาม (Shadowing)</button>
@@ -153,7 +155,9 @@
     <button class="nav-tab" data-view="view-shop">🛍️ ร้านค้าเหมียวช็อป</button>
     <button class="nav-tab" data-view="view-daily">📅 ภารกิจรายวัน (Daily Loop)</button>
     <button class="nav-tab" data-view="view-settings">⚙️ ตั้งค่า &amp; เซฟเกม</button>
-  </nav>
+    </nav>
+    <button id="nav-arrow-right" class="nav-scroll-arrow" title="เลื่อนแท็บไปทางขวา">▶</button>
+  </div>
 
   <!-- Main Content Area -->
   <main class="main-content">
@@ -338,6 +342,127 @@
         </div>
       </div>
 
+      
+      <!-- ==============================================
+           MEOW CENTRAL COMMAND HUB (ศูนย์รวมทุกเมนูในหน้าเดียว)
+           ============================================== -->
+      <div class="meow-central-hub-card" id="meow-central-hub-card">
+        <div class="hub-header-row">
+          <div class="hub-title-group">
+            <span class="hub-badge-pill">🐾 All-in-One Dashboard</span>
+            <h3 class="hub-main-title">ศูนย์รวมเมนูและกิจกรรมการเรียนรู้ทั้งหมด</h3>
+          </div>
+          <span class="hub-sub-hint">แตะเพื่อเข้าถึงทุกฟังก์ชันได้ทันทีจากหน้าเดียว ไม่ต้องเลื่อนหา</span>
+        </div>
+
+        <div class="hub-grid-tiles">
+          <!-- Tile 1: 40 CEFR Adventure -->
+          <div class="hub-tile-item tile-adventure" onclick="scrollToAdventureGrid()">
+            <div class="tile-icon-bubble">🗺️</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>การผจญภัย 40 ด่าน</h4>
+                <span class="tile-tag tag-blue">A1 - C1</span>
+              </div>
+              <p>บทสนทนาสถานการณ์จริง สั่งกาแฟ ประชุม สัมภาษณ์งาน</p>
+            </div>
+            <span class="tile-action-arrow">ลุยเลย ➔</span>
+          </div>
+
+          <!-- Tile 2: Shadowing Studio -->
+          <div class="hub-tile-item tile-shadowing" onclick="switchView('view-shadowing')">
+            <div class="tile-icon-bubble">🎙️</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>ฝึกพูดตาม (Shadowing)</h4>
+                <span class="tile-tag tag-purple">70 ประโยค</span>
+              </div>
+              <p>เลียนเสียงสำเนียงเนทีฟ ให้คะแนนคำต่อคำ เทียบเสียงสด</p>
+            </div>
+            <span class="tile-action-arrow">ฝึกพูด ➔</span>
+          </div>
+
+          <!-- Tile 3: AI Cat Free-Talk -->
+          <div class="hub-tile-item tile-freetalk" onclick="switchView('view-ai-freetalk')">
+            <div class="tile-icon-bubble">💬</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>คุยกับแมว AI</h4>
+                <span class="tile-tag tag-green">ตรวจแกรมม่า</span>
+              </div>
+              <p>แชทภาษาอังกฤษอิสระพร้อมคุณหมอแมวตรวจไวยากรณ์สด</p>
+            </div>
+            <span class="tile-action-arrow">ชวนคุย ➔</span>
+          </div>
+
+          <!-- Tile 4: Vocab Decks -->
+          <div class="hub-tile-item tile-vocab" onclick="switchView('view-vocab')">
+            <div class="tile-icon-bubble">📚</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>คลังการ์ดคำศัพท์</h4>
+                <span class="tile-tag tag-amber">TOEIC/TOEFL</span>
+              </div>
+              <p>การ์ดคำศัพท์จำแม่นด้วยระบบทบทวน Spaced Repetition</p>
+            </div>
+            <span class="tile-action-arrow">ท่องศัพท์ ➔</span>
+          </div>
+
+          <!-- Tile 5: Wardrobe & Cat Room -->
+          <div class="hub-tile-item tile-wardrobe" onclick="switchView('view-wardrobe')">
+            <div class="tile-icon-bubble">👗</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>ห้องแต่งตัว & คาเฟ่แมว</h4>
+                <span class="tile-tag tag-pink">6 สายพันธุ์</span>
+              </div>
+              <p>เปลี่ยนหมวก ชุดเกราะ อาวุธ รถซิ่ง และเล่นกับน้องแมว</p>
+            </div>
+            <span class="tile-action-arrow">แต่งตัว ➔</span>
+          </div>
+
+          <!-- Tile 6: Shop & Adoptions -->
+          <div class="hub-tile-item tile-shop" onclick="switchView('view-shop')">
+            <div class="tile-icon-bubble">🛍️</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>ร้านค้าเหมียวช็อป</h4>
+                <span class="tile-tag tag-orange">PawCoins</span>
+              </div>
+              <p>ใช้เหรียญปลดล็อกของเล่น ขนมแมว และรับเลี้ยงเพื่อนแมว</p>
+            </div>
+            <span class="tile-action-arrow">ช็อปเลย ➔</span>
+          </div>
+
+          <!-- Tile 7: Daily Quests -->
+          <div class="hub-tile-item tile-daily" onclick="switchView('view-daily')">
+            <div class="tile-icon-bubble">📅</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>ภารกิจประจำวัน</h4>
+                <span class="tile-tag tag-teal">Daily Streak</span>
+              </div>
+              <p>ทำภารกิจสะสมเหรียญ EXP และรักษาไฟความขยันต่อเนื่อง</p>
+            </div>
+            <span class="tile-action-arrow">ดูภารกิจ ➔</span>
+          </div>
+
+          <!-- Tile 8: CEFR Certificate & Radar -->
+          <div class="hub-tile-item tile-cert" onclick="openCefrModal('radar')">
+            <div class="tile-icon-bubble">🎓</div>
+            <div class="tile-info">
+              <div class="tile-title-row">
+                <h4>ใบประกาศ CEFR & สถิติ</h4>
+                <span class="tile-tag tag-indigo">มาตรฐานสากล</span>
+              </div>
+              <p>กราฟเรดาร์ทักษะ 6 ด้าน และพิมพ์ใบประกาศนียบัตร</p>
+            </div>
+            <span class="tile-action-arrow">เปิดดู ➔</span>
+          </div>
+        </div>
+      </div>
+
+
       <!-- ==============================================
            DAILY HABIT LOOP & QUICK ADVENTURE LAUNCHER
            แผงภารกิจด่วนประจำวัน (สร้างแรงบันดาลใจ • เล่นแล้วติด อยากเล่นทุกวัน)
@@ -414,6 +539,14 @@
          ============================================== -->
     <section id="view-ai-freetalk" class="view-section">
       <div class="freetalk-container">
+        <!-- Persistent Back to Central Hub Banner -->
+        <div class="hub-return-banner">
+          <button class="btn-return-hub" onclick="switchView('view-adventure')">
+            <span>🏠</span> กลับหน้าหลักศูนย์รวม (Home Hub)
+          </button>
+          <span class="current-section-indicator">📍 เมนูปัจจุบัน: <strong>💬 คุยกับน้องแมว AI & หมอตรวจไวยากรณ์</strong></span>
+        </div>
+
         
         <!-- Header: Cat Companion Info & Settings -->
         <div class="freetalk-header-card">
@@ -515,6 +648,14 @@
          ============================================== -->
     <section id="view-shadowing" class="view-section">
       <div class="shadowing-container">
+        <!-- Persistent Back to Central Hub Banner -->
+        <div class="hub-return-banner">
+          <button class="btn-return-hub" onclick="switchView('view-adventure')">
+            <span>🏠</span> กลับหน้าหลักศูนย์รวม (Home Hub)
+          </button>
+          <span class="current-section-indicator">📍 เมนูปัจจุบัน: <strong>🎙️ ฝึกพูดตาม (Shadowing Studio)</strong></span>
+        </div>
+
 
         <!-- Top Banner: Studio Intro & Overall Progress -->
         <div class="shadowing-header-banner">
@@ -705,7 +846,15 @@
     </section>
 
     <section id="view-vocab" class="view-section">
-      <div class="section-banner" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: #3d155f;">
+      <div class="section-banner"
+        <!-- Persistent Back to Central Hub Banner -->
+        <div class="hub-return-banner">
+          <button class="btn-return-hub" onclick="switchView('view-adventure')">
+            <span>🏠</span> กลับหน้าหลักศูนย์รวม (Home Hub)
+          </button>
+          <span class="current-section-indicator">📍 เมนูปัจจุบัน: <strong>📚 คลังการ์ดคำศัพท์ TOEIC & TOEFL</strong></span>
+        </div>
+ style="background: linear-gradient(135deg, #a18cd1, #fbc2eb); color: #3d155f;">
         <div>
           <h2>คลังการ์ดคำศัพท์ระดับสากล (TOEIC &amp; TOEFL Cards)</h2>
           <p>ฝึกท่องศัพท์ระดับทำงานและการประชุมสากล พลิกการ์ดฟังเสียงสำเนียงเจ้าของภาษา ท่องครบรับ EXP และเหรียญทอง PawCoins!</p>
@@ -1056,7 +1205,15 @@
          VIEW 4: SHOP (MEOW SHOP)
          ============================================== -->
     <section id="view-shop" class="view-section">
-      <div class="section-banner" style="background: linear-gradient(135deg, #ffd56b, #ffb26b); color: #4a2c00;">
+      <div class="section-banner"
+        <!-- Persistent Back to Central Hub Banner -->
+        <div class="hub-return-banner">
+          <button class="btn-return-hub" onclick="switchView('view-adventure')">
+            <span>🏠</span> กลับหน้าหลักศูนย์รวม (Home Hub)
+          </button>
+          <span class="current-section-indicator">📍 เมนูปัจจุบัน: <strong>🛍️ ร้านค้าเหมียวช็อป (PawShop)</strong></span>
+        </div>
+ style="background: linear-gradient(135deg, #ffd56b, #ffb26b); color: #4a2c00;">
         <div>
           <h2>ร้านค้าเหมียวช็อป (Meow Shop)</h2>
           <p>นำเหรียญทองจากการฝึกสนทนามาอัปเกรดเครื่องแต่งกาย อาวุธเสริมพลัง ยานพาหนะ และบ้านพัก ยิ่งเลเวลสูงยิ่งปลดล็อกไอเทมหายาก!</p>
@@ -1181,37 +1338,25 @@
 
   <!-- MOBILE BOTTOM NAVIGATION BAR (Thumb-friendly for smartphone users) -->
   <nav class="mobile-bottom-nav">
-    <button class="mob-nav-btn active" data-view="view-adventure" title="การผจญภัย">
+    <button class="mob-nav-btn active" data-view="view-adventure" title="หน้าหลัก">
+      <span class="mob-nav-icon">🏠</span>
+      <span class="mob-nav-label">หน้าหลัก</span>
+    </button>
+    <button class="mob-nav-btn" data-action="goto-stages" onclick="scrollToAdventureGrid()" title="ผจญภัย 40 ด่าน">
       <span class="mob-nav-icon">🗺️</span>
-      <span class="mob-nav-label">ผจญภัย</span>
+      <span class="mob-nav-label">40 ด่าน</span>
     </button>
     <button class="mob-nav-btn" data-view="view-shadowing" title="ฝึกพูดตาม (Shadowing)">
       <span class="mob-nav-icon">🎙️</span>
       <span class="mob-nav-label">Shadowing</span>
     </button>
-    <button class="mob-nav-btn" data-view="view-ai-freetalk" title="คุยอิสระกับน้องแมว AI">
+    <button class="mob-nav-btn" data-view="view-ai-freetalk" title="คุยกับน้องแมว AI">
       <span class="mob-nav-icon">💬</span>
       <span class="mob-nav-label">คุยกับแมว</span>
     </button>
-    <button class="mob-nav-btn" data-view="view-vocab" title="การ์ดศัพท์โทอิค &amp; โทเฟล">
-      <span class="mob-nav-icon">📚</span>
-      <span class="mob-nav-label">ศัพท์ TOEIC</span>
-    </button>
-    <button class="mob-nav-btn" data-view="view-wardrobe" title="ห้องน้องแมว &amp; แต่งตัว">
-      <span class="mob-nav-icon">🐱</span>
-      <span class="mob-nav-label">ห้องน้องแมว</span>
-    </button>
-    <button class="mob-nav-btn" data-view="view-shop" title="ร้านค้า">
-      <span class="mob-nav-icon">🛍️</span>
-      <span class="mob-nav-label">ร้านค้า</span>
-    </button>
-    <button class="mob-nav-btn" data-view="view-daily" title="ภารกิจรายวัน">
-      <span class="mob-nav-icon">📅</span>
-      <span class="mob-nav-label">ภารกิจ</span>
-    </button>
-    <button class="mob-nav-btn" data-view="view-settings" title="ตั้งค่า">
-      <span class="mob-nav-icon">⚙️</span>
-      <span class="mob-nav-label">ตั้งค่า</span>
+    <button class="mob-nav-btn" data-action="goto-hub" onclick="scrollToCentralHub()" title="เมนูทั้งหมดในหน้าเดียว">
+      <span class="mob-nav-icon">🗂️</span>
+      <span class="mob-nav-label">เมนูทั้งหมด</span>
     </button>
   </nav>
 
@@ -1568,9 +1713,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="scenarios.js?v=3.4"></script>
-  <script src="vocab_decks.js?v=3.4"></script>
-  <script src="shadowing_dataset.js?v=3.4"></script>
-  <script src="app.js?v=3.4"></script>
+  <script src="scenarios.js?v=3.5"></script>
+  <script src="vocab_decks.js?v=3.5"></script>
+  <script src="shadowing_dataset.js?v=3.5"></script>
+  <script src="app.js?v=3.5"></script>
 </body>
 </html>
