@@ -3945,12 +3945,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const btnToyDish = document.getElementById("btn-toy-dish");
   if (btnToyDish) btnToyDish.onclick = triggerToyFoodDish;
 
-  const squadYarn = document.getElementById("squad-yarn-ball");
-  if (squadYarn) squadYarn.onclick = triggerToyYarn;
-
-  const squadDish = document.getElementById("squad-food-dish");
-  if (squadDish) squadDish.onclick = triggerToyFoodDish;
-
   const btnSquadAdoptMore = document.getElementById("btn-squad-adopt-more");
   if (btnSquadAdoptMore) {
     btnSquadAdoptMore.onclick = () => {
@@ -4101,14 +4095,22 @@ window.addEventListener("DOMContentLoaded", () => {
   // Start Autonomous Real Cat Playground Loop
   startSquadAutonomousPlay();
 
-  // Initial renders
-  updateHUD();
-  refreshCatAvatars();
-  renderAdventureGrid();
-  renderWardrobeInventory();
-  renderShop();
-  renderDailyQuests();
-  initVocabDeck("toeic");
+  // Initial renders with Bulletproof Error Boundaries
+  function safeInit(fn, name) {
+    try {
+      fn();
+    } catch (err) {
+      console.error("[SafeInit Error] Failed in " + name + ":", err);
+    }
+  }
+
+  safeInit(updateHUD, "updateHUD");
+  safeInit(refreshCatAvatars, "refreshCatAvatars");
+  safeInit(renderAdventureGrid, "renderAdventureGrid");
+  safeInit(renderWardrobeInventory, "renderWardrobeInventory");
+  safeInit(renderShop, "renderShop");
+  safeInit(renderDailyQuests, "renderDailyQuests");
+  safeInit(() => initVocabDeck("toeic"), "initVocabDeck");
 
   // Wire AI Cat Free-Talk Companion
   const btnHeroTalk = document.getElementById("btn-hero-talk-cat");

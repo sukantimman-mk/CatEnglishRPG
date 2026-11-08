@@ -1,5 +1,5 @@
-// MeowQuest Service Worker v1.1.0
-const CACHE_NAME = 'meowquest-cache-v6';
+// MeowQuest Service Worker v1.2.0 (Network-First Strategy for Zero Stale Bugs)
+const CACHE_NAME = 'meowquest-cache-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -15,22 +15,24 @@ const ASSETS_TO_CACHE = [
   './icons/apple-touch-icon.png'
 ];
 
-// Install: Cache core assets
+// Install: Cache core assets and skip waiting immediately
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    })
   );
 });
 
-// Activate: Clean old caches
+// Activate: Immediately purge all old caches and claim clients
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(
         keyList.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('[SW] Purging old cache:', key);
             return caches.delete(key);
           }
         })
@@ -39,29 +41,41 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Stale-While-Revalidate strategy
+// Fetch: NETWORK-FIRST for HTML & JS to ensure instant updates without stale code
 self.addEventListener('fetch', (event) => {
-  // Only handle GET requests and http/https
   if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request).then((networkResponse) => {
+  const url = new URL(event.request.url);
+  const isCodeAsset = url.pathname.endsWith('.js') || url.pathname.endsWith('.html') || url.pathname.endsWith('.css') || url.pathname === '/' || url.pathname.endsWith('/');
+
+  if (isCodeAsset) {
+    // Network-First: Always try network to get the latest fixes immediately
+    event.respondWith(
+      fetch(event.request).then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+          const resClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, resClone));
         }
         return networkResponse;
       }).catch(() => {
-        // If offline and not in cache, return cachedResponse
-        return cachedResponse;
-      });
-
-      return cachedResponse || fetchPromise;
-    })
-  );
+        // Fallback to cache if offline
+        return caches.match(event.request);
+      })
+    );
+  } else {
+    // Cache-First for static images/icons
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        return cached || fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const resClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, resClone));
+          }
+          return networkResponse;
+        });
+      })
+    );
+  }
 });
