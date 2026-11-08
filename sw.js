@@ -1,5 +1,5 @@
 // MeowQuest Service Worker v1.2.0 (Network-First Strategy for Zero Stale Bugs)
-const CACHE_NAME = 'meowquest-cache-v10';
+const CACHE_NAME = 'meowquest-cache-v11';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

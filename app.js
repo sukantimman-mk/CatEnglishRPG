@@ -533,6 +533,18 @@ function triggerHaptic(pattern = 20) {
   }
 }
 
+// Bulletproof HTML Entity Escaping (Fixes Cat Free-Talk and Shadowing Word Drills)
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+window.escapeHtml = escapeHtml;
+
 // ==========================================
 // 4. DYNAMIC SVG CAT AVATAR GENERATOR (ENHANCED FOR CAT LOVERS)
 // ==========================================
@@ -3577,7 +3589,19 @@ function switchView(targetViewId) {
   });
   const target = document.getElementById(targetViewId);
   if (target) target.classList.add("active");
-  if (targetViewId === "view-shadowing") renderShadowingStudio();
+
+  // Dynamic View Render Dispatcher (Always initializes view contents safely)
+  try {
+    if (targetViewId === "view-adventure" && typeof renderAdventureGrid === "function") renderAdventureGrid();
+    if (targetViewId === "view-ai-freetalk" && typeof renderFreeTalkView === "function") renderFreeTalkView();
+    if (targetViewId === "view-shadowing" && typeof renderShadowingStudio === "function") renderShadowingStudio();
+    if (targetViewId === "view-vocab" && typeof initVocabDeck === "function") initVocabDeck(currentVocabDeck || "toeic");
+    if (targetViewId === "view-wardrobe" && typeof renderWardrobeInventory === "function") renderWardrobeInventory();
+    if (targetViewId === "view-shop" && typeof renderShop === "function") renderShop();
+    if (targetViewId === "view-daily" && typeof renderDailyQuests === "function") renderDailyQuests();
+  } catch(err) {
+    console.error("[switchView render error]:", err);
+  }
 
   // Keep both desktop and mobile nav in sync
   document.querySelectorAll(".nav-tab").forEach((tab) => {
@@ -6174,3 +6198,12 @@ function scrollToCentralHub() {
   }
 }
 
+
+
+// Global Window Bindings for AI Cat Free-Talk
+window.switchView = switchView;
+window.renderFreeTalkView = renderFreeTalkView;
+window.sendUserFreeTalkMessage = sendUserFreeTalkMessage;
+window.setupFreeTalkSpeech = setupFreeTalkSpeech;
+window.clearFreeTalkHistory = clearFreeTalkHistory;
+window.speakCatFreeTalkText = speakCatFreeTalkText;

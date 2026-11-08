@@ -52,7 +52,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=3.7">
+  <link rel="stylesheet" href="style.css?v=3.8">
 </head>
 <body>
   <!-- Emergency Healing Floating Bar (Hidden unless error occurs) -->
@@ -231,10 +231,10 @@
               </div>
 
               <div class="sanctuary-care-btns">
-                <button id="btn-hero-shadowing" class="btn-pet-action btn-shadow" title="ฝึกพูดตามและเลียนเสียงสำเนียง (Shadowing Practice)">
+                <button id="btn-hero-shadowing" class="btn-pet-action btn-shadow" onclick="switchView('view-shadowing')" title="ฝึกพูดตามและเลียนเสียงสำเนียง (Shadowing Practice)">
                   <span>🎙️</span> ฝึก Shadowing
                 </button>
-                <button id="btn-hero-talk-cat" class="btn-pet-action btn-talk" title="คุยภาษาอังกฤษอิสระกับน้องแมว (AI Free-Talk)">
+                <button id="btn-hero-talk-cat" class="btn-pet-action btn-talk" onclick="switchView('view-ai-freetalk')" title="คุยภาษาอังกฤษอิสระกับน้องแมว (AI Free-Talk)">
                   <span>💬</span> คุยกับแมว AI
                 </button>
                 <button id="btn-hero-pet-cat" class="btn-pet-action btn-pet-love" title="ลูบหัวหรือเกาคางน้องแมว (+สุข)">
@@ -610,13 +610,13 @@
         <div class="freetalk-topics-bar">
           <span class="freetalk-topics-label">💡 หัวข้อชวนคุย:</span>
           <div class="freetalk-topics-scroll" id="freetalk-topic-pills">
-            <button class="topic-pill" data-prompt="What is your favorite food, kitty?">🍕 ของกินที่ชอบ</button>
-            <button class="topic-pill" data-prompt="I feel tired from work today.">💼 บ่นเรื่องงาน/การบ้าน</button>
-            <button class="topic-pill" data-prompt="Tell me a funny cat joke!">😂 เล่ามุกตลกแมว</button>
-            <button class="topic-pill" data-prompt="Where do you want to travel?">✈️ ฝันอยากไปเที่ยวไหน</button>
-            <button class="topic-pill" data-prompt="I am agree with you. Can you check my grammar?">🩺 ลองตรวจไวยากรณ์</button>
-            <button class="topic-pill" data-prompt="What should I do this weekend?">🎉 วันหยุดทำอะไรดี</button>
-            <button class="topic-pill" data-prompt="Why do cats love cardboard boxes so much?">📦 ทำไมชอบนอนในกล่อง</button>
+            <button class="topic-pill" data-prompt="What is your favorite food, kitty?" onclick="sendUserFreeTalkMessage('What is your favorite food, kitty?')">🍕 ของกินที่ชอบ</button>
+            <button class="topic-pill" data-prompt="I feel tired from work today." onclick="sendUserFreeTalkMessage('I feel tired from work today.')">💼 บ่นเรื่องงาน/การบ้าน</button>
+            <button class="topic-pill" data-prompt="Tell me a funny cat joke!" onclick="sendUserFreeTalkMessage('Tell me a funny cat joke!')">😂 เล่ามุกตลกแมว</button>
+            <button class="topic-pill" data-prompt="Where do you want to travel?" onclick="sendUserFreeTalkMessage('Where do you want to travel?')">✈️ ฝันอยากไปเที่ยวไหน</button>
+            <button class="topic-pill" data-prompt="I am agree with you. Can you check my grammar?" onclick="sendUserFreeTalkMessage('I am agree with you. Can you check my grammar?')">🩺 ลองตรวจไวยากรณ์</button>
+            <button class="topic-pill" data-prompt="What should I do this weekend?" onclick="sendUserFreeTalkMessage('What should I do this weekend?')">🎉 วันหยุดทำอะไรดี</button>
+            <button class="topic-pill" data-prompt="Why do cats love cardboard boxes so much?" onclick="sendUserFreeTalkMessage('Why do cats love cardboard boxes so much?')">📦 ทำไมชอบนอนในกล่อง</button>
           </div>
         </div>
 
@@ -652,8 +652,8 @@
           <button id="freetalk-mic-btn" class="freetalk-action-btn btn-mic" title="กดเพื่อพูดภาษาอังกฤษกับน้องแมว">
             🎙️
           </button>
-          <input type="text" id="freetalk-text-input" class="freetalk-input-field" placeholder="พิมพ์คุยภาษาอังกฤษกับน้องแมว... (กด Enter เพื่อส่ง)" autocomplete="off">
-          <button id="freetalk-send-btn" class="freetalk-action-btn btn-send" title="ส่งข้อความ">
+          <input type="text" id="freetalk-text-input" class="freetalk-input-field" placeholder="พิมพ์คุยภาษาอังกฤษกับน้องแมว... (กด Enter เพื่อส่ง)" autocomplete="off" onkeydown="if(event.key==='Enter') sendUserFreeTalkMessage(this.value)">
+          <button id="freetalk-send-btn" class="freetalk-action-btn btn-send" onclick="sendUserFreeTalkMessage(document.getElementById('freetalk-text-input').value)" title="ส่งข้อความ">
             ส่ง 🚀
           </button>
         </div>
@@ -1752,9 +1752,9 @@
   </footer>
 
   <!-- Scripts -->
-  <script src="scenarios.js?v=3.7"></script>
-  <script src="vocab_decks.js?v=3.7"></script>
-  <script src="shadowing_dataset.js?v=3.7"></script>
-  <script src="app.js?v=3.7"></script>
+  <script src="scenarios.js?v=3.8"></script>
+  <script src="vocab_decks.js?v=3.8"></script>
+  <script src="shadowing_dataset.js?v=3.8"></script>
+  <script src="app.js?v=3.8"></script>
 </body>
 </html>
