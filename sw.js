@@ -1,9 +1,10 @@
 // MeowQuest Service Worker v1.2.0 (Network-First Strategy for Zero Stale Bugs)
-const CACHE_NAME = 'meowquest-cache-v11';
+const CACHE_NAME = 'meowquest-cache-v12';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './style.css',
+  './freetalk_brain.js',
   './app.js',
   './scenarios.js',
   './vocab_decks.js',

@@ -4616,6 +4616,13 @@ function renderFreeTalkView() {
 
   updateFriendshipMeterUI();
   renderFreeTalkMessages();
+
+  // Update dynamic topic suggestion chips based on last cat message
+  const history = gameState.freeTalkHistory || [];
+  const lastCatMsg = [...history].reverse().find(m => m.sender === "cat");
+  if (typeof updateFreeTalkSuggestionChips === "function") {
+    updateFreeTalkSuggestionChips(lastCatMsg ? lastCatMsg.chips : null);
+  }
 }
 
 function updateFriendshipMeterUI() {
@@ -4733,9 +4740,12 @@ function checkCatGrammar(text) {
 
 // Generate intelligent Cat reply
 function generateCatFreeTalkReply(userText) {
-  const lower = userText.toLowerCase();
+  if (typeof window !== "undefined" && window.MeowMind && typeof window.MeowMind.getCatReply === "function") {
+    return window.MeowMind.getCatReply(userText);
+  }
 
-  // 1. Check topic intents
+  // Built-in fallback
+  const lower = userText.toLowerCase();
   for (const intent of CAT_CONVERSATION_INTENTS) {
     for (const kw of intent.keywords) {
       if (lower.includes(kw)) {
@@ -4744,8 +4754,6 @@ function generateCatFreeTalkReply(userText) {
       }
     }
   }
-
-  // 2. Default fallback
   const def = DEFAULT_CAT_REPLIES[Math.floor(Math.random() * DEFAULT_CAT_REPLIES.length)];
   return def;
 }
@@ -4807,8 +4815,13 @@ function sendUserFreeTalkMessage(text, isVoice = false) {
       sender: "cat",
       text: catReply.en,
       translation: catReply.th,
+      chips: catReply.chips || [],
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     });
+
+    if (typeof updateFreeTalkSuggestionChips === "function" && catReply.chips) {
+      updateFreeTalkSuggestionChips(catReply.chips);
+    }
 
     // Limit history to 35 messages
     if (gameState.freeTalkHistory.length > 35) {
@@ -4873,6 +4886,39 @@ function speakCatFreeTalkText(text) {
 }
 
 // Clear chat history
+
+// Dynamic Suggestion Chips Updater for Free-Talk
+function updateFreeTalkSuggestionChips(chips) {
+  const container = document.getElementById("freetalk-topic-pills");
+  if (!container) return;
+
+  if (!chips || !chips.length) {
+    chips = [
+      "What is your favorite food, kitty? 🍣",
+      "I feel tired from work today 💼",
+      "Tell me a funny cat joke! 😂",
+      "Do you like dogs? 🐶",
+      "Teach me a new vocabulary word! 📚",
+      "Why do cats love cardboard boxes? 📦",
+      "I love you so much, kitty! 💖"
+    ];
+  }
+
+  container.innerHTML = "";
+  chips.forEach((chipText) => {
+    const btn = document.createElement("button");
+    btn.className = "topic-pill";
+    btn.textContent = chipText;
+    btn.onclick = () => {
+      // Clean emoji from sent text for speech recognition/sending cleanly
+      const cleanText = chipText.replace(/[^\w\s.,!?'\u0E00-\u0E7F]/gi, '').trim();
+      sendUserFreeTalkMessage(cleanText || chipText);
+    };
+    container.appendChild(btn);
+  });
+}
+window.updateFreeTalkSuggestionChips = updateFreeTalkSuggestionChips;
+
 function clearFreeTalkHistory() {
   if (confirm("ต้องการล้างประวัติการคุยกับน้องแมวทั้งหมดหรือไม่เหมียว? 🐾")) {
     gameState.freeTalkHistory = [];
